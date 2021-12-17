@@ -1,4 +1,3 @@
-#include <atomic>
 #include <iostream>
 #include <set>
 #include <shared_mutex>
@@ -8,134 +7,12 @@
 
 #include "rt-vamp-plugin/PluginAdapter.h"
 
+#include "PluginInstanceAdapter.hpp"
 #include "VampFeatureWrapper.hpp"
 #include "VampOutputDescriptorWrapper.h"
 #include "VampPluginDescriptorCpp.h"
 
 namespace rtvamp {
-
-class PluginWrapper {
-public:
-    PluginWrapper(std::unique_ptr<Plugin> plugin)
-        : plugin_{std::move(plugin)},
-          parameters_(plugin_->getParameterDescriptors()),
-          programs_(plugin_->getPrograms())
-    {
-        updateOutputDescriptors();
-    }
-
-    int initialise(unsigned int /* inputChannels */, unsigned int stepSize, unsigned int blockSize) {
-        blockSize_ = blockSize;
-        const bool result = plugin_->initialise(stepSize, blockSize);
-        outputsNeedUpdate_ = true;
-        return result ? 1 : 0;
-    }
-
-    void reset() {
-        plugin_->reset();
-    }
-
-    float getParameter(int index) const {
-        try {
-            return plugin_->getParameter(parameters_.at(index).identifier); 
-        } catch (const std::out_of_range&) {}
-        return 0.0f;
-    }
-
-    void setParameter(int index, float value) {
-        try {
-            plugin_->setParameter(parameters_.at(index).identifier, value);
-            outputsNeedUpdate_ = true;
-        } catch (const std::out_of_range&) {}
-    }
-
-    unsigned int getCurrentProgram() {
-        const std::string program{plugin_->getCurrentProgram()};
-        for (size_t i = 0; i < programs_.size(); ++i) {
-            if (programs_[i] == program) return i;
-        }
-        return 0;
-    }
-
-    void selectProgram(unsigned int index) {
-        try {
-            plugin_->selectProgram(programs_.at(index));
-            outputsNeedUpdate_ = true;
-        } catch (const std::out_of_range&) {}
-    }
-
-    unsigned int getOutputCount() {
-        updateOutputDescriptors();
-        return outputs_.size();
-    }
-
-    VampOutputDescriptor* getOutputDescriptor(unsigned int index) {
-        updateOutputDescriptors();
-        std::shared_lock readerLock(mutex_);
-        try {
-            return &outputDescriptorWrappers_.at(index).get();
-        } catch (const std::out_of_range&) {}
-        return nullptr;
-    }
-
-    VampFeatureList* process(const float* const* inputBuffers, int sec, int nsec) {
-        const auto*   buffer    = inputBuffers[0];  // only first channel
-        const int64_t timestamp = 1'000'000'000 * sec + nsec;
-
-        auto getInputBuffer = [&]() -> InputBuffer {
-            if (plugin_->getInputDomain() == InputDomain::TimeDomain) {
-                return std::span(buffer, blockSize_);
-            } else {
-                // casts between interleaved arrays and std::complex are guaranteed to be valid
-                // https://en.cppreference.com/w/cpp/numeric/complex
-                return std::span(reinterpret_cast<const std::complex<float>*>(buffer), blockSize_ + 2);
-            }
-        };
-
-        const auto& result = plugin_->process(getInputBuffer(), timestamp);
-
-        featureListsWrapper_.assignValues(result);
-        return featureListsWrapper_.get();
-    }
-
-    VampFeatureList* getRemainingFeatures() {
-        return featureListsEmpty_.data();  // list with featureCount = 0 and features = nullptr
-    }
-
-    const Plugin* get() const noexcept { return plugin_.get(); }
-
-private:
-    void updateOutputDescriptors() {
-        if (outputsNeedUpdate_) {
-            std::unique_lock writerLock(mutex_);
-
-            outputs_ = plugin_->getOutputDescriptors();
-
-            const size_t outputCount = outputs_.size();
-            featureListsWrapper_.setOutputCount(outputCount);
-            featureListsEmpty_.resize(outputCount, VampFeatureList{0, nullptr});
-
-            // (re)generate vamp output descriptors
-            outputDescriptorWrappers_.clear();
-            for (const auto& output : outputs_) {
-                outputDescriptorWrappers_.emplace_back(output);
-            }
-
-            outputsNeedUpdate_ = false;
-        }
-    }
-
-    const std::unique_ptr<Plugin>            plugin_;
-    const ParameterList                      parameters_;
-    const ProgramList                        programs_;
-    std::shared_mutex                        mutex_;
-    size_t                                   blockSize_{0};
-    std::atomic<bool>                        outputsNeedUpdate_{true};
-    OutputList                               outputs_;
-    std::vector<VampOutputDescriptorWrapper> outputDescriptorWrappers_;
-    std::vector<VampFeatureList>             featureListsEmpty_;  // for getRemainingFeatures
-    VampFeatureListsWrapper                  featureListsWrapper_;
-};
 
 class PluginAdapterBase::Impl {
 public:
@@ -148,10 +25,10 @@ private:
     static VampPluginHandle vampInstantiate(const VampPluginDescriptor*, float);
     static void             vampCleanup(VampPluginHandle);
 
-    static PluginWrapper* findPluginWrapper(VampPluginHandle);
+    static PluginInstanceAdapter* findPlugin(VampPluginHandle);
 
     using Instances = std::set<Impl*>;
-    using Plugins   = std::vector<std::unique_ptr<PluginWrapper>>;
+    using Plugins   = std::vector<std::unique_ptr<PluginInstanceAdapter>>;
 
     inline static Instances         instances_;
     inline static std::shared_mutex instancesMutex_;
@@ -163,12 +40,16 @@ private:
     std::unique_ptr<VampPluginDescriptorCpp> descriptor_{nullptr};
 };
 
+/* ---------------------------------------------------------------------------------------------- */
+
 PluginAdapterBase::PluginAdapterBase() : impl_{std::make_unique<Impl>(*this)} {}
 PluginAdapterBase::~PluginAdapterBase() = default;
 
 const VampPluginDescriptor* PluginAdapterBase::getDescriptor() {
     return impl_->getDescriptor();
 }
+
+/* ---------------------------------------------------------------------------------------------- */
 
 PluginAdapterBase::Impl::Impl(PluginAdapterBase& base) : base_(base) {
     std::unique_lock writeLock(instancesMutex_);
@@ -201,47 +82,47 @@ const VampPluginDescriptor* PluginAdapterBase::Impl::getDescriptor() {
         descriptor_->initialise = [](
             VampPluginHandle handle, unsigned int inputChannels, unsigned int stepSize, unsigned int blockSize
         ) {
-            auto* wrapper = findPluginWrapper(handle);
-            if (!wrapper) return 0;
-            return wrapper->initialise(inputChannels, stepSize, blockSize);
+            auto* adapter = findPlugin(handle);
+            if (!adapter) return 0;
+            return adapter->initialise(inputChannels, stepSize, blockSize);
         };
 
         descriptor_->reset = [](VampPluginHandle handle) {
-            auto* wrapper = findPluginWrapper(handle);
-            if (!wrapper) return;
-            wrapper->reset();
+            auto* adapter = findPlugin(handle);
+            if (!adapter) return;
+            adapter->reset();
         };
 
         descriptor_->getParameter = [](VampPluginHandle handle, int index) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->getParameter(index) : 0.0f;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->getParameter(index) : 0.0f;
         };
 
         descriptor_->setParameter = [](VampPluginHandle handle, int index, float value) {
-            auto* wrapper = findPluginWrapper(handle);
-            if (!wrapper) return;
-            wrapper->setParameter(index, value);
+            auto* adapter = findPlugin(handle);
+            if (!adapter) return;
+            adapter->setParameter(index, value);
         };
 
         descriptor_->getCurrentProgram = [](VampPluginHandle handle) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->getCurrentProgram() : 0;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->getCurrentProgram() : 0;
         };
 
         descriptor_->selectProgram = [](VampPluginHandle handle, unsigned int index) {
-            auto* wrapper = findPluginWrapper(handle);
-            if (!wrapper) return;
-            wrapper->selectProgram(index);
+            auto* adapter = findPlugin(handle);
+            if (!adapter) return;
+            adapter->selectProgram(index);
         };
 
         descriptor_->getPreferredStepSize = [](VampPluginHandle handle) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->get()->getPreferredStepSize() : 0;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->get()->getPreferredStepSize() : 0;
         };
 
         descriptor_->getPreferredBlockSize = [](VampPluginHandle handle) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->get()->getPreferredBlockSize() : 0;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->get()->getPreferredBlockSize() : 0;
         };
 
         descriptor_->getMinChannelCount = [](VampPluginHandle) -> unsigned {
@@ -253,13 +134,13 @@ const VampPluginDescriptor* PluginAdapterBase::Impl::getDescriptor() {
         };
 
         descriptor_->getOutputCount = [](VampPluginHandle handle) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->getOutputCount() : 0;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->getOutputCount() : 0;
         };
 
         descriptor_->getOutputDescriptor = [](VampPluginHandle handle, unsigned int index) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->getOutputDescriptor(index) : nullptr;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->getOutputDescriptor(index) : nullptr;
         };
 
         descriptor_->releaseOutputDescriptor = [](VampOutputDescriptor*) {};  // memory owned and released by plugin
@@ -267,13 +148,13 @@ const VampPluginDescriptor* PluginAdapterBase::Impl::getDescriptor() {
         descriptor_->process = [](
             VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec
         ) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->process(inputBuffers, sec, nsec) : nullptr;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->process(inputBuffers, sec, nsec) : nullptr;
         };
 
         descriptor_->getRemainingFeatures = [](VampPluginHandle handle) {
-            auto* wrapper = findPluginWrapper(handle);
-            return wrapper ? wrapper->getRemainingFeatures() : nullptr;
+            auto* adapter = findPlugin(handle);
+            return adapter ? adapter->getRemainingFeatures() : nullptr;
         };
 
         descriptor_->releaseFeatureSet = [](VampFeatureList*) {};  // memory owned and released by plugin
@@ -282,12 +163,12 @@ const VampPluginDescriptor* PluginAdapterBase::Impl::getDescriptor() {
     return descriptor_.get();
 }
 
-PluginWrapper* PluginAdapterBase::Impl::findPluginWrapper(VampPluginHandle handle) {
+PluginInstanceAdapter* PluginAdapterBase::Impl::findPlugin(VampPluginHandle handle) {
     std::shared_lock readerLock(pluginsMutex_);
     auto it = std::find_if(
         plugins_.begin(),
         plugins_.end(),
-        [&](const auto& wrapper) { return wrapper.get() == handle; }
+        [&](const auto& adapter) { return adapter.get() == handle; }
     );
     return it == plugins_.end() ? nullptr : (*it).get();
 }
@@ -306,7 +187,7 @@ VampPluginHandle PluginAdapterBase::Impl::vampInstantiate(
 
     std::unique_lock pluginsWriteLock(pluginsMutex_);
     auto& pluginWrapper = plugins_.emplace_back(
-        std::make_unique<PluginWrapper>((*it)->base_.createPlugin(inputSampleRate))
+        std::make_unique<PluginInstanceAdapter>((*it)->base_.createPlugin(inputSampleRate))
     );
     return pluginWrapper.get();
 }
@@ -316,12 +197,11 @@ void PluginAdapterBase::Impl::vampCleanup(VampPluginHandle handle) {
     auto it = std::find_if(
         plugins_.begin(),
         plugins_.end(),
-        [&](const auto& wrapper) { return wrapper.get() == handle; }
+        [&](const auto& adapter) { return adapter.get() == handle; }
     );
     if (it != plugins_.end()) {
         plugins_.erase(it);
     }
 }
-
 
 }  // namespace rtvamp
