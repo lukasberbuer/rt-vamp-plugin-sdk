@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "VampOutputDescriptorWrapper.h"
+#include "VampOutputDescriptorWrapper.hpp"
 
 using namespace Catch::Matchers;
 using namespace rtvamp;

@@ -44,7 +44,8 @@ public:
         std::copy(values.begin(), values.end(), values_.begin());
     }
 
-    VampFeatureUnion* get() noexcept { return featureUnion_.data(); }
+    const VampFeatureUnion* get() const noexcept { return featureUnion_.data(); }
+    VampFeatureUnion*       get()       noexcept { return featureUnion_.data(); }
 
 private:
     VampFeature&   getV1() noexcept { return featureUnion_[0].v1; }

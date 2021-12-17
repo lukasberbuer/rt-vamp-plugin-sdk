@@ -25,7 +25,7 @@ struct VampOutputDescriptorWrapper{
         if (!binNames_.empty()) {
             binNames_.resize(d.binCount);  // crop or fill missing names with empty strings
         }
-        transformStringToConstChar(binNames_, binNamesConstChar_);
+        transform::all(binNames_, binNamesConstChar_, transform::ToConstChar{});
 
         descriptor_.identifier       = identifier_.c_str();
         descriptor_.name             = name_.c_str();
@@ -44,8 +44,8 @@ struct VampOutputDescriptorWrapper{
         descriptor_.hasDuration      = 0;
     }
 
-    VampOutputDescriptor&       get()       { return descriptor_; }
-    const VampOutputDescriptor& get() const { return descriptor_; }
+    const VampOutputDescriptor& get() const noexcept { return descriptor_; }
+    VampOutputDescriptor&       get()       noexcept { return descriptor_; }
 
 private:
     VampOutputDescriptor descriptor_;

@@ -9,7 +9,7 @@
 #include "rt-vamp-plugin/Plugin.h"
 
 #include "VampFeatureWrapper.hpp"
-#include "VampOutputDescriptorWrapper.h"
+#include "VampOutputDescriptorWrapper.hpp"
 
 namespace rtvamp {
 
