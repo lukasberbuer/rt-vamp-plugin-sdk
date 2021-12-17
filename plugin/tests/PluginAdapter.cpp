@@ -86,10 +86,10 @@ TEST_CASE("PluginAdapter instantiation") {
     }
 
     SECTION("Preferences / channel count") {
-        REQUIRE(d->getPreferredStepSize(h) == 0);
-        REQUIRE(d->getPreferredBlockSize(h) == 0);
-        REQUIRE(d->getMinChannelCount(h) == 1);
-        REQUIRE(d->getMaxChannelCount(h) == 1);
+        CHECK(d->getPreferredStepSize(h) == 0);
+        CHECK(d->getPreferredBlockSize(h) == 0);
+        CHECK(d->getMinChannelCount(h) == 1);
+        CHECK(d->getMaxChannelCount(h) == 1);
     }
 
     SECTION("Outputs") {
@@ -129,6 +129,38 @@ TEST_CASE("PluginAdapter instantiation") {
         REQUIRE(o1 == o2);
         o1->binCount = 99;
         REQUIRE(o2->binCount == 99);
+
+        d->releaseOutputDescriptor(o1);
+        d->releaseOutputDescriptor(o2);
+    }
+
+    SECTION("Initialise,  process and getRemainingFeatures") {
+        const unsigned int              inputChannels = 1;
+        const unsigned int              blockSize = 5;
+        const unsigned int              stepSize = 5;
+        const std::vector<float>        signal{1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
+        const std::vector<const float*> inputBuffer{signal.data()};
+
+        d->initialise(h, inputChannels, stepSize, blockSize);
+
+        auto* result = d->process(h, inputBuffer.data(), 0, 0);
+
+        CHECK(result != nullptr);
+        CHECK(result[0].featureCount == 1);
+        CHECK(result[0].features[0].v1.valueCount == 3);
+        CHECK(result[0].features[0].v1.values[0] == 1.1f);
+        CHECK(result[0].features[0].v1.values[1] == 2.2f);
+        CHECK(result[0].features[0].v1.values[2] == 3.3f);
+
+        d->releaseFeatureSet(result); 
+
+        auto* remaining = d->getRemainingFeatures(h);
+
+        REQUIRE(remaining != nullptr);
+        REQUIRE(remaining[0].featureCount == 0);
+        REQUIRE(remaining[0].features == nullptr);
+
+        d->releaseFeatureSet(remaining); 
     }
 
     d->cleanup(h);

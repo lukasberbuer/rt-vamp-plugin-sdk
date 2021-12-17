@@ -2,6 +2,7 @@ add_executable(
     tests_plugin
     Plugin.cpp
     PluginAdapter.cpp
+    VampFeatureWrapper.cpp
     VampOutputDescriptorWrapper.cpp
 )
 

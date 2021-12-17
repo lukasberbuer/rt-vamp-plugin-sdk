@@ -8,6 +8,7 @@
 
 #include "rt-vamp-plugin/PluginAdapter.h"
 
+#include "VampFeatureWrapper.hpp"
 #include "VampOutputDescriptorWrapper.h"
 #include "VampPluginDescriptorCpp.h"
 
@@ -92,10 +93,13 @@ public:
         };
 
         const auto& result = plugin_->process(getInputBuffer(), timestamp);
+
+        featureListsWrapper_.assignValues(result);
+        return featureListsWrapper_.get();
     }
 
     VampFeatureList* getRemainingFeatures() {
-
+        return featureListsEmpty_.data();  // list with featureCount = 0 and features = nullptr
     }
 
     const Plugin* get() const noexcept { return plugin_.get(); }
@@ -106,6 +110,10 @@ private:
             std::unique_lock writerLock(mutex_);
 
             outputs_ = plugin_->getOutputDescriptors();
+
+            const size_t outputCount = outputs_.size();
+            featureListsWrapper_.setOutputCount(outputCount);
+            featureListsEmpty_.resize(outputCount, VampFeatureList{0, nullptr});
 
             // (re)generate vamp output descriptors
             outputDescriptorWrappers_.clear();
@@ -125,6 +133,7 @@ private:
     std::atomic<bool>                        outputsNeedUpdate_{true};
     OutputList                               outputs_;
     std::vector<VampOutputDescriptorWrapper> outputDescriptorWrappers_;
+    std::vector<VampFeatureList>             featureListsEmpty_;  // for getRemainingFeatures
     VampFeatureListsWrapper                  featureListsWrapper_;
 };
 
