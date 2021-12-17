@@ -5,7 +5,7 @@
 
 #include "vamp/vamp.h"
 
-#include "rt-vamp-plugin/PluginAdapter.h"
+#include "rt-vamp-plugin/PluginAdapter.hpp"
 
 #include "PluginInstanceAdapter.hpp"
 #include "VampFeatureWrapper.hpp"

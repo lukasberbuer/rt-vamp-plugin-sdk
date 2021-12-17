@@ -1,8 +1,8 @@
 #include <catch2/catch.hpp>
 
-#include "rt-vamp-plugin/Plugin.h"
+#include "rt-vamp-plugin/Plugin.hpp"
 
-#include "TestPlugin.h"
+#include "TestPlugin.hpp"
 
 using namespace rtvamp;
 

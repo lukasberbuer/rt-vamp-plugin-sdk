@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rt-vamp-plugin/Plugin.h"
+#include "rt-vamp-plugin/Plugin.hpp"
 
 using namespace rtvamp;
 

@@ -3,7 +3,7 @@
 #include <memory>
 #include <type_traits>
 
-#include "Plugin.h"
+#include "Plugin.hpp"
 
 // forward declarations
 struct _VampPluginDescriptor;

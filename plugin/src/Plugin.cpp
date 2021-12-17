@@ -1,4 +1,4 @@
-#include "rt-vamp-plugin/Plugin.h"
+#include "rt-vamp-plugin/Plugin.hpp"
 
 namespace rtvamp {
 

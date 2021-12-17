@@ -2,9 +2,9 @@
 
 #include "vamp/vamp.h"
 
-#include "rt-vamp-plugin/PluginAdapter.h"
+#include "rt-vamp-plugin/PluginAdapter.hpp"
 
-#include "TestPlugin.h"
+#include "TestPlugin.hpp"
 
 using Catch::Matchers::Equals;
 using namespace rtvamp;

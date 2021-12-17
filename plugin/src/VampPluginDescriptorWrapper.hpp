@@ -6,9 +6,9 @@
 
 #include "vamp/vamp.h"
 
-#include "rt-vamp-plugin/Plugin.h"
+#include "rt-vamp-plugin/Plugin.hpp"
 
-#include "helper.h"
+#include "helper.hpp"
 
 namespace rtvamp {
 
