@@ -2,7 +2,7 @@ add_executable(
     tests_plugin
     Plugin.cpp
     PluginAdapter.cpp
-    VampOutputDescriptorCpp.cpp
+    VampOutputDescriptorWrapper.cpp
 )
 
 target_link_libraries(

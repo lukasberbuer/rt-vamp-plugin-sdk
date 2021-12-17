@@ -13,53 +13,54 @@ TEST_CASE("PluginAdapter descriptor") {
     PluginAdapter<TestPlugin> adapter;
     const auto* d = adapter.getDescriptor();
 
-    REQUIRE(d->vampApiVersion == 2);
+    CHECK(d->vampApiVersion == 2);
 
-    REQUIRE_THAT(d->identifier,  Equals("test"));
-    REQUIRE_THAT(d->name,        Equals("Test plugin"));
-    REQUIRE_THAT(d->description, Equals("Some random test plugin"));
-    REQUIRE_THAT(d->maker,       Equals("LB"));
-    REQUIRE_THAT(d->copyright,   Equals("MIT"));
-    REQUIRE(d->pluginVersion == 1);
+    CHECK_THAT(d->identifier,  Equals("test"));
+    CHECK_THAT(d->name,        Equals("Test plugin"));
+    CHECK_THAT(d->description, Equals("Some random test plugin"));
+    CHECK_THAT(d->maker,       Equals("LB"));
+    CHECK_THAT(d->copyright,   Equals("MIT"));
+    CHECK(d->pluginVersion == 1);
 
-    REQUIRE(d->parameterCount == 1);
+    CHECK(d->parameterCount == 1);
+
     const auto* p = d->parameters[0];
-    REQUIRE_THAT(p->identifier,  Equals("param"));
-    REQUIRE_THAT(p->name,        Equals("Parameter"));
-    REQUIRE_THAT(p->description, Equals("Some random parameter"));
-    REQUIRE_THAT(p->unit,        Equals(""));
-    REQUIRE(p->minValue == 0.0f);
-    REQUIRE(p->maxValue == 2.0f);
-    REQUIRE(p->defaultValue == 1.0f);
-    REQUIRE(p->isQuantized == true);
-    REQUIRE_THAT(p->valueNames[0], Equals("a"));
-    REQUIRE_THAT(p->valueNames[1], Equals("b"));
-    REQUIRE_THAT(p->valueNames[2], Equals("c"));
+    CHECK_THAT(p->identifier,  Equals("param"));
+    CHECK_THAT(p->name,        Equals("Parameter"));
+    CHECK_THAT(p->description, Equals("Some random parameter"));
+    CHECK_THAT(p->unit,        Equals(""));
+    CHECK(p->minValue == 0.0f);
+    CHECK(p->maxValue == 2.0f);
+    CHECK(p->defaultValue == 1.0f);
+    CHECK(p->isQuantized == true);
+    CHECK_THAT(p->valueNames[0], Equals("a"));
+    CHECK_THAT(p->valueNames[1], Equals("b"));
+    CHECK_THAT(p->valueNames[2], Equals("c"));
 
-    REQUIRE(d->programCount == 2);
-    REQUIRE_THAT(d->programs[0], Equals("default"));
-    REQUIRE_THAT(d->programs[1], Equals("new"));
+    CHECK(d->programCount == 2);
+    CHECK_THAT(d->programs[0], Equals("default"));
+    CHECK_THAT(d->programs[1], Equals("new"));
 
-    REQUIRE(d->inputDomain == vampTimeDomain);
+    CHECK(d->inputDomain == vampTimeDomain);
 
-    REQUIRE(d->instantiate != nullptr);
-    REQUIRE(d->cleanup != nullptr);
-    REQUIRE(d->initialise != nullptr);
-    REQUIRE(d->reset != nullptr);
-    REQUIRE(d->getParameter != nullptr);
-    REQUIRE(d->setParameter != nullptr);
-    REQUIRE(d->getCurrentProgram != nullptr);
-    REQUIRE(d->selectProgram != nullptr);
-    REQUIRE(d->getPreferredStepSize != nullptr);
-    REQUIRE(d->getPreferredBlockSize != nullptr);
-    REQUIRE(d->getMinChannelCount != nullptr);
-    REQUIRE(d->getMaxChannelCount != nullptr);
-    REQUIRE(d->getOutputCount != nullptr);
-    REQUIRE(d->getOutputDescriptor != nullptr);
-    REQUIRE(d->releaseOutputDescriptor != nullptr);
-    REQUIRE(d->process != nullptr);
-    REQUIRE(d->getRemainingFeatures != nullptr);
-    REQUIRE(d->releaseFeatureSet != nullptr);
+    CHECK(d->instantiate != nullptr);
+    CHECK(d->cleanup != nullptr);
+    CHECK(d->initialise != nullptr);
+    CHECK(d->reset != nullptr);
+    CHECK(d->getParameter != nullptr);
+    CHECK(d->setParameter != nullptr);
+    CHECK(d->getCurrentProgram != nullptr);
+    CHECK(d->selectProgram != nullptr);
+    CHECK(d->getPreferredStepSize != nullptr);
+    CHECK(d->getPreferredBlockSize != nullptr);
+    CHECK(d->getMinChannelCount != nullptr);
+    CHECK(d->getMaxChannelCount != nullptr);
+    CHECK(d->getOutputCount != nullptr);
+    CHECK(d->getOutputDescriptor != nullptr);
+    CHECK(d->releaseOutputDescriptor != nullptr);
+    CHECK(d->process != nullptr);
+    CHECK(d->getRemainingFeatures != nullptr);
+    CHECK(d->releaseFeatureSet != nullptr);
 }
 
 TEST_CASE("PluginAdapter instantiation") {
@@ -98,27 +99,36 @@ TEST_CASE("PluginAdapter instantiation") {
         VampOutputDescriptor* o = d->getOutputDescriptor(h, 0);
         REQUIRE(o != nullptr);
 
-        REQUIRE_THAT(o->identifier,  Equals("output"));
-        REQUIRE_THAT(o->name,        Equals("Output"));
-        REQUIRE_THAT(o->description, Equals("Some random output"));
-        REQUIRE_THAT(o->unit,        Equals("V"));
+        CHECK_THAT(o->identifier,  Equals("output"));
+        CHECK_THAT(o->name,        Equals("Output"));
+        CHECK_THAT(o->description, Equals("Some random output"));
+        CHECK_THAT(o->unit,        Equals("V"));
 
-        REQUIRE(o->hasFixedBinCount == 1);
-        REQUIRE(o->binCount == 3);
-        REQUIRE_THAT(o->binNames[0], Equals("a"));
-        REQUIRE_THAT(o->binNames[1], Equals("b"));
-        REQUIRE_THAT(o->binNames[2], Equals("c"));
+        CHECK(o->hasFixedBinCount == 1);
+        CHECK(o->binCount == 3);
+        CHECK_THAT(o->binNames[0], Equals("a"));
+        CHECK_THAT(o->binNames[1], Equals("b"));
+        CHECK_THAT(o->binNames[2], Equals("c"));
 
-        REQUIRE(o->hasKnownExtents == 1);
-        REQUIRE(o->minValue == 0.0f);
-        REQUIRE(o->maxValue == 10.0f);
-        REQUIRE(o->isQuantized == 0);
-        REQUIRE(o->quantizeStep == 0.0f);
-        REQUIRE(o->sampleType == vampOneSamplePerStep);
-        REQUIRE(o->sampleRate == 0);
-        REQUIRE(o->hasDuration == 0);
+        CHECK(o->hasKnownExtents == 1);
+        CHECK(o->minValue == 0.0f);
+        CHECK(o->maxValue == 10.0f);
+        CHECK(o->isQuantized == 0);
+        CHECK(o->quantizeStep == 0.0f);
+        CHECK(o->sampleType == vampOneSamplePerStep);
+        CHECK(o->sampleRate == 0);
+        CHECK(o->hasDuration == 0);
 
         d->releaseOutputDescriptor(o);
+    }
+
+    SECTION("Shared resource of VampOutputDescriptor -> problem?") {
+        VampOutputDescriptor* o1 = d->getOutputDescriptor(h, 0);
+        VampOutputDescriptor *o2 = d->getOutputDescriptor(h, 0);
+
+        REQUIRE(o1 == o2);
+        o1->binCount = 99;
+        REQUIRE(o2->binCount == 99);
     }
 
     d->cleanup(h);

@@ -8,7 +8,7 @@
 
 #include "rt-vamp-plugin/PluginAdapter.h"
 
-#include "VampOutputDescriptorCpp.h"
+#include "VampOutputDescriptorWrapper.h"
 #include "VampPluginDescriptorCpp.h"
 
 namespace rtvamp {
@@ -72,7 +72,7 @@ public:
         updateOutputDescriptors();
         std::shared_lock readerLock(mutex_);
         try {
-            return new VampOutputDescriptorCpp(outputs_.at(index));
+            return &outputDescriptorWrappers_.at(index).get();
         } catch (const std::out_of_range&) {}
         return nullptr;
     }
@@ -104,7 +104,15 @@ private:
     void updateOutputDescriptors() {
         if (outputsNeedUpdate_) {
             std::unique_lock writerLock(mutex_);
+
             outputs_ = plugin_->getOutputDescriptors();
+
+            // (re)generate vamp output descriptors
+            outputDescriptorWrappers_.clear();
+            for (const auto& output : outputs_) {
+                outputDescriptorWrappers_.emplace_back(output);
+            }
+
             outputsNeedUpdate_ = false;
         }
     }
@@ -114,9 +122,10 @@ private:
     const ProgramList                        programs_;
     std::shared_mutex                        mutex_;
     size_t                                   blockSize_{0};
-    OutputList                               outputs_;
     std::atomic<bool>                        outputsNeedUpdate_{true};
-    std::unique_ptr<VampOutputDescriptorCpp> outputDescriptor_;
+    OutputList                               outputs_;
+    std::vector<VampOutputDescriptorWrapper> outputDescriptorWrappers_;
+    VampFeatureListsWrapper                  featureListsWrapper_;
 };
 
 class PluginAdapterBase::Impl {
@@ -244,11 +253,7 @@ const VampPluginDescriptor* PluginAdapterBase::Impl::getDescriptor() {
             return wrapper ? wrapper->getOutputDescriptor(index) : nullptr;
         };
 
-        descriptor_->releaseOutputDescriptor = [](VampOutputDescriptor* desc) {
-            if (desc == nullptr) return;
-            delete static_cast<VampOutputDescriptorCpp*>(desc);
-            desc = nullptr;
-        };
+        descriptor_->releaseOutputDescriptor = [](VampOutputDescriptor*) {};  // memory owned and released by plugin
 
         descriptor_->process = [](
             VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec

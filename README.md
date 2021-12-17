@@ -1,4 +1,4 @@
-# Real-time Vamp plugin SDK for C++17
+# Real-time Vamp plugin SDK for C++20
 
 Vamp is an C/C++ plugin API for audio analysis / feature extraction plugins: https://www.vamp-plugins.org
 

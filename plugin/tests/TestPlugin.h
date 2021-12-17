@@ -40,7 +40,7 @@ public:
         if (id == "param") param_ = value;
     } 
 
-    ProgramList getPrograms() const { return programs_; }
+    ProgramList getPrograms()       const { return programs_; }
     std::string getCurrentProgram() const { return programs_[programIndex_]; }
 
     void selectProgram(std::string_view program) {
