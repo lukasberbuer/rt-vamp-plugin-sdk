@@ -9,8 +9,8 @@ add_executable(
 target_link_libraries(
     tests_plugin
     PRIVATE
-        ${LIBRARY_NAME}
         ${PROJECT_OPTIONS}
+        ${LIBRARY_NAME}
         Catch2::Catch2WithMain
 )
 target_include_directories(tests_plugin PRIVATE ../src)

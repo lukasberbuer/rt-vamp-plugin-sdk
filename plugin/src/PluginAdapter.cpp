@@ -187,10 +187,10 @@ VampPluginHandle PluginAdapterBase::Impl::vampInstantiate(
     if (it == instances_.end()) return nullptr;
 
     std::unique_lock pluginsWriteLock(pluginsMutex_);
-    auto& pluginWrapper = plugins_.emplace_back(
+    auto& adapter = plugins_.emplace_back(
         std::make_unique<PluginInstanceAdapter>((*it)->base_.createPlugin(inputSampleRate))
     );
-    return pluginWrapper.get();
+    return adapter.get();
 }
 
 void PluginAdapterBase::Impl::vampCleanup(VampPluginHandle handle) {
