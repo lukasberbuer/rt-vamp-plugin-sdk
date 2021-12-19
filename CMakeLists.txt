@@ -8,6 +8,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
 set(PROJECT_OPTIONS "${PROJECT_NAME}_project_options")
 add_library(${PROJECT_OPTIONS} INTERFACE)
 
@@ -45,12 +47,18 @@ if(RTVAMP_ENABLE_TESTS)
     include(cmake/Tests.cmake)
     enable_testing()
 endif()
+
+add_subdirectory(host)
+add_subdirectory(plugin)
+    
+option(RTVAMP_ENABLE_BENCHMARKS "Build benchmarks" OFF)
+if(RTVAMP_ENABLE_BENCHMARKS)
+    message(STATUS "Benchmarks enabled")
+    add_subdirectory(benchmarks)
+endif()
     
 option(RTVAMP_ENABLE_EXAMPLES "Build examples" OFF)
 if(RTVAMP_ENABLE_EXAMPLES)
     message(STATUS "Examples enabled")
     add_subdirectory(examples)
 endif()
-
-add_subdirectory(host)
-add_subdirectory(plugin)
