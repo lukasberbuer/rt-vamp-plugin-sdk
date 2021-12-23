@@ -30,10 +30,10 @@ private:
     using Instances = std::set<Impl*>;
     using Plugins   = std::vector<std::unique_ptr<PluginInstanceAdapter>>;
 
-    inline static Instances         instances_;
-    inline static std::shared_mutex instancesMutex_;
-    inline static Plugins           plugins_;
-    inline static std::shared_mutex pluginsMutex_;
+    inline static           Instances         instances_;
+    inline static constinit std::shared_mutex instancesMutex_;
+    inline static           Plugins           plugins_;
+    inline static constinit std::shared_mutex pluginsMutex_;
 
     std::mutex                                   mutex_;  // guard non-static members
     PluginAdapterBase&                           base_;
