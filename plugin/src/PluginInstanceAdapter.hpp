@@ -17,8 +17,7 @@ class PluginInstanceAdapter {
 public:
     explicit PluginInstanceAdapter(std::unique_ptr<Plugin> plugin)
         : plugin_{std::move(plugin)},
-          parameters_(plugin_->getParameterDescriptors()),
-          programs_(plugin_->getPrograms())
+          parameters_(plugin_->getParameterDescriptors())
     {
         updateOutputDescriptors();
     }
@@ -49,18 +48,18 @@ public:
     }
 
     unsigned int getCurrentProgram() {
-        const std::string program{plugin_->getCurrentProgram()};
-        for (size_t i = 0; i < programs_.size(); ++i) {
-            if (programs_[i] == program) return i;
+        const auto programs = plugin_->getPrograms();
+        const auto program  = plugin_->getCurrentProgram();
+        for (size_t i = 0; i < programs.size(); ++i) {
+            if (programs[i] == program) return i;
         }
         return 0;
     }
 
     void selectProgram(unsigned int index) {
-        try {
-            plugin_->selectProgram(programs_.at(index));
-            outputsNeedUpdate_ = true;
-        } catch (const std::out_of_range&) {}
+        const auto programs = plugin_->getPrograms();
+        if (index >= programs.size()) return;
+        plugin_->selectProgram(programs[index]);
     }
 
     unsigned int getOutputCount() {
@@ -128,7 +127,6 @@ private:
 
     const std::unique_ptr<Plugin>            plugin_;
     const ParameterList                      parameters_;
-    const ProgramList                        programs_;
     std::shared_mutex                        mutex_;
     size_t                                   blockSize_{0};
     std::atomic<bool>                        outputsNeedUpdate_{true};

@@ -81,7 +81,7 @@ public:
         featureUnionWrappers_[outputNumber].assignValues(values);
     }
 
-    void assignValues(const FeatureSet& values) {
+    void assignValues(std::span<const Feature> values) {
         const auto outputCount = values.size();
         if (getOutputCount() != outputCount) {
             setOutputCount(outputCount);

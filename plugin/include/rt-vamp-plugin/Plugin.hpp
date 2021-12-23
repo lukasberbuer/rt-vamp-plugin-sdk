@@ -25,7 +25,6 @@ struct ParameterDescriptor {
 };
 
 using ParameterList = std::vector<ParameterDescriptor>;
-using ProgramList   = std::vector<std::string>;
 
 struct OutputDescriptor {
     std::string identifier;
@@ -79,9 +78,9 @@ public:
     virtual float         getParameter(std::string_view) const { return 0.0f; }
     virtual void          setParameter(std::string_view, float) {} 
 
-    virtual ProgramList getPrograms() const { return {}; }
-    virtual std::string getCurrentProgram() const { return {}; }
-    virtual void        selectProgram(std::string_view) {}
+    virtual constexpr std::span<const char* const> getPrograms()       const { return {}; }
+    virtual const char*                            getCurrentProgram() const { return {}; }
+    virtual void                                   selectProgram(std::string_view) {}
 
     virtual OutputList getOutputDescriptors() const = 0;
 

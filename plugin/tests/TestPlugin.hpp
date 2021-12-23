@@ -16,7 +16,7 @@ public:
     constexpr int         getPluginVersion() const override { return 1; };
     constexpr InputDomain getInputDomain()   const override { return InputDomain::TimeDomain; };
 
-    ParameterList getParameterDescriptors() const {
+    ParameterList getParameterDescriptors() const override {
         ParameterList result;
         ParameterDescriptor d;
         d.identifier   = "param";
@@ -32,18 +32,23 @@ public:
         return result;
     }
 
-    float getParameter(std::string_view id) const {
+    float getParameter(std::string_view id) const override {
         return id == "param" ? param_ : 0.0f;
     }
 
-    void setParameter(std::string_view id, float value) {
+    void setParameter(std::string_view id, float value) override {
         if (id == "param") param_ = value;
-    } 
+    }
 
-    ProgramList getPrograms()       const { return programs_; }
-    std::string getCurrentProgram() const { return programs_[programIndex_]; }
+    constexpr std::span<const char* const> getPrograms() const override {
+        return programs_;
+    }
 
-    void selectProgram(std::string_view program) {
+    const char* getCurrentProgram() const override {
+        return programs_[programIndex_];
+    }
+
+    void selectProgram(std::string_view program) override {
         for (size_t i = 0; i < programs_.size(); ++i) {
             if (programs_[i] == program) {
                 programIndex_ = i;
@@ -87,7 +92,8 @@ public:
     }
 
 private:
-    float param_ = 1.0f;
-    std::vector<std::string> programs_{"default", "new"};
+    static constexpr std::array programs_{"default", "new"};
+
+    float  param_ = 1.0f;
     size_t programIndex_ = 0;
 };

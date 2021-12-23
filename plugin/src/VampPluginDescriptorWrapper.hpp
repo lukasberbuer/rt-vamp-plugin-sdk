@@ -18,8 +18,7 @@ namespace rtvamp {
 class VampPluginDescriptorWrapper : VampPluginDescriptor {
 public:
     explicit VampPluginDescriptorWrapper(const Plugin& plugin)
-        : parameters_(plugin.getParameterDescriptors()),
-          programs_(plugin.getPrograms())
+        : parameters_(plugin.getParameterDescriptors())
     {
         auto& d = descriptor_;
 
@@ -32,8 +31,8 @@ public:
         d.pluginVersion  = plugin.getPluginVersion();
         d.parameterCount = parameters_.size();
         d.parameters     = getParameters();
-        d.programCount   = programs_.size();
-        d.programs       = getPrograms();
+        d.programCount   = plugin.getPrograms().size();
+        d.programs       = const_cast<const char**>(plugin.getPrograms().data());  // should be save because programs is a compile-time constant
         d.inputDomain    = plugin.getInputDomain() == InputDomain::FrequencyDomain
             ? vampFrequencyDomain
             : vampTimeDomain;
@@ -96,20 +95,12 @@ private:
         return vampParametersPtr_.data();
     }
 
-    const char** getPrograms() {
-        transform::all(programs_, vampPrograms_, transform::ToConstChar{});
-        return vampPrograms_.data();
-    }
-
     VampPluginDescriptor descriptor_;
 
     const std::vector<ParameterDescriptor>      parameters_;
     std::vector<VampParameterDescriptor>        vampParameters_;
     std::vector<const VampParameterDescriptor*> vampParametersPtr_;
     std::vector<std::vector<const char*>>       vampParametersValueNames_;
-
-    const std::vector<std::string> programs_;
-    std::vector<const char*>       vampPrograms_;
 };
 
 }  // namespace rtvamp
