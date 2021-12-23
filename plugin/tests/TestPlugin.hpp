@@ -8,13 +8,13 @@ class TestPlugin : public Plugin {
 public:
     TestPlugin(float inputSampleRate) : Plugin(inputSampleRate) {}
 
-    const char* getIdentifier() const override  { return "test"; }
-    const char* getName() const override        { return "Test plugin"; };
-    const char* getDescription() const override { return "Some random test plugin"; };
-    const char* getMaker() const override       { return "LB"; };
-    const char* getCopyright() const            { return "MIT"; };
-
-    int getPluginVersion() const override { return 1; };
+    constexpr const char* getIdentifier()    const override { return "test"; }
+    constexpr const char* getName()          const override { return "Test plugin"; };
+    constexpr const char* getDescription()   const override { return "Some random test plugin"; };
+    constexpr const char* getMaker()         const override { return "LB"; };
+    constexpr const char* getCopyright()     const override { return "MIT"; };
+    constexpr int         getPluginVersion() const override { return 1; };
+    constexpr InputDomain getInputDomain()   const override { return InputDomain::TimeDomain; };
 
     ParameterList getParameterDescriptors() const {
         ParameterList result;
@@ -58,8 +58,6 @@ public:
     };
 
     void reset() override {};
-
-    InputDomain getInputDomain() const override { return InputDomain::TimeDomain; };
 
     OutputList getOutputDescriptors() const override {
         OutputList result;

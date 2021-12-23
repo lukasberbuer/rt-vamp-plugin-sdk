@@ -4,10 +4,6 @@ class PluginBase : public rtvamp::Plugin {
 public:
     using rtvamp::Plugin::Plugin;
 
-    const char* getMaker() const override {
-        return "Lukas Berbuer";
-    }
-    const char* getCopyright() const override {
-        return "MIT";
-    }
+    constexpr const char* getMaker()     const override { return "Lukas Berbuer"; }
+    constexpr const char* getCopyright() const override { return "MIT"; }
 };

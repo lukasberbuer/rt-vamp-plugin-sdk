@@ -62,18 +62,18 @@ public:
     explicit Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
     virtual ~Plugin() {}
 
-    unsigned int getVampApiVersion() const { return 2; }
+    constexpr unsigned int getVampApiVersion() const { return 2; }
 
-    virtual const char* getIdentifier() const = 0;
-    virtual const char* getName() const = 0;
-    virtual const char* getDescription() const = 0;
-    virtual const char* getMaker() const = 0;
-    virtual const char* getCopyright() const = 0;
-    virtual int         getPluginVersion() const = 0;
+    virtual constexpr const char* getIdentifier() const = 0;
+    virtual constexpr const char* getName() const = 0;
+    virtual constexpr const char* getDescription() const = 0;
+    virtual constexpr const char* getMaker() const = 0;
+    virtual constexpr const char* getCopyright() const = 0;
+    virtual constexpr int         getPluginVersion() const = 0;
 
-    virtual InputDomain  getInputDomain() const = 0;
-    virtual unsigned int getPreferredBlockSize() const { return 0; }
-    virtual unsigned int getPreferredStepSize()  const { return 0; }
+    virtual constexpr InputDomain  getInputDomain() const = 0;
+    virtual constexpr unsigned int getPreferredBlockSize() const { return 0; }
+    virtual constexpr unsigned int getPreferredStepSize()  const { return 0; }
 
     virtual ParameterList getParameterDescriptors() const { return {}; }
     virtual float         getParameter(std::string_view) const { return 0.0f; }

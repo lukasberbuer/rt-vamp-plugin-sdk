@@ -18,22 +18,17 @@ namespace rtvamp {
 class VampPluginDescriptorWrapper : VampPluginDescriptor {
 public:
     explicit VampPluginDescriptorWrapper(const Plugin& plugin)
-        : identifier_(plugin.getIdentifier()),
-          name_(plugin.getName()),
-          description_(plugin.getDescription()),
-          maker_(plugin.getMaker()),
-          copyright_(plugin.getCopyright()),
-          parameters_(plugin.getParameterDescriptors()),
+        : parameters_(plugin.getParameterDescriptors()),
           programs_(plugin.getPrograms())
     {
         auto& d = descriptor_;
 
         d.vampApiVersion = plugin.getVampApiVersion();
-        d.identifier     = identifier_.c_str();
-        d.name           = name_.c_str();
-        d.description    = description_.c_str();
-        d.maker          = maker_.c_str();
-        d.copyright      = copyright_.c_str();
+        d.identifier     = plugin.getIdentifier();
+        d.name           = plugin.getName();
+        d.description    = plugin.getDescription();
+        d.maker          = plugin.getMaker();
+        d.copyright      = plugin.getCopyright();
         d.pluginVersion  = plugin.getPluginVersion();
         d.parameterCount = parameters_.size();
         d.parameters     = getParameters();
@@ -107,12 +102,6 @@ private:
     }
 
     VampPluginDescriptor descriptor_;
-
-    const std::string identifier_;
-    const std::string name_;
-    const std::string description_;
-    const std::string maker_;
-    const std::string copyright_;
 
     const std::vector<ParameterDescriptor>      parameters_;
     std::vector<VampParameterDescriptor>        vampParameters_;

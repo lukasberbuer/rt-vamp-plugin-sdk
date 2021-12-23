@@ -20,14 +20,13 @@ class RMS : public rtvamp::Plugin {
 public:
     using Plugin::Plugin;
 
-    const char* getIdentifier()    const override { return "rms"; }
-    const char* getName()          const override { return "Root mean square"; }
-    const char* getDescription()   const override { return ""; };
-    const char* getMaker()         const override { return "Lukas Berbuer"; }
-    const char* getCopyright()     const override { return "MIT"; }
-    int         getPluginVersion() const override { return 1; };
-
-    InputDomain getInputDomain() const { return InputDomain::TimeDomain; }
+    constexpr const char* getIdentifier()    const override { return "rms"; }
+    constexpr const char* getName()          const override { return "Root mean square"; }
+    constexpr const char* getDescription()   const override { return ""; };
+    constexpr const char* getMaker()         const override { return "Lukas Berbuer"; }
+    constexpr const char* getCopyright()     const override { return "MIT"; }
+    constexpr int         getPluginVersion() const override { return 1; };
+    constexpr InputDomain getInputDomain()   const override { return InputDomain::TimeDomain; }
 
     OutputList getOutputDescriptors() const override {
         OutputDescriptor d;

@@ -8,12 +8,11 @@ class RMS : public PluginBase {
 public:
     using PluginBase::PluginBase;
 
-    const char* getIdentifier()    const override { return "rms"; }
-    const char* getName()          const override { return "Root mean square"; }
-    const char* getDescription()   const override { return ""; };
-    int         getPluginVersion() const override { return 1; };
-
-    InputDomain getInputDomain() const { return InputDomain::TimeDomain; }
+    constexpr const char* getIdentifier()    const override { return "rms"; }
+    constexpr const char* getName()          const override { return "Root mean square"; }
+    constexpr const char* getDescription()   const override { return ""; };
+    constexpr int         getPluginVersion() const override { return 1; };
+    constexpr InputDomain getInputDomain()   const override { return InputDomain::TimeDomain; }
 
     OutputList getOutputDescriptors() const override;
 
