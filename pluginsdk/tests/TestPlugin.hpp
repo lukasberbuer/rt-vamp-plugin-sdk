@@ -2,7 +2,7 @@
 
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
-using namespace rtvamp;
+using namespace rtvamp::pluginsdk;
 
 class TestPlugin : public PluginDefinition<1> {
 public:

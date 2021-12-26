@@ -4,7 +4,7 @@
 
 #include "TestPlugin.hpp"
 
-using namespace rtvamp;
+using namespace rtvamp::pluginsdk;
 
 TEST_CASE("PluginDefinition") {
     TestPlugin plugin(48000);

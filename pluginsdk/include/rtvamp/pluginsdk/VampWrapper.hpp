@@ -12,7 +12,7 @@
 #include "rtvamp/pluginsdk/debug.hpp"
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
-namespace rtvamp {
+namespace rtvamp::pluginsdk {
 
 /**
  * Generate plugin descriptor from plugin definition at compile time.
@@ -217,4 +217,4 @@ private:
     std::array<VampFeatureList, NOutputs>         featureLists_{};
 };
 
-}  // namespace rtvamp
+}  // namespace rtvamp::pluginsdk

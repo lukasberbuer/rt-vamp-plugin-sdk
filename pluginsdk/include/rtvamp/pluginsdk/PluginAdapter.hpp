@@ -8,7 +8,7 @@
 #include "rtvamp/pluginsdk/debug.hpp"
 #include "rtvamp/pluginsdk/VampWrapper.hpp"
 
-namespace rtvamp {
+namespace rtvamp::pluginsdk {
 
 template <typename TPluginDefinition>
 class PluginInstanceAdapter {
@@ -272,4 +272,4 @@ private:
     inline static std::vector<std::unique_ptr<TPluginInstanceAdapter>> plugins;
 };
 
-}  // namespace rtvamp
+}  // namespace rtvamp::pluginsdk

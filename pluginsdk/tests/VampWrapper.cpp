@@ -7,7 +7,7 @@
 #include "TestPlugin.hpp"
 
 using namespace Catch::Matchers;
-using namespace rtvamp;
+using namespace rtvamp::pluginsdk;
 
 template <typename U, typename V>
 static consteval bool strEqual(U&& u, V&& v) {

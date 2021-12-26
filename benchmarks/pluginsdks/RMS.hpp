@@ -8,7 +8,7 @@
 
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
-using namespace rtvamp;
+using namespace rtvamp::pluginsdk;
 
 template <typename T>
 struct square {
@@ -17,7 +17,7 @@ struct square {
     }
 };
 
-class RMS : public rtvamp::PluginDefinition<1 /* 1 output */> {
+class RMS : public PluginDefinition<1 /* 1 output */> {
 public:
     using PluginDefinition::PluginDefinition;
 

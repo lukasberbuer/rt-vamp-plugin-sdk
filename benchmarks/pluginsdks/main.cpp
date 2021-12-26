@@ -35,7 +35,7 @@ static void BM_plugin(benchmark::State& state) {
 
     descriptor->cleanup(handle);
 }
-BENCHMARK_TEMPLATE(BM_plugin, rtvamp::PluginAdapter<RMS>)
+BENCHMARK_TEMPLATE(BM_plugin, PluginAdapter<RMS>)
     ->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 BENCHMARK_TEMPLATE(BM_plugin, Vamp::PluginAdapter<RMSvamp>)
     ->RangeMultiplier(2)->Range(1 << 4, 1 << 16);

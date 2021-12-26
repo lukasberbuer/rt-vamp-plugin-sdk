@@ -14,7 +14,7 @@
  */
 static_assert(sizeof(unsigned int) >= sizeof(uint32_t), "Size type must have at least 32 bit");
 
-namespace rtvamp {
+namespace rtvamp::pluginsdk {
 
 struct ParameterDescriptor {
     const char* identifier  = "";
@@ -130,4 +130,4 @@ void PluginDefinition<NOutputs>::initialiseFeatureSet() {
     }
 }
 
-}  // namespace rtvamp
+}  // namespace rtvamp::pluginsdk

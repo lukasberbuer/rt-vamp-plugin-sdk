@@ -4,7 +4,7 @@
 
 #include "rtvamp/pluginsdk/PluginAdapter.hpp"
 
-namespace rtvamp {
+namespace rtvamp::pluginsdk {
 
 template <typename... Plugins>
 class EntryPoint {
@@ -26,14 +26,14 @@ private:
     };
 };
 
-}  // namespace rtvamp
+}  // namespace rtvamp::pluginsdk
 
 /* -------------------------------------------- Macro ------------------------------------------- */
 
-#define RTVAMP_ENTRY_POINT(...)                                                  \
-    extern "C" const VampPluginDescriptor* vampGetPluginDescriptor(              \
-        unsigned int version,                                                    \
-        unsigned int index                                                       \
-    ) {                                                                          \
-        return ::rtvamp::EntryPoint<__VA_ARGS__>::getDescriptor(version, index); \
+#define RTVAMP_ENTRY_POINT(...)                                                             \
+    extern "C" const VampPluginDescriptor* vampGetPluginDescriptor(                         \
+        unsigned int version,                                                               \
+        unsigned int index                                                                  \
+    ) {                                                                                     \
+        return ::rtvamp::pluginsdk::EntryPoint<__VA_ARGS__>::getDescriptor(version, index); \
     }
