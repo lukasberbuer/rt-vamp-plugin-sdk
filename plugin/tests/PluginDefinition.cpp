@@ -1,12 +1,12 @@
 #include <catch2/catch.hpp>
 
-#include "rt-vamp-plugin/Plugin.hpp"
+#include "rt-vamp-plugin/PluginDefinition.hpp"
 
 #include "TestPlugin.hpp"
 
 using namespace rtvamp;
 
-TEST_CASE("Plugin") {
+TEST_CASE("PluginDefinition") {
     TestPlugin plugin(48000);
 
     CHECK(plugin.getInputSampleRate() == 48000);
@@ -21,10 +21,5 @@ TEST_CASE("Plugin") {
         const auto& featureSet = plugin.process(TimeDomainBuffer{}, 0);
         CHECK(featureSet.size() == 1);
         CHECK(featureSet[0].size() == 3);
-    }
-
-    SECTION("Get stored result with getResult") {
-        const auto& featureSet = plugin.process(TimeDomainBuffer{}, 0);
-        CHECK(&featureSet == &plugin.getResult());
     }
 }

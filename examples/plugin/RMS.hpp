@@ -1,20 +1,35 @@
 #pragma once
 
-#include "PluginBase.hpp"
+#include "rt-vamp-plugin/PluginDefinition.hpp"
 
 using namespace rtvamp;
 
-class RMS : public PluginBase {
+class RMS : public PluginDefinition<1> {
 public:
-    using PluginBase::PluginBase;
+    using PluginDefinition::PluginDefinition;  // inherit constructor
 
-    constexpr const char* getIdentifier()    const override { return "rms"; }
-    constexpr const char* getName()          const override { return "Root mean square"; }
-    constexpr const char* getDescription()   const override { return ""; };
-    constexpr int         getPluginVersion() const override { return 1; };
-    constexpr InputDomain getInputDomain()   const override { return InputDomain::TimeDomain; }
+    static constexpr Meta meta {
+        .identifier    = "rms",
+        .name          = "Root mean square",
+        .description   = "",
+        .maker         = "LB",
+        .copyright     = "MIT",
+        .pluginVersion = 1,
+        .inputDomain   = InputDomain::TimeDomain,
+    };
 
-    OutputList getOutputDescriptors() const override;
+    OutputList getOutputDescriptors() const override {
+        return {
+            OutputDescriptor{
+                .identifier  = "rms",
+                .name        = "RMS",
+                .description = "Root mean square of signal",
+                .unit        = "V",
+                .binCount    = 1,
+                // use default values for extend and quantization
+            }
+        };
+    }
 
     bool initialise(unsigned int stepSize, unsigned int blockSize) override;
     void reset() override;

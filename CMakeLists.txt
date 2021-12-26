@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(rt-vamp-plugin-sdk CXX)
+include(cmake/StandardProjectSettings.cmake)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
@@ -20,9 +21,8 @@ if(MSVC)
     target_compile_options(
         ${PROJECT_OPTIONS}
         INTERFACE
-            /permissive-
             /W4
-            /w14640
+            /permissive-
     )
 else()
     target_compile_options(
@@ -33,12 +33,12 @@ else()
             -Wshadow
             -Wnon-virtual-dtor
             -Wpedantic
+            # disabled warnings:
+            -Wno-unused-parameter
     )
 endif()
 
 include(cmake/Sanitizers.cmake)
-
-include_directories(3rdparty)
 
 option(RTVAMP_ENABLE_TESTS "Enable tests" OFF)
 if(RTVAMP_ENABLE_TESTS)

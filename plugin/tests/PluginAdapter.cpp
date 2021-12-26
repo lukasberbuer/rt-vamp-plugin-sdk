@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "vamp/vamp.h"
+#include <vamp/vamp.h>
 
 #include "rt-vamp-plugin/PluginAdapter.hpp"
 
@@ -10,38 +10,10 @@ using Catch::Matchers::Equals;
 using namespace rtvamp;
 
 TEST_CASE("PluginAdapter descriptor") {
-    PluginAdapter<TestPlugin> adapter;
-    const auto* d = adapter.getDescriptor();
+    const VampPluginDescriptor* d = PluginAdapter<TestPlugin>::getDescriptor();
 
-    CHECK(d->vampApiVersion == 2);
-
-    CHECK_THAT(d->identifier,  Equals("test"));
-    CHECK_THAT(d->name,        Equals("Test plugin"));
-    CHECK_THAT(d->description, Equals("Some random test plugin"));
-    CHECK_THAT(d->maker,       Equals("LB"));
-    CHECK_THAT(d->copyright,   Equals("MIT"));
-    CHECK(d->pluginVersion == 1);
-
-    CHECK(d->parameterCount == 1);
-
-    const auto* p = d->parameters[0];
-    CHECK_THAT(p->identifier,  Equals("param"));
-    CHECK_THAT(p->name,        Equals("Parameter"));
-    CHECK_THAT(p->description, Equals("Some random parameter"));
-    CHECK_THAT(p->unit,        Equals(""));
-    CHECK(p->minValue == 0.0f);
-    CHECK(p->maxValue == 2.0f);
-    CHECK(p->defaultValue == 1.0f);
-    CHECK(p->isQuantized == true);
-    CHECK_THAT(p->valueNames[0], Equals("a"));
-    CHECK_THAT(p->valueNames[1], Equals("b"));
-    CHECK_THAT(p->valueNames[2], Equals("c"));
-
-    CHECK(d->programCount == 2);
-    CHECK_THAT(d->programs[0], Equals("default"));
-    CHECK_THAT(d->programs[1], Equals("new"));
-
-    CHECK(d->inputDomain == vampTimeDomain);
+    // static descriptor data already checked in PluginDescriptor test
+    // now the function pointers should be assigned
 
     CHECK(d->instantiate != nullptr);
     CHECK(d->cleanup != nullptr);
@@ -64,8 +36,7 @@ TEST_CASE("PluginAdapter descriptor") {
 }
 
 TEST_CASE("PluginAdapter instantiation") {
-    PluginAdapter<TestPlugin> adapter;
-    const VampPluginDescriptor* d = adapter.getDescriptor();
+    const VampPluginDescriptor* d = PluginAdapter<TestPlugin>::getDescriptor();
 
     VampPluginHandle h = d->instantiate(d, 48000);
     REQUIRE(h != nullptr);
@@ -78,7 +49,7 @@ TEST_CASE("PluginAdapter instantiation") {
         d->setParameter(h, 0, 2.0f);
         REQUIRE(d->getParameter(h, 0) == 2.0f);
     }
-    
+
     SECTION("Program") {
         REQUIRE(d->getCurrentProgram(h) == 0);
         d->selectProgram(h, 1);
@@ -134,7 +105,7 @@ TEST_CASE("PluginAdapter instantiation") {
         d->releaseOutputDescriptor(o2);
     }
 
-    SECTION("Initialise,  process and getRemainingFeatures") {
+    SECTION("Initialise, process and getRemainingFeatures") {
         const unsigned int              inputChannels = 1;
         const unsigned int              blockSize = 5;
         const unsigned int              stepSize = 5;

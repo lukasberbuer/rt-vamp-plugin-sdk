@@ -1,12 +1,94 @@
+#include <string_view>
+
 #include <catch2/catch.hpp>
 
-#include "VampFeatureWrapper.hpp"
+#include "rt-vamp-plugin/VampWrapper.hpp"
 
+#include "TestPlugin.hpp"
+
+using namespace Catch::Matchers;
 using namespace rtvamp;
+
+template <typename U, typename V>
+static consteval bool strEqual(U&& u, V&& v) {
+    return std::string_view(std::forward<U>(u))
+        == std::string_view(std::forward<V>(v));
+}
+
+TEST_CASE("VampPluginDescriptorWrapper") {
+    constexpr auto d = VampPluginDescriptorWrapper<TestPlugin>::get();
+
+    STATIC_REQUIRE(d.vampApiVersion == 2);
+
+    STATIC_REQUIRE(strEqual(d.identifier, "test"));
+    STATIC_REQUIRE(strEqual(d.name, "Test plugin"));
+    STATIC_REQUIRE(strEqual(d.description, "Some random test plugin"));
+    STATIC_REQUIRE(strEqual(d.maker, "LB"));
+    STATIC_REQUIRE(d.pluginVersion == 1);
+    STATIC_REQUIRE(strEqual(d.copyright , "MIT"));
+    STATIC_REQUIRE(d.parameterCount == 1);
+
+    constexpr auto* p = d.parameters[0];
+    STATIC_REQUIRE(strEqual(p->identifier, "param"));
+    STATIC_REQUIRE(strEqual(p->name, "Parameter"));
+    STATIC_REQUIRE(strEqual(p->description, "Some random parameter"));
+    STATIC_REQUIRE(strEqual(p->unit, ""));
+    STATIC_REQUIRE(p->minValue == 0.0f);
+    STATIC_REQUIRE(p->maxValue == 2.0f);
+    STATIC_REQUIRE(p->defaultValue == 1.0f);
+    STATIC_REQUIRE(p->isQuantized == true);
+    STATIC_REQUIRE(p->quantizeStep == 1.0f);
+#if __cpp_lib_constexpr_vector
+    STATIC_REQUIRE(p->valueNames.size() == 3);
+    STATIC_REQUIRE(strEqual(p->valueNames[0], "a"));
+    STATIC_REQUIRE(strEqual(p->valueNames[1], "b"));
+    STATIC_REQUIRE(strEqual(p->valueNames[2], "c"));
+#endif
+
+    STATIC_REQUIRE(d.programCount == 2);
+    STATIC_REQUIRE(strEqual(d.programs[0], "default"));
+    STATIC_REQUIRE(strEqual(d.programs[1], "new"));
+}
+
+TEST_CASE("VampOutputDescriptorWrapper") {
+    SECTION("Default values") {
+        OutputDescriptor            descriptor{};
+        VampOutputDescriptorWrapper wrapper(descriptor);
+        VampOutputDescriptor&       d = wrapper.get();
+
+        CHECK_THAT(d.identifier,  Equals(""));
+        CHECK_THAT(d.name,        Equals(""));
+        CHECK_THAT(d.description, Equals(""));
+        CHECK_THAT(d.unit,        Equals(""));
+        CHECK(d.hasFixedBinCount == 1);
+        CHECK(d.binCount == 0);
+        CHECK(d.binNames == nullptr);
+        CHECK(d.hasKnownExtents == 0);
+        CHECK(d.minValue == 0.0f);
+        CHECK(d.maxValue == 0.0f);
+        CHECK(d.isQuantized == 0);
+        CHECK(d.quantizeStep == 0.0f);
+        CHECK(d.sampleType == vampOneSamplePerStep);
+        CHECK(d.sampleRate == 0.0f);
+    }
+
+    SECTION("Non-matching binCount and binNames size") {
+        OutputDescriptor descriptor;
+        descriptor.binCount = 3;
+        descriptor.binNames = {"a", "b"};
+
+        VampOutputDescriptorWrapper wrapper(descriptor);
+        VampOutputDescriptor&       d = wrapper.get();
+
+        CHECK_THAT(d.binNames[0], Equals("a"));
+        CHECK_THAT(d.binNames[1], Equals("b"));
+        CHECK_THAT(d.binNames[2], Equals(""));
+    }
+}
 
 TEST_CASE("VampFeatureUnionWrapper") {
     SECTION("Default values") {
-        VampFeatureUnionWrapper wrapper;
+        VampFeatureUnionWrapper wrapper{};
         VampFeatureUnion*       feature = wrapper.get();
         VampFeature&            v1 = feature->v1;
         VampFeatureV2&          v2 = feature->v2;
@@ -25,7 +107,7 @@ TEST_CASE("VampFeatureUnionWrapper") {
     }
 
     SECTION("Get/set value count") {
-        VampFeatureUnionWrapper wrapper;
+        VampFeatureUnionWrapper wrapper{};
         REQUIRE(wrapper.getValueCount() == 0);
         REQUIRE(wrapper.get()->v1.values == nullptr);
 
@@ -36,7 +118,7 @@ TEST_CASE("VampFeatureUnionWrapper") {
     }
 
     SECTION("Assign values") {
-        VampFeatureUnionWrapper  wrapper;
+        VampFeatureUnionWrapper wrapper{};
         const std::vector<float> values{1.0f, 2.0f, 3.0f};
 
         auto getRawValues = [&] {
@@ -58,25 +140,12 @@ TEST_CASE("VampFeatureUnionWrapper") {
 
 TEST_CASE("VampFeatureListsWrapper") {
     SECTION("Empty") {
-        VampFeatureListsWrapper wrapper;
+        VampFeatureListsWrapper<0> wrapper{};
         REQUIRE(wrapper.get() == nullptr);
     }
 
-    SECTION("Get/set output count") {
-        VampFeatureListsWrapper wrapper;
-        REQUIRE(wrapper.getOutputCount() == 0);
-
-        wrapper.setOutputCount(3);
-        REQUIRE(wrapper.getOutputCount() == 3);
-        // check if size of raw array is valid -> access would fail with address sanitizer
-        REQUIRE(wrapper.get()[0].features);
-        REQUIRE(wrapper.get()[1].features);
-        REQUIRE(wrapper.get()[2].features);
-    }
-
     SECTION("Assign values per output") {
-        VampFeatureListsWrapper  wrapper;
-        wrapper.setOutputCount(3);
+        VampFeatureListsWrapper<3> wrapper;
 
         auto getValueCount = [&](size_t outputNumber) {
             return wrapper.get()[outputNumber].features[0].v1.valueCount;
@@ -102,9 +171,7 @@ TEST_CASE("VampFeatureListsWrapper") {
     }
 
     SECTION("Assign values") {
-        VampFeatureListsWrapper  wrapper;
-        // don't set output count manually
-        // wrapper.setOutputCount(3);
+        VampFeatureListsWrapper<3> wrapper{};
 
         const std::vector<std::vector<float>> values{
             {0.0f},

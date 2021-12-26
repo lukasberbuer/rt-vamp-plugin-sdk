@@ -2,10 +2,11 @@
 
 #include <cmath>
 #include <numeric>  // accumulate
+#include <iostream>
 
 #include <vamp-sdk/Plugin.h>
 
-#include "rt-vamp-plugin/Plugin.hpp"
+#include "rt-vamp-plugin/PluginDefinition.hpp"
 
 using namespace rtvamp;
 
@@ -16,27 +17,31 @@ struct square {
     }
 };
 
-class RMS : public rtvamp::Plugin {
+class RMS : public rtvamp::PluginDefinition<1 /* 1 output */> {
 public:
-    using Plugin::Plugin;
+    using PluginDefinition::PluginDefinition;
 
-    constexpr const char* getIdentifier()    const override { return "rms"; }
-    constexpr const char* getName()          const override { return "Root mean square"; }
-    constexpr const char* getDescription()   const override { return ""; };
-    constexpr const char* getMaker()         const override { return "Lukas Berbuer"; }
-    constexpr const char* getCopyright()     const override { return "MIT"; }
-    constexpr int         getPluginVersion() const override { return 1; };
-    constexpr InputDomain getInputDomain()   const override { return InputDomain::TimeDomain; }
+    static constexpr Meta meta {
+        .identifier    = "rms",
+        .name          = "Root mean square",
+        .description   = "",
+        .maker         = "LB",
+        .copyright     = "MIT",
+        .pluginVersion = 1,
+        .inputDomain   = InputDomain::TimeDomain,
+    };
 
     OutputList getOutputDescriptors() const override {
-        OutputDescriptor d;
-        d.identifier  = "rms";
-        d.name        = "RMS";
-        d.description = "Root mean square of signal";
-        d.unit        = "V";
-        d.binCount    = 1;
-        // use default values for extend and quantization
-        return {d};
+        return {
+            OutputDescriptor{
+                .identifier  = "rms",
+                .name        = "RMS",
+                .description = "Root mean square of signal",
+                .unit        = "V",
+                .binCount    = 1,
+                // use default values for extend and quantization
+            }
+        };
     }
 
     bool initialise(unsigned int /* stepSize */, unsigned int /* blockSize */) override {
@@ -47,14 +52,14 @@ public:
     void reset() override {}
 
     const FeatureSet& process(InputBuffer inputBuffer, uint64_t /* nsec */) override {
-        auto  signal = std::get<TimeDomainBuffer>(inputBuffer);
-        auto& result = getFeatureSet();
+        auto signal = std::get<TimeDomainBuffer>(inputBuffer);
 
         const float sumSquares = std::accumulate(
             signal.begin(), signal.end(), 0.0f, square<float>()
         );
         const float rms = std::sqrt(sumSquares / signal.size());
 
+        auto& result = getFeatureSet();
         result[0][0] = rms;
         return result;
     }
@@ -71,7 +76,7 @@ public:
     std::string getCopyright()     const override { return ""; };
     int         getPluginVersion() const override { return 1; };
 
-    InputDomain getInputDomain() const { return TimeDomain; }
+    InputDomain getInputDomain() const override { return TimeDomain; }
 
     OutputList getOutputDescriptors() const override {
         OutputDescriptor d;

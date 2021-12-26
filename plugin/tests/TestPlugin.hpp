@@ -1,35 +1,56 @@
 #pragma once
 
-#include "rt-vamp-plugin/Plugin.hpp"
+#include "rt-vamp-plugin/PluginDefinition.hpp"
 
 using namespace rtvamp;
 
-class TestPlugin : public Plugin {
+class TestPlugin : public PluginDefinition<1> {
 public:
-    TestPlugin(float inputSampleRate) : Plugin(inputSampleRate) {}
+    using PluginDefinition::PluginDefinition;  // inherit constructor
 
-    constexpr const char* getIdentifier()    const override { return "test"; }
-    constexpr const char* getName()          const override { return "Test plugin"; };
-    constexpr const char* getDescription()   const override { return "Some random test plugin"; };
-    constexpr const char* getMaker()         const override { return "LB"; };
-    constexpr const char* getCopyright()     const override { return "MIT"; };
-    constexpr int         getPluginVersion() const override { return 1; };
-    constexpr InputDomain getInputDomain()   const override { return InputDomain::TimeDomain; };
+    static constexpr Meta meta{
+        .identifier    = "test",
+        .name          = "Test plugin",
+        .description   = "Some random test plugin",
+        .maker         = "LB",
+        .copyright     = "MIT",
+        .pluginVersion = 1,
+        .inputDomain   = InputDomain::TimeDomain,
+    };
 
-    ParameterList getParameterDescriptors() const override {
-        ParameterList result;
-        ParameterDescriptor d;
-        d.identifier   = "param";
-        d.name         = "Parameter";
-        d.description  = "Some random parameter";
-        d.unit         = "";
-        d.minValue     = 0.0f;
-        d.maxValue     = 2.0f;
-        d.defaultValue = 1.0f;
-        d.isQuantized  = true;
-        d.valueNames   = {"a", "b", "c"};
-        result.push_back(d);
-        return result;
+    static constexpr std::array parameters{
+        ParameterDescriptor{
+            .identifier   = "param",
+            .name         = "Parameter",
+            .description  = "Some random parameter",
+            .unit         = "",
+            .minValue     = 0.0f,
+            .maxValue     = 2.0f,
+            .defaultValue = 1.0f,
+            .isQuantized  = true,
+            .quantizeStep = 1.0f,
+#if __cpp_lib_constexpr_vector
+            .valuenNames  = {"a", "b", "c"},
+#endif
+        }
+    };
+
+    static constexpr std::array programs{"default", "new"};
+
+    OutputList getOutputDescriptors() const override {
+        return {
+            OutputDescriptor{
+                .identifier      = "output",
+                .name            = "Output",
+                .description     = "Some random output",
+                .unit            = "V",
+                .binCount        = 3,
+                .binNames        = {"a", "b", "c"},
+                .hasKnownExtents = true,
+                .minValue        = 0.0f,
+                .maxValue        = 10.0f,
+            },
+        };
     }
 
     float getParameter(std::string_view id) const override {
@@ -40,48 +61,28 @@ public:
         if (id == "param") param_ = value;
     }
 
-    constexpr std::span<const char* const> getPrograms() const override {
-        return programs_;
-    }
-
     const char* getCurrentProgram() const override {
-        return programs_[programIndex_];
+        return programs[programIndex_];
     }
 
     void selectProgram(std::string_view program) override {
-        for (size_t i = 0; i < programs_.size(); ++i) {
-            if (programs_[i] == program) {
+        for (size_t i = 0; i < programs.size(); ++i) {
+            if (programs[i] == program) {
                 programIndex_ = i;
                 return;
             }
         }
     }
 
-    bool initialise(unsigned int, unsigned int) override {
+    void reset() override {};
+
+    bool initialise(uint32_t stepSize, uint32_t blockSize) override {
         initialiseFeatureSet();
         return true;
     };
 
-    void reset() override {};
-
-    OutputList getOutputDescriptors() const override {
-        OutputList result;
-        OutputDescriptor d;
-        d.identifier      = "output";
-        d.name            = "Output";
-        d.description     = "Some random output";
-        d.unit            = "V";
-        d.binCount        = 3;
-        d.binNames        = {"a", "b", "c"};
-        d.hasKnownExtents = true;
-        d.minValue        = 0.0f;
-        d.maxValue        = 10.0f;
-        result.push_back(d);
-        return result;
-    }
-
-    const FeatureSet& process(InputBuffer inputBuffer, uint64_t) override {
-        auto  signal = std::get<TimeDomainBuffer>(inputBuffer);
+    const FeatureSet& process(InputBuffer buffer, uint64_t nsec) override {
+        auto  signal = std::get<TimeDomainBuffer>(buffer);
         auto& result = getFeatureSet();
         if (signal.size() >= 3) {
             result[0][0] = signal[0];
@@ -89,11 +90,9 @@ public:
             result[0][2] = signal[2];
         }
         return result;
-    }
+    };
 
 private:
-    static constexpr std::array programs_{"default", "new"};
-
-    float  param_ = 1.0f;
+    float  param_{1.0f};
     size_t programIndex_ = 0;
 };

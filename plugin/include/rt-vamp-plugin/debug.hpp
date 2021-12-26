@@ -1,10 +1,10 @@
+#pragma once
+
 #include <iostream>
 #include <ostream>
 
-
 template <typename Arg, typename... Args>
-void print(std::ostream& out, Arg&& arg, Args&&... args)
-{
+void print(std::ostream& out, Arg&& arg, Args&&... args) {
     out << std::forward<Arg>(arg);
     ((out << ' ' << std::forward<Args>(args)), ...);
     out << std::endl;

@@ -1,9 +1,9 @@
 add_executable(
     tests_plugin
-    Plugin.cpp
+    EntryPoint.cpp
     PluginAdapter.cpp
-    VampFeatureWrapper.cpp
-    VampOutputDescriptorWrapper.cpp
+    PluginDefinition.cpp
+    VampWrapper.cpp
 )
 
 target_link_libraries(
@@ -13,6 +13,5 @@ target_link_libraries(
         ${LIBRARY_NAME}
         Catch2::Catch2WithMain
 )
-target_include_directories(tests_plugin PRIVATE ../src)
 
 discover_and_run_tests(tests_plugin)
