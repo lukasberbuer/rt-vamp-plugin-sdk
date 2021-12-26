@@ -6,11 +6,12 @@
 #include <utility>  // cmp_less
 
 #include "rtvamp/pluginsdk/debug.hpp"
+#include "rtvamp/pluginsdk/PluginDefinition.hpp"
 #include "rtvamp/pluginsdk/VampWrapper.hpp"
 
 namespace rtvamp::pluginsdk {
 
-template <typename TPluginDefinition>
+template <IsPluginDefinition TPluginDefinition>
 class PluginInstanceAdapter {
 public:
     explicit PluginInstanceAdapter(float inputSampleRate) : plugin_(inputSampleRate) {
@@ -117,7 +118,7 @@ private:
     VampFeatureListsWrapper<outputCount>     featureListsWrapper_;
 };
 
-template <typename TPluginDefinition>
+template <IsPluginDefinition TPluginDefinition>
 class PluginAdapter {
 public:
     static consteval const VampPluginDescriptor* getDescriptor() { return &descriptor; }

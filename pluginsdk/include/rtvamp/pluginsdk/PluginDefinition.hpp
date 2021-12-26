@@ -130,4 +130,22 @@ void PluginDefinition<NOutputs>::initialiseFeatureSet() {
     }
 }
 
+/* ------------------------------------------- Concept ------------------------------------------ */
+
+/**
+ * Check if type is derived from PluginDefinition.
+ * Some workaround to make it work with integer template parameter for output count.
+ */
+template <typename T, size_t MaxOutputCount = 100>
+consteval bool isPluginDefinition() {
+    return []<std::size_t... Ns>(std::index_sequence<Ns...>) {
+        return std::disjunction<
+            std::is_base_of<PluginDefinition<Ns>, T>...
+        >::value;
+    }(std::make_index_sequence<MaxOutputCount>{});
+}
+
+template <typename T>
+concept IsPluginDefinition = isPluginDefinition<T>();
+
 }  // namespace rtvamp::pluginsdk
