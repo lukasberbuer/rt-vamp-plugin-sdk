@@ -12,7 +12,7 @@ public:
     static constexpr const VampPluginDescriptor* getDescriptor(
         unsigned int version,
         unsigned int index
-    ) noexcept {
+    ) {
         if (version < 1) return {};
         if (index >= pluginCount) return {};
         return descriptors[index];
@@ -27,3 +27,13 @@ private:
 };
 
 }  // namespace rtvamp
+
+/* -------------------------------------------- Macro ------------------------------------------- */
+
+#define RTVAMP_ENTRY_POINT(...)                                                  \
+    extern "C" const VampPluginDescriptor* vampGetPluginDescriptor(              \
+        unsigned int version,                                                    \
+        unsigned int index                                                       \
+    ) {                                                                          \
+        return ::rtvamp::EntryPoint<__VA_ARGS__>::getDescriptor(version, index); \
+    }                                                                            \
