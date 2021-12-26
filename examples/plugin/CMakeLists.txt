@@ -7,7 +7,7 @@ target_link_libraries(
     example-plugin
     PRIVATE
         ${PROJECT_OPTIONS}
-        rt-vamp-plugin
+        rtvamp-pluginsdk
 )
 set_target_properties(
     example-plugin

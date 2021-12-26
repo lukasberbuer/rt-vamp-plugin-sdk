@@ -1,7 +1,7 @@
 #include <catch2/catch.hpp>
 
-#include "rt-vamp-plugin/EntryPoint.hpp"
-#include "rt-vamp-plugin/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk/EntryPoint.hpp"
+#include "rtvamp/pluginsdk/PluginAdapter.hpp"
 
 #include "TestPlugin.hpp"
 

@@ -9,9 +9,8 @@
 
 #include "vamp/vamp.h"
 
-#include "rt-vamp-plugin/PluginDefinition.hpp"
-
-#include "debug.hpp"
+#include "rtvamp/pluginsdk/debug.hpp"
+#include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
 namespace rtvamp {
 

@@ -59,7 +59,7 @@ using Feature = std::vector<float>;
 /**
  * Base class to implement feature extraction plugins.
  * 
- * The number of outputs is provided as an template parameter.
+ * The number of outputs is provided as a template parameter.
  */
 template <uint32_t NOutputs>
 class PluginDefinition {

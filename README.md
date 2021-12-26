@@ -5,16 +5,23 @@ Vamp is an C/C++ plugin API for audio analysis / feature extraction plugins: htt
 This SDK targets performance-critical applications by:
 
 - reducing memory allocations
-- restricting and simplifying the plugin API
+- simplifying and restricting the plugin API
+- `constexpr` evaluation for compile-time errors instead of runtime errors
 
 The SDK aims to be **well tested**, **cross-platform** and use **modern C++**.
 
-```
-rt-vamp-plugin-sdk
+Compiler support:
 
-rt-vamp-plugin/
-rt-vamp-host/
-```
+- GCC >= 10
+- Clang >= 11
+- MSVC >= 19.30
+
+Further ideas:
+
+- Plugin tester as library and executable
+- Python bindings for host
+- Adapter library for Python plugins?
+- Adapter library for WASM plugins?
 
 ## Why another SDK?
 

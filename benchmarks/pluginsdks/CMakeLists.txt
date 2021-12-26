@@ -1,9 +1,9 @@
-add_executable(benchmark_plugin-sdk main.cpp)
+add_executable(benchmark_pluginsdks main.cpp)
 target_link_libraries(
-    benchmark_plugin-sdk
+    benchmark_pluginsdks
     PRIVATE
         ${PROJECT_OPTIONS}
-        rt-vamp-plugin
+        rtvamp-pluginsdk
         benchmark::benchmark
         vamp-plugin-sdk::vamp-sdk
 )

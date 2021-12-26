@@ -1,6 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "rt-vamp-plugin/PluginDefinition.hpp"
+#include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
 #include "TestPlugin.hpp"
 

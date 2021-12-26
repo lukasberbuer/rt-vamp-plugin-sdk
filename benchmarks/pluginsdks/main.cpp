@@ -1,11 +1,10 @@
-#include <algorithm>
+#include <algorithm>  // generate
 #include <random>
 
 #include <benchmark/benchmark.h>
 #include <vamp-sdk/PluginAdapter.h>
 
-#include "rt-vamp-plugin/PluginAdapter.hpp"
-#include "vamp/vamp.h"
+#include "rtvamp/pluginsdk/PluginAdapter.hpp"
 
 #include "RMS.hpp"
 

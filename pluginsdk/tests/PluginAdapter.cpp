@@ -2,7 +2,7 @@
 
 #include <vamp/vamp.h>
 
-#include "rt-vamp-plugin/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk/PluginAdapter.hpp"
 
 #include "TestPlugin.hpp"
 

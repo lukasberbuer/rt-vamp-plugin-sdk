@@ -1,4 +1,4 @@
-#include "rt-vamp-plugin/EntryPoint.hpp"
+#include "rtvamp/pluginsdk/EntryPoint.hpp"
 
 #include "RMS.hpp"
 

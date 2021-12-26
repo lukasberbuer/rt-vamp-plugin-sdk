@@ -1,5 +1,5 @@
-set(LIBRARY_NAME rt-vamp-host)
-set(ALIAS_NAME "${PROJECT_NAME}::host")
+set(LIBRARY_NAME rtvamp-hostsdk)
+set(ALIAS_NAME "${PROJECT_NAME}::hostsdk")
 
 add_library(
     ${LIBRARY_NAME}
@@ -10,7 +10,7 @@ add_library(${ALIAS_NAME} ALIAS ${LIBRARY_NAME})
 target_link_libraries(
     ${LIBRARY_NAME}
     PUBLIC
-        rt-vamp-plugin
+        rtvamp-pluginsdk
     PRIVATE
         ${PROJECT_OPTIONS}
 )

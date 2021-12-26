@@ -1,5 +1,5 @@
-set(LIBRARY_NAME rt-vamp-plugin)
-set(ALIAS_NAME "${PROJECT_NAME}::plugin")
+set(LIBRARY_NAME rtvamp-pluginsdk)
+set(ALIAS_NAME "${PROJECT_NAME}::pluginsdk")
 
 add_library(${LIBRARY_NAME} INTERFACE)  # header-only
 add_library(${ALIAS_NAME} ALIAS ${LIBRARY_NAME})

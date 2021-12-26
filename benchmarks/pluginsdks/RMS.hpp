@@ -6,7 +6,7 @@
 
 #include <vamp-sdk/Plugin.h>
 
-#include "rt-vamp-plugin/PluginDefinition.hpp"
+#include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
 using namespace rtvamp;
 

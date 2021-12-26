@@ -2,7 +2,7 @@
 
 #include "vamp/vamp.h"
 
-#include "PluginAdapter.hpp"
+#include "rtvamp/pluginsdk/PluginAdapter.hpp"
 
 namespace rtvamp {
 
@@ -36,4 +36,4 @@ private:
         unsigned int index                                                       \
     ) {                                                                          \
         return ::rtvamp::EntryPoint<__VA_ARGS__>::getDescriptor(version, index); \
-    }                                                                            \
+    }

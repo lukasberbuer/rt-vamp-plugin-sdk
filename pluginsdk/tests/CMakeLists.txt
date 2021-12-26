@@ -1,5 +1,5 @@
 add_executable(
-    tests_plugin
+    tests_pluginsdk
     EntryPoint.cpp
     PluginAdapter.cpp
     PluginDefinition.cpp
@@ -7,11 +7,11 @@ add_executable(
 )
 
 target_link_libraries(
-    tests_plugin
+    tests_pluginsdk
     PRIVATE
         ${PROJECT_OPTIONS}
         ${LIBRARY_NAME}
         Catch2::Catch2WithMain
 )
 
-discover_and_run_tests(tests_plugin)
+discover_and_run_tests(tests_pluginsdk)

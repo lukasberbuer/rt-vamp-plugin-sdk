@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(rt-vamp-plugin-sdk CXX)
+project(rtvamp CXX)
 include(cmake/StandardProjectSettings.cmake)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -48,8 +48,8 @@ if(RTVAMP_ENABLE_TESTS)
     enable_testing()
 endif()
 
-add_subdirectory(host)
-add_subdirectory(plugin)
+add_subdirectory(hostsdk)
+add_subdirectory(pluginsdk)
     
 option(RTVAMP_ENABLE_BENCHMARKS "Build benchmarks" OFF)
 if(RTVAMP_ENABLE_BENCHMARKS)
