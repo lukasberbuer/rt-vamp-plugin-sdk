@@ -81,7 +81,7 @@ public:
         return true;
     };
 
-    const FeatureSet& process(InputBuffer buffer, uint64_t nsec) override {
+    FeatureSet process(InputBuffer buffer, uint64_t nsec) override {
         auto  signal = std::get<TimeDomainBuffer>(buffer);
         auto& result = getFeatureSet();
         if (signal.size() >= 3) {
@@ -93,6 +93,6 @@ public:
     };
 
 private:
-    float  param_{1.0f};
+    float  param_        = 1.0f;
     size_t programIndex_ = 0;
 };

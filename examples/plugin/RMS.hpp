@@ -10,8 +10,8 @@ public:
 
     static constexpr Meta meta {
         .identifier    = "rms",
-        .name          = "Root mean square",
-        .description   = "",
+        .name          = "RMS",
+        .description   = "Root mean square",
         .maker         = "LB",
         .copyright     = "MIT",
         .pluginVersion = 1,
@@ -34,5 +34,5 @@ public:
     bool initialise(unsigned int stepSize, unsigned int blockSize) override;
     void reset() override;
 
-    const FeatureSet& process(InputBuffer inputBuffer, uint64_t nsec) override;
+    FeatureSet process(InputBuffer inputBuffer, uint64_t nsec) override;
 };

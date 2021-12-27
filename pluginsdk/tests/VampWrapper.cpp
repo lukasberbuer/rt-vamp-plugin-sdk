@@ -52,7 +52,7 @@ TEST_CASE("VampPluginDescriptorWrapper") {
 
 TEST_CASE("VampOutputDescriptorWrapper") {
     SECTION("Default values") {
-        OutputDescriptor            descriptor{};
+        Plugin::OutputDescriptor    descriptor{};
         VampOutputDescriptorWrapper wrapper(descriptor);
         VampOutputDescriptor&       d = wrapper.get();
 
@@ -73,7 +73,7 @@ TEST_CASE("VampOutputDescriptorWrapper") {
     }
 
     SECTION("Non-matching binCount and binNames size") {
-        OutputDescriptor descriptor;
+        Plugin::OutputDescriptor descriptor;
         descriptor.binCount = 3;
         descriptor.binNames = {"a", "b"};
 

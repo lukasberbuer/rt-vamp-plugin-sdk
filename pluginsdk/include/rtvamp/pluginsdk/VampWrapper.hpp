@@ -9,7 +9,7 @@
 
 #include "vamp/vamp.h"
 
-#include "rtvamp/pluginsdk/debug.hpp"
+#include "rtvamp/pluginsdk/Plugin.hpp"
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
 namespace rtvamp::pluginsdk {
@@ -23,7 +23,7 @@ public:
     static consteval VampPluginDescriptor get() {
         VampPluginDescriptor d{};
         // static plugin information
-        d.vampApiVersion = TPluginDefinition::vampApiVersion;
+        d.vampApiVersion = 2;
         d.identifier     = TPluginDefinition::meta.identifier;
         d.name           = TPluginDefinition::meta.name;
         d.description    = TPluginDefinition::meta.description;
@@ -41,7 +41,7 @@ public:
 
 private:
     static consteval auto getVampInputDomain() {
-        return TPluginDefinition::meta.inputDomain == InputDomain::FrequencyDomain
+        return TPluginDefinition::meta.inputDomain == Plugin::InputDomain::FrequencyDomain
             ? vampFrequencyDomain
             : vampTimeDomain;
     }
@@ -99,7 +99,7 @@ private:
  * therefore not copied.
  */
 struct VampOutputDescriptorWrapper{
-    explicit VampOutputDescriptorWrapper(const OutputDescriptor& d)
+    explicit VampOutputDescriptorWrapper(const Plugin::OutputDescriptor& d)
         : binNames_(d.binNames)
     {
         if (!binNames_.empty()) {
@@ -167,7 +167,7 @@ public:
         v1.values     = values_.empty() ? nullptr : values_.data();  // might got reallocated
     }
 
-    void assignValues(const Feature& values) {
+    void assignValues(const Plugin::Feature& values) {
         if (const auto n = values.size(); getValueCount() != n) {
             setValueCount(n);
         }
@@ -198,12 +198,12 @@ public:
         }
     }
 
-    void assignValues(size_t outputNumber, const Feature& values) {
+    void assignValues(size_t outputNumber, const Plugin::Feature& values) {
         assert(outputNumber < NOutputs);
         featureUnionWrappers_[outputNumber].assignValues(values);
     }
 
-    void assignValues(std::span<const Feature> values) {
+    void assignValues(std::span<const Plugin::Feature> values) {
         assert(values.size() == NOutputs);
         for (size_t i = 0; i < NOutputs; ++i) {
             assignValues(i, values[i]);

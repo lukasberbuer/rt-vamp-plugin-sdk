@@ -51,7 +51,7 @@ public:
 
     void reset() override {}
 
-    const FeatureSet& process(InputBuffer inputBuffer, uint64_t /* nsec */) override {
+    FeatureSet process(InputBuffer inputBuffer, uint64_t /* nsec */) override {
         auto signal = std::get<TimeDomainBuffer>(inputBuffer);
 
         const float sumSquares = std::accumulate(

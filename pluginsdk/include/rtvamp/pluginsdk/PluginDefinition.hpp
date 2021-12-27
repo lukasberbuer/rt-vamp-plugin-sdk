@@ -8,53 +8,9 @@
 #include <variant>
 #include <vector>
 
-/**
- * Vamp C API uses unsigned int as size type (blockSize, stepSize, channelCount, outputCount, ...).
- * Make sure that has at least 32 bit and use uint32_t as type in C++ interfaces.
- */
-static_assert(sizeof(unsigned int) >= sizeof(uint32_t), "Size type must have at least 32 bit");
+#include "rtvamp/pluginsdk/Plugin.hpp"
 
 namespace rtvamp::pluginsdk {
-
-struct ParameterDescriptor {
-    const char* identifier  = "";
-    const char* name        = "";
-    const char* description = "";
-    const char* unit        = "";
-
-    float minValue     = 0.0f;
-    float maxValue     = 0.0f;
-    float defaultValue = 0.0f;
-    bool  isQuantized  = false;
-    float quantizeStep = 0.0f;
-#if __cpp_lib_constexpr_vector
-    std::vector<const char*> valueNames{};
-#endif
-};
-
-struct OutputDescriptor {
-    const char* identifier  = "";
-    const char* name        = "";
-    const char* description = "";
-    const char* unit        = "";
-
-    uint32_t                 binCount = 0;
-    std::vector<std::string> binNames{};
-
-    bool  hasKnownExtents = false;
-    float minValue        = 0.0f;
-    float maxValue        = 0.0f;
-    bool  isQuantized     = false;
-    float quantizeStep    = 0.0f;
-};
-
-enum class InputDomain { TimeDomain, FrequencyDomain };
-
-using TimeDomainBuffer      = std::span<const float>;
-using FrequencyDomainBuffer = std::span<const std::complex<float>>;
-using InputBuffer           = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
-
-using Feature = std::vector<float>;
 
 /**
  * Base class to implement feature extraction plugins.
@@ -62,16 +18,11 @@ using Feature = std::vector<float>;
  * The number of outputs is provided as a template parameter.
  */
 template <uint32_t NOutputs>
-class PluginDefinition {
+class PluginDefinition : public Plugin {
 public:
-    explicit PluginDefinition(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
-    virtual ~PluginDefinition() = default;
+    using Plugin::Plugin;  // inherit constructor
 
-    using OutputList = std::array<OutputDescriptor, NOutputs>;
-    using FeatureSet = std::array<Feature, NOutputs>;
-
-    static constexpr uint32_t vampApiVersion = 2;
-    static constexpr uint32_t outputCount    = NOutputs;
+    static constexpr uint32_t outputCount = NOutputs;
 
     struct Meta {
         const char* identifier;
@@ -90,33 +41,27 @@ public:
     static constexpr std::array<ParameterDescriptor, 0> parameters{};
     static constexpr std::array<const char*, 0>         programs{};
 
-    // virtual methods which may be implemented in the plugin
-    virtual float       getParameter(std::string_view id) const { return 0.0f; }
-    virtual void        setParameter(std::string_view id, float value) {} 
+    constexpr const char*   getIndentifier()   const override final { return meta.identifier; }
+    constexpr const char*   getName()          const override final { return meta.name; }
+    constexpr const char*   getDescription()   const override final { return meta.description; }
+    constexpr const char*   getMaker()         const override final { return meta.maker; }
+    constexpr const char*   getCopyright()     const override final { return meta.copyright; }
+    constexpr uint32_t      getPluginVersion() const override final { return meta.pluginVersion; }
+    constexpr InputDomain   getInputDomain()   const override final { return meta.inputDomain; }
 
-    virtual const char* getCurrentProgram() const { return {}; }
-    virtual void        selectProgram(std::string_view name) {}
+    constexpr ParameterList getParameterList() const override final { return parameters; }
+    constexpr ProgramList   getProgramList()   const override final { return programs; }
 
-    virtual uint32_t    getPreferredStepSize()  const { return 0; }
-    virtual uint32_t    getPreferredBlockSize() const { return 0; }
-
-    // pure virtual methods which must be implemented in the plugin
-    virtual OutputList  getOutputDescriptors() const = 0;
-
-    virtual bool initialise(uint32_t stepSize, uint32_t blockSize) = 0;
-    virtual void reset() = 0;
-
-    virtual const FeatureSet& process(InputBuffer buffer, uint64_t nsec) = 0;
-
-    float getInputSampleRate() const noexcept { return inputSampleRate_; }
+    constexpr uint32_t      getOutputCount()   const override final { return NOutputs; }
 
 protected:
-    FeatureSet& getFeatureSet() noexcept { return featureSet_; }
+    using FeatureArray = std::array<Feature, NOutputs>;
+
+    FeatureArray& getFeatureSet() noexcept { return featureSet_; }
     void initialiseFeatureSet();
 
 private:
-    const float inputSampleRate_;
-    FeatureSet  featureSet_;
+    FeatureArray featureSet_;
 };
 
 /* --------------------------------------- Implementation --------------------------------------- */
@@ -132,20 +77,24 @@ void PluginDefinition<NOutputs>::initialiseFeatureSet() {
 
 /* ------------------------------------------- Concept ------------------------------------------ */
 
-/**
- * Check if type is derived from PluginDefinition.
- * Some workaround to make it work with integer template parameter for output count.
- */
-template <typename T, size_t MaxOutputCount = 100>
-consteval bool isPluginDefinition() {
-    return []<std::size_t... Ns>(std::index_sequence<Ns...>) {
-        return std::disjunction<
-            std::is_base_of<PluginDefinition<Ns>, T>...
-        >::value;
-    }(std::make_index_sequence<MaxOutputCount>{});
-}
+template <typename T>
+concept IsPluginMeta = requires(T t) {
+    { t.identifier }    -> std::convertible_to<const char*>;
+    { t.name }          -> std::convertible_to<const char*>;
+    { t.description }   -> std::convertible_to<const char*>;
+    { t.maker }         -> std::convertible_to<const char*>;
+    { t.copyright }     -> std::convertible_to<const char*>;
+    { t.pluginVersion } -> std::convertible_to<int>;
+    { t.inputDomain }   -> std::convertible_to<Plugin::InputDomain>;
+};
 
 template <typename T>
-concept IsPluginDefinition = isPluginDefinition<T>();
+concept IsPluginDefinition = requires(T t) {
+    requires std::is_base_of_v<Plugin, T>;
+    { t.outputCount } -> std::convertible_to<uint32_t>;
+    { t.meta }        -> IsPluginMeta;
+    { t.parameters }  -> std::convertible_to<Plugin::ParameterList>;
+    { t.programs }    -> std::convertible_to<Plugin::ProgramList>;
+};
 
 }  // namespace rtvamp::pluginsdk
