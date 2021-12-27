@@ -24,7 +24,7 @@ public:
     explicit constexpr Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
     virtual ~Plugin() = default;
 
-    enum class InputDomain { TimeDomain, FrequencyDomain };
+    enum class InputDomain { Time, Frequency };
 
     struct ParameterDescriptor {
         const char* identifier  = "";

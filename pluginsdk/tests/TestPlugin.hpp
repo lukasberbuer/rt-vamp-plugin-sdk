@@ -15,7 +15,7 @@ public:
         .maker         = "LB",
         .copyright     = "MIT",
         .pluginVersion = 1,
-        .inputDomain   = InputDomain::TimeDomain,
+        .inputDomain   = InputDomain::Time,
     };
 
     static constexpr std::array parameters{

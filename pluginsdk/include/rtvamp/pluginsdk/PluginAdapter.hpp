@@ -67,7 +67,7 @@ public:
         const int64_t timestamp = 1'000'000'000 * sec + nsec;
 
         auto getInputBuffer = [&]() -> Plugin::InputBuffer {
-            if constexpr (TPluginDefinition::meta.inputDomain == Plugin::InputDomain::TimeDomain) {
+            if constexpr (TPluginDefinition::meta.inputDomain == Plugin::InputDomain::Time) {
                 return std::span(buffer, blockSize_);
             } else {
                 // casts between interleaved arrays and std::complex are guaranteed to be valid
