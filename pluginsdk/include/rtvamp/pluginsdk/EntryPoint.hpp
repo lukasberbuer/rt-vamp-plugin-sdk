@@ -14,7 +14,7 @@ public:
         unsigned int version,
         unsigned int index
     ) {
-        if (version < 1) return {};
+        if (version < 1 || version > VAMP_API_VERSION) return {};
         if (index >= pluginCount) return {};
         return descriptors[index];
     }

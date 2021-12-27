@@ -8,7 +8,7 @@
 
 /**
  * Vamp C API uses unsigned int as size type (blockSize, stepSize, channelCount, outputCount, ...).
- * Make sure that has at least 32 bit and use uint32_t as size type in C++ interfaces.
+ * Make sure it has at least 32 bit and use uint32_t as size type in C++ interfaces.
  */
 static_assert(sizeof(unsigned int) >= sizeof(uint32_t), "Size type must have at least 32 bit");
 

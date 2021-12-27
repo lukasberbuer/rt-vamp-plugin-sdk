@@ -11,8 +11,11 @@ using namespace rtvamp::pluginsdk;
 TEST_CASE("EntryPoint") {
     using EP = EntryPoint<TestPlugin, TestPlugin>;
 
-    SECTION("Invalid version") {
-        REQUIRE(EP::getDescriptor(0, 0) == nullptr);  // version 0
+    SECTION("Valid version range") {
+        REQUIRE(EP::getDescriptor(0, 0) == nullptr);
+        REQUIRE(EP::getDescriptor(1, 0) != nullptr);
+        REQUIRE(EP::getDescriptor(2, 0) != nullptr);
+        REQUIRE(EP::getDescriptor(3, 0) == nullptr);
     }
 
     SECTION("Valid index range") {
