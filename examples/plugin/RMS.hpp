@@ -2,9 +2,7 @@
 
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
-using namespace rtvamp::pluginsdk;
-
-class RMS : public PluginDefinition<1> {
+class RMS : public rtvamp::pluginsdk::PluginDefinition<1> {
 public:
     using PluginDefinition::PluginDefinition;  // inherit constructor
 
@@ -31,7 +29,7 @@ public:
         };
     }
 
-    bool initialise(unsigned int stepSize, unsigned int blockSize) override;
+    bool initialise(uint32_t stepSize, uint32_t blockSize) override;
     void reset() override;
 
     FeatureSet process(InputBuffer inputBuffer, uint64_t nsec) override;

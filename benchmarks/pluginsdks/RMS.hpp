@@ -44,7 +44,7 @@ public:
         };
     }
 
-    bool initialise(unsigned int /* stepSize */, unsigned int /* blockSize */) override {
+    bool initialise(uint32_t /* stepSize */, uint32_t /* blockSize */) override {
         initialiseFeatureSet();
         return true;
     }

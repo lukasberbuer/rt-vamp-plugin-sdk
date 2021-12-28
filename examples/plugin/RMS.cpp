@@ -3,7 +3,7 @@
 #include <cmath>
 #include <numeric>  // accumulate
 
-bool RMS::initialise(unsigned int /* stepSize */, unsigned int /* blockSize */) {
+bool RMS::initialise(uint32_t stepSize, uint32_t blockSize) {
     initialiseFeatureSet();
     return true;
 }
@@ -18,7 +18,7 @@ struct square {
 };
 
 RMS::FeatureSet RMS::process(InputBuffer inputBuffer, uint64_t /* nsec */) {
-    auto  signal = std::get<TimeDomainBuffer>(inputBuffer);
+    auto signal = std::get<TimeDomainBuffer>(inputBuffer);
 
     const float sumSquares = std::accumulate(
         signal.begin(), signal.end(), 0.0f, square<float>()
