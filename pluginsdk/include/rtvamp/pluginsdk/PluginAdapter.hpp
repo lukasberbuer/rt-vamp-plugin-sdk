@@ -66,7 +66,7 @@ public:
         const auto*   buffer    = inputBuffers[0];  // only first channel
         const int64_t timestamp = 1'000'000'000 * sec + nsec;
 
-        auto getInputBuffer = [&]() -> Plugin::InputBuffer {
+        const auto getInputBuffer = [&]() -> Plugin::InputBuffer {
             if constexpr (TPluginDefinition::meta.inputDomain == Plugin::InputDomain::Time) {
                 return std::span(buffer, blockSize_);
             } else {

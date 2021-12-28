@@ -69,12 +69,12 @@ public:
     using Feature                 = std::vector<float>;
     using FeatureSet              = std::span<const Feature>;
 
-    virtual constexpr const char*   getIndentifier()   const = 0;
+    virtual constexpr const char*   getIdentifier( )   const = 0;
     virtual constexpr const char*   getName()          const = 0;
     virtual constexpr const char*   getDescription()   const = 0;
     virtual constexpr const char*   getMaker()         const = 0;
     virtual constexpr const char*   getCopyright()     const = 0;
-    virtual constexpr uint32_t      getPluginVersion() const = 0;
+    virtual constexpr int           getPluginVersion() const = 0;
     virtual constexpr InputDomain   getInputDomain()   const = 0;
 
     virtual constexpr ParameterList getParameterList()                const { return {}; }

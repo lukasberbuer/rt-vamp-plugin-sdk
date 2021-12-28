@@ -3,7 +3,7 @@ set(ALIAS_NAME "${PROJECT_NAME}::hostsdk")
 
 add_library(
     ${LIBRARY_NAME}
-    src/PluginAdapter.cpp
+    src/PluginHostAdapter.cpp
 )
 add_library(${ALIAS_NAME} ALIAS ${LIBRARY_NAME})
 

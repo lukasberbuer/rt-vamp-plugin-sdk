@@ -41,12 +41,12 @@ public:
     static constexpr std::array<ParameterDescriptor, 0> parameters{};
     static constexpr std::array<const char*, 0>         programs{};
 
-    constexpr const char*   getIndentifier()   const override final { return meta.identifier; }
+    constexpr const char*   getIdentifier()    const override final { return meta.identifier; }
     constexpr const char*   getName()          const override final { return meta.name; }
     constexpr const char*   getDescription()   const override final { return meta.description; }
     constexpr const char*   getMaker()         const override final { return meta.maker; }
     constexpr const char*   getCopyright()     const override final { return meta.copyright; }
-    constexpr uint32_t      getPluginVersion() const override final { return meta.pluginVersion; }
+    constexpr int           getPluginVersion() const override final { return meta.pluginVersion; }
     constexpr InputDomain   getInputDomain()   const override final { return meta.inputDomain; }
 
     constexpr ParameterList getParameterList() const override final { return parameters; }
