@@ -46,7 +46,7 @@ static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
         parameter.isQuantized  = vampParameter->isQuantized == 1 ? true : false;
         parameter.quantizeStep = vampParameter->quantizeStep;
 #if __cpp_lib_constexpr_vector
-        parameter.valueNames   = getValueNames(vampParameter);
+        parameter.valueNames   = getValueNames(*vampParameter);
 #endif
     }
     return result;
