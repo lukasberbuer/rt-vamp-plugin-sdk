@@ -1,0 +1,10 @@
+[requires]
+benchmark/[>=1.6.0]
+catch2/[>=2.13]
+
+[options]
+catch2:with_main=True
+
+[generators]
+cmake_find_package_multi
+virtualenv
