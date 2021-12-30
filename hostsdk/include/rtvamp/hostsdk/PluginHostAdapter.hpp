@@ -43,6 +43,8 @@ public:
     FeatureSet    process(InputBuffer buffer, uint64_t nsec) override;
 
 private:
+    void checkRequirements();
+
     const VampPluginDescriptor&      descriptor_;
     VampPluginHandle                 handle_{nullptr};
     std::vector<ParameterDescriptor> parameters_;

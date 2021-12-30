@@ -15,7 +15,36 @@ TEST_CASE("PluginHostAdapter plugin requirements") {
     SECTION("Min channel count == 1") {
         auto descriptor = TestPluginDescriptor::get();
         descriptor.getMinChannelCount = [](VampPluginHandle) { return 2u; };
-        // REQUIRE_THROWS(PluginHostAdapter(descriptor, 48000));
+        REQUIRE_THROWS_WITH(
+            PluginHostAdapter(descriptor, 48000),
+            "Minimum channel count > 1 not supported"
+        );
+    }
+
+    SECTION("hasFixedBinCount == false") {
+        auto descriptor = TestPluginDescriptor::get();
+        static auto outputs = TestPluginDescriptor::outputs;
+        outputs[0].hasFixedBinCount = 0;
+        descriptor.getOutputDescriptor = [](VampPluginHandle, unsigned int) {
+            return const_cast<VampOutputDescriptor*>(outputs.data());
+        };
+        REQUIRE_THROWS_WITH(
+            PluginHostAdapter(descriptor, 48000),
+            "Dynamic bin count of output \"output\" not supported"
+        );
+    }
+
+    SECTION("sampleType != vampOneSamplePerStep") {
+        auto descriptor = TestPluginDescriptor::get();
+        static auto outputs = TestPluginDescriptor::outputs;
+        outputs[0].sampleType = GENERATE(vampFixedSampleRate, vampVariableSampleRate);
+        descriptor.getOutputDescriptor = [](VampPluginHandle, unsigned int) {
+            return const_cast<VampOutputDescriptor*>(outputs.data());
+        };
+        REQUIRE_THROWS_WITH(
+            PluginHostAdapter(descriptor, 48000),
+            "Sample type of output \"output\" not supported (OneSamplePerStep required)"
+        );
     }
 }
 

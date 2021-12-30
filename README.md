@@ -30,7 +30,7 @@ But there are some drawbacks for real-time processing:
 
 - Huge amount of memory allocations due to the extensive use of C++ containers like vectors and lists **passed by value**.
 
-  Let's have a look at the `process` function which does the main work:
+  Let's have a look at the `process` method of the `Vamp::Plugin` class which does the main work:
 
   `FeatureSet process(const float *const *inputBuffers, RealTime timestamp)`
 
@@ -47,17 +47,19 @@ But there are some drawbacks for real-time processing:
 
 ## Restrictions
 
-Following features of the Vamp API are restricted by the `rt-vamp-plugin-sdk`:
+Following features of the Vamp API `Vamp::Plugin` are restricted by the `rt-vamp-plugin-sdk`:
 
-- `hasFixedBinCount` has to be `true`. The number of values is constant for each feature during processing.
-  This has the advantage, that the memory for the feature vector can be preallocated.
+- `OutputDescriptor::hasFixedBinCount == true` for every output.
+  The number of values is constant for each feature during processing.
+  This has the advantage, that memory for the feature vector can be preallocated.
 
-- `SampleType` has to be `OneSamplePerStep`: the plugin will generate one feature set for each input block.
+- `OutputDescriptor::SampleType == OneSamplePerStep` for every output.
+  The plugin will generate one feature set for each input block.
   
   Following parameters are therefore negitable:
-  - `Vamp::Plugin::OutputDescriptor::sampleRate`
-  - `Vamp::Plugin::OutputDescriptor::hasDuration`
-  - `Vamp::Plugin::Feature::hasTimestamp` / `Vamp::Plugin::Feature::timestamp`
-  - `Vamp::Plugin::Feature::hasDuration` / `Vamp::Plugin::Feature::duration`
+  - `OutputDescriptor::sampleRate`
+  - `OutputDescriptor::hasDuration`
+  - `Feature::hasTimestamp` & `Feature::timestamp`
+  - `Feature::hasDuration` & `Feature::duration`
 
-- Only one input channel allowed
+- Only one input channel allowed: `getMinChannelCount() == 1`

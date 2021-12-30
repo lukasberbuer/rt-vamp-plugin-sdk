@@ -87,10 +87,10 @@ PluginHostAdapter::PluginHostAdapter(
     );
 
     try {
-        // checkRequirements();
+        checkRequirements();
     } catch (const std::exception&) {
         descriptor_.cleanup(handle_);
-        throw;  // TODO add descriptor info to message
+        throw;
     }
 }
 
@@ -195,6 +195,7 @@ bool PluginHostAdapter::initialise(uint32_t stepSize, uint32_t blockSize) {
         featureSet_.resize(outputCount_);
     }
     const auto success = descriptor_.initialise(handle_, 1, stepSize, blockSize);
+    checkRequirements();  // output definitions might change dynamically
     initialised_ = true;
     return success;
 }
@@ -248,6 +249,40 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
     descriptor_.releaseFeatureSet(vampFeatureLists);
 
     return featureSet_;
+}
+
+template<typename... Ts>
+std::string concat(Ts const&... ts){
+    std::stringstream s;
+    (s << ... << ts);
+    return s.str();
+}
+
+void PluginHostAdapter::checkRequirements() {
+    if (descriptor_.getMinChannelCount(handle_) > 1)
+        throw std::runtime_error("Minimum channel count > 1 not supported");
+
+    for (size_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
+        const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
+        if (outputDescriptor->hasFixedBinCount != 1) {
+            throw std::runtime_error(
+                concat(
+                    "Dynamic bin count of output \"",
+                    outputDescriptor->identifier,
+                    "\" not supported"
+                )
+            );
+        }
+        if (outputDescriptor->sampleType != vampOneSamplePerStep) {
+            throw std::runtime_error(
+                concat(
+                    "Sample type of output \"",
+                    outputDescriptor->identifier,
+                    "\" not supported (OneSamplePerStep required)"
+                )
+            );
+        }
+    }
 }
 
 }  // namespace rtvamp::hostsdk
