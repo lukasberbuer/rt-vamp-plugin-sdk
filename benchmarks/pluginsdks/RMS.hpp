@@ -8,8 +8,6 @@
 
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
-using namespace rtvamp::pluginsdk;
-
 template <typename T>
 struct square {
     T operator()(const T& left, const T& right) const {   
@@ -17,7 +15,7 @@ struct square {
     }
 };
 
-class RMS : public PluginDefinition<1 /* 1 output */> {
+class RMS : public rtvamp::pluginsdk::PluginDefinition<1 /* 1 output */> {
 public:
     using PluginDefinition::PluginDefinition;
 

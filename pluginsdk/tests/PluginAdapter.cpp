@@ -1,3 +1,6 @@
+#include <thread>
+#include <vector>
+
 #include <catch2/catch.hpp>
 
 #include <vamp/vamp.h>
@@ -135,4 +138,39 @@ TEST_CASE("PluginAdapter instantiation") {
     }
 
     d->cleanup(h);
+}
+
+TEST_CASE("PluginAdapter thread-safety (with thread sanitizer)") {
+    const VampPluginDescriptor* d = PluginAdapter<TestPlugin>::getDescriptor();
+
+    const uint32_t stepSize  = 512;
+    const uint32_t blockSize = 1024;
+    const size_t   loops     = 100;
+
+    const std::vector<float> inputBuffer(blockSize, 1.0f);
+    const float*             inputBufferPtr = inputBuffer.data();
+    const float* const*      inputBuffers   = &inputBufferPtr;
+
+    auto threadFunc = [&] {
+        VampPluginHandle h = d->instantiate(d, 48000);
+        d->initialise(h, 1, stepSize, blockSize);
+
+        for (size_t i = 0; i < loops; ++i) {
+            auto* featureSet = d->process(h, inputBuffers, 0, 0);
+            d->releaseFeatureSet(featureSet);
+        }
+
+        d->cleanup(h);
+    };
+
+    const size_t threadCount = 8;
+    std::vector<std::thread> threads;
+
+    for (size_t i = 0; i < threadCount; ++i) {
+        threads.emplace_back(threadFunc);
+    }
+
+    for (auto& thread : threads) {
+        thread.join();
+    }
 }

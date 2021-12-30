@@ -35,9 +35,15 @@ static void BM_plugin(benchmark::State& state) {
 
     descriptor->cleanup(handle);
 }
-BENCHMARK_TEMPLATE(BM_plugin, PluginAdapter<RMS>)
+// single-threaded with block size variation
+BENCHMARK_TEMPLATE(BM_plugin, rtvamp::pluginsdk::PluginAdapter<RMS>)
     ->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 BENCHMARK_TEMPLATE(BM_plugin, Vamp::PluginAdapter<RMSvamp>)
     ->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
+// multi-threaded with fixed block size
+BENCHMARK_TEMPLATE(BM_plugin, rtvamp::pluginsdk::PluginAdapter<RMS>)
+    ->Args({4096})->Threads(4)->UseRealTime();
+BENCHMARK_TEMPLATE(BM_plugin, Vamp::PluginAdapter<RMSvamp>)
+    ->Args({4096})->Threads(4)->UseRealTime();
 
 BENCHMARK_MAIN();
