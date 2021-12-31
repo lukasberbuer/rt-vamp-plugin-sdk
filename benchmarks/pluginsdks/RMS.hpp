@@ -2,7 +2,6 @@
 
 #include <cmath>
 #include <numeric>  // accumulate
-#include <iostream>
 
 #include <vamp-sdk/Plugin.h>
 
@@ -21,8 +20,8 @@ public:
 
     static constexpr Meta meta {
         .identifier    = "rms",
-        .name          = "Root mean square",
-        .description   = "",
+        .name          = "RMS",
+        .description   = "Root mean square",
         .maker         = "LB",
         .copyright     = "MIT",
         .pluginVersion = 1,
@@ -68,10 +67,10 @@ public:
     explicit RMSvamp(float inputSampleRate) : Plugin(inputSampleRate) {}
 
     std::string getIdentifier()    const override { return "rms"; }
-    std::string getName()          const override { return "Root mean square"; }
-    std::string getDescription()   const override { return ""; };
-    std::string getMaker()         const override { return "Lukas Berbuer"; };
-    std::string getCopyright()     const override { return ""; };
+    std::string getName()          const override { return "RMS"; }
+    std::string getDescription()   const override { return "Root mean square"; };
+    std::string getMaker()         const override { return "LB"; };
+    std::string getCopyright()     const override { return "MIT"; };
     int         getPluginVersion() const override { return 1; };
 
     InputDomain getInputDomain() const override { return TimeDomain; }

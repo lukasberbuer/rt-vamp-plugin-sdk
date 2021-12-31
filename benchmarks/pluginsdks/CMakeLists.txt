@@ -3,7 +3,7 @@ target_link_libraries(
     benchmark_pluginsdks
     PRIVATE
         ${PROJECT_OPTIONS}
-        rtvamp-pluginsdk
         benchmark::benchmark
+        rtvamp-pluginsdk
         vamp-plugin-sdk::vamp-sdk
 )
