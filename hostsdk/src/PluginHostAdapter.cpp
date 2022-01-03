@@ -9,6 +9,8 @@
 
 #include "vamp/vamp.h"
 
+#include "helper.hpp"
+
 namespace rtvamp::hostsdk {
 
 static const char* notNullptr(const char* s) {
@@ -248,13 +250,6 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
     return featureSet_;
 }
 
-template<typename... Ts>
-std::string concat(Ts const&... ts){
-    std::stringstream s;
-    (s << ... << ts);
-    return s.str();
-}
-
 void PluginHostAdapter::checkRequirements() {
     if (descriptor_.getMinChannelCount(handle_) > 1)
         throw std::runtime_error("Minimum channel count > 1 not supported");
@@ -263,7 +258,7 @@ void PluginHostAdapter::checkRequirements() {
         const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
         if (outputDescriptor->hasFixedBinCount != 1) {
             throw std::runtime_error(
-                concat(
+                helper::concat(
                     "Dynamic bin count of output \"",
                     outputDescriptor->identifier,
                     "\" not supported"
@@ -272,7 +267,7 @@ void PluginHostAdapter::checkRequirements() {
         }
         if (outputDescriptor->sampleType != vampOneSamplePerStep) {
             throw std::runtime_error(
-                concat(
+                helper::concat(
                     "Sample type of output \"",
                     outputDescriptor->identifier,
                     "\" not supported (OneSamplePerStep required)"
