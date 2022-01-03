@@ -6,5 +6,6 @@ catch2/[>=2.13]
 catch2:with_main=True
 
 [generators]
+cmake_find_package
 cmake_find_package_multi
 virtualenv

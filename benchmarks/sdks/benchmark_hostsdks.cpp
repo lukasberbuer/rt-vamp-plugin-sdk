@@ -1,18 +1,10 @@
-#include <algorithm>  // generate
-#include <random>
-
 #include <benchmark/benchmark.h>
 #include <vamp-hostsdk/PluginHostAdapter.h>
 
 #include "rtvamp/hostsdk/PluginHostAdapter.hpp"
 
 #include "DescriptorRMS.hpp"
-
-static void randomize(std::vector<float>& vec) {
-    std::default_random_engine       engine;
-    std::uniform_real_distribution<> dist(-1.0f, 1.0f);
-    std::generate(vec.begin(), vec.end(), [&] { return dist(engine); });
-}
+#include "helper.hpp"
 
 constexpr auto descriptor = DescriptorRMS::get();
 

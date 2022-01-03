@@ -6,12 +6,7 @@
 
 #include "vamp/vamp.h"
 
-template <typename T>
-struct square {
-    T operator()(const T& left, const T& right) const {   
-        return left + right * right;
-    }
-};
+#include "helper.hpp"
 
 struct DescriptorRMS {
     static consteval VampPluginDescriptor get() {

@@ -3,16 +3,11 @@
 #include <cmath>
 #include <numeric>  // accumulate
 
+#include "vamp/vamp.h"
 #include <vamp-sdk/Plugin.h>
 
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
-
-template <typename T>
-struct square {
-    T operator()(const T& left, const T& right) const {   
-        return left + right * right;
-    }
-};
+#include "helper.hpp"
 
 class RMS : public rtvamp::pluginsdk::PluginDefinition<1 /* 1 output */> {
 public:
@@ -115,3 +110,6 @@ public:
 private:
     size_t blockSize_ = 0;
 };
+
+const VampPluginDescriptor* getVampDescriptor();
+const VampPluginDescriptor* getRtvampDescriptor();
