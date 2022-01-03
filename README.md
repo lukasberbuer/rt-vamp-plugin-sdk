@@ -2,7 +2,7 @@
 
 Vamp is an C/C++ plugin API for audio analysis / feature extraction plugins: https://www.vamp-plugins.org
 
-This SDK targets performance-critical applications by:
+This SDK for plugins and hosts targets performance-critical applications by:
 
 - reducing memory allocations
 - simplifying and restricting the plugin API
