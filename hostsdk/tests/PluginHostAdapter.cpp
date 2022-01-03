@@ -78,9 +78,6 @@ TEST_CASE("PluginHostAdapter static plugin data") {
             CHECK(parameter.defaultValue == vampParameter.defaultValue);
             CHECK(parameter.isQuantized  == (vampParameter.isQuantized == 1));
             CHECK(parameter.quantizeStep == vampParameter.quantizeStep);
-#if __cpp_lib_constexpr_vector
-            // CHECK(parameter.valueNames == nullptr);
-#endif
         }
     };
 

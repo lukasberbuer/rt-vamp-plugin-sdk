@@ -37,9 +37,7 @@ public:
         float defaultValue = 0.0f;
         bool  isQuantized  = false;
         float quantizeStep = 0.0f;
-#if __cpp_lib_constexpr_vector
-        std::vector<const char*> valueNames{};
-#endif
+        // std::vector<const char*> valueNames{};  // currently not possible -> wait for constexpr vectors
     };
 
     struct OutputDescriptor {

@@ -73,9 +73,6 @@ private:
             vp.defaultValue = p.defaultValue;
             vp.isQuantized  = p.isQuantized;
             vp.quantizeStep = p.quantizeStep;
-#if __cpp_lib_constexpr_vector
-            vp.valueNames   = const_cast<const char**>(p.valueNames.data());
-#endif
         }
         return result;
     }();

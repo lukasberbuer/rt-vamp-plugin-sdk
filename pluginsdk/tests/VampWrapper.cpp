@@ -38,12 +38,6 @@ TEST_CASE("VampPluginDescriptorWrapper") {
     STATIC_REQUIRE(p->defaultValue == 1.0f);
     STATIC_REQUIRE(p->isQuantized == true);
     STATIC_REQUIRE(p->quantizeStep == 1.0f);
-#if __cpp_lib_constexpr_vector
-    STATIC_REQUIRE(p->valueNames.size() == 3);
-    STATIC_REQUIRE(strEqual(p->valueNames[0], "a"));
-    STATIC_REQUIRE(strEqual(p->valueNames[1], "b"));
-    STATIC_REQUIRE(strEqual(p->valueNames[2], "c"));
-#endif
 
     STATIC_REQUIRE(d.programCount == 2);
     STATIC_REQUIRE(strEqual(d.programs[0], "default"));

@@ -25,9 +25,6 @@ TEST_CASE("EntryPoint") {
     }
 
     SECTION("Check descriptor") {
-        REQUIRE(EP::getDescriptor(2, 0) != nullptr);
-        REQUIRE(EP::getDescriptor(2, 0) == PluginAdapter<TestPlugin>::getDescriptor());
-
         // descriptors of the same plugin should point to the same memory location
         REQUIRE(EP::getDescriptor(2, 0) == EP::getDescriptor(2, 1));
     }

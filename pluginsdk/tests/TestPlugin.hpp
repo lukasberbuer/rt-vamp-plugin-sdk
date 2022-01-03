@@ -29,9 +29,6 @@ public:
             .defaultValue = 1.0f,
             .isQuantized  = true,
             .quantizeStep = 1.0f,
-#if __cpp_lib_constexpr_vector
-            .valuenNames  = {"a", "b", "c"},
-#endif
         }
     };
 
