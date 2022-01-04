@@ -14,7 +14,7 @@ namespace rtvamp::hostsdk {
 class PluginHostAdapter : public Plugin {
 public:
     PluginHostAdapter(const VampPluginDescriptor& descriptor, float inputSampleRate);
-    virtual ~PluginHostAdapter();
+    ~PluginHostAdapter();
 
     const char*   getIdentifier()    const override;
     const char*   getName()          const override;
