@@ -4,8 +4,6 @@
 
 #include "rtvamp/hostsdk/PluginLoader.hpp"
 
-using Catch::Matchers::Contains;
-using Catch::Matchers::Equals;
 using Catch::Matchers::VectorContains;
 using rtvamp::hostsdk::PluginLoader;
 
