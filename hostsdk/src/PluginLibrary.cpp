@@ -66,17 +66,6 @@ std::string PluginLibrary::getLibraryName() const {
     return libraryPath_.stem().string();
 }
 
-std::vector<std::string> PluginLibrary::getPlugins() const {
-    std::vector<std::string> result(descriptors_.size());
-    std::transform(
-        descriptors_.begin(),
-        descriptors_.end(),
-        result.begin(),
-        [](const VampPluginDescriptor* d) { return d->identifier; }
-    );
-    return result;
-}
-
 std::vector<const VampPluginDescriptor*> PluginLibrary::getDescriptors() const {
     return descriptors_;
 }

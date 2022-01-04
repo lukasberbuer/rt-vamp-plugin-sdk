@@ -42,9 +42,9 @@ TEST_CASE("PluginLibrary") {
         REQUIRE_THAT(library.getLibraryName(), Equals("example-plugin"));
         REQUIRE(library.getDescriptors().size() == 1);
 
-        const auto plugins = library.getPlugins();
-        REQUIRE(plugins.size() == 1);
-        REQUIRE_THAT(plugins[0], Equals("rms"));
+        const auto descriptors = library.getDescriptors();
+        REQUIRE(descriptors.size() == 1);
+        REQUIRE_THAT(descriptors[0]->identifier, Equals("rms"));
 
         SECTION("Same handle for multiple library loads -> same plugin descriptors") {
             PluginLibrary library2(path);

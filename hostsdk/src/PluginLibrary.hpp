@@ -15,8 +15,6 @@ public:
 
     std::string getLibraryName() const;
 
-    std::vector<std::string> getPlugins() const;
-
     std::vector<const VampPluginDescriptor*> getDescriptors() const;
 
 private:
