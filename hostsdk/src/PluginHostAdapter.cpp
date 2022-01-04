@@ -18,17 +18,6 @@ static const char* notNullptr(const char* s) {
     return s;
 }
 
-static std::vector<const char*> getValueNames(const VampParameterDescriptor& p) {
-    std::vector<const char*> result{};
-
-    if (p.isQuantized && p.valueNames) {
-        for (size_t i = 0; p.valueNames[i]; ++i) {  // guaranteed to end with nullptr?
-            result.push_back(p.valueNames[i]);
-        }
-    }
-    return result;
-}
-
 static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
     const VampPluginDescriptor& descriptor
 ) {

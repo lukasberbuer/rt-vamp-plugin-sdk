@@ -30,7 +30,7 @@ void close(void* handle) {
 void* getFunction(void* handle, const char* name) {
     dlerror();  // clear any existing error
     void* funcPtr = dlsym(handle, name);
-    if (const char* error = dlerror()) {
+    if (dlerror()) {
         throw std::runtime_error(
             helper::concat("Undefined symbol in dynamic library: ", name)
         );

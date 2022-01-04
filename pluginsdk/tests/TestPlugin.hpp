@@ -2,9 +2,7 @@
 
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
-using namespace rtvamp::pluginsdk;
-
-class TestPlugin : public PluginDefinition<1> {
+class TestPlugin : public rtvamp::pluginsdk::PluginDefinition<1> {
 public:
     using PluginDefinition::PluginDefinition;  // inherit constructor
 

@@ -10,7 +10,7 @@
 #include "TestPlugin.hpp"
 
 using Catch::Matchers::Equals;
-using namespace rtvamp::pluginsdk;
+using rtvamp::pluginsdk::PluginAdapter;
 
 TEST_CASE("PluginAdapter descriptor") {
     const VampPluginDescriptor* d = PluginAdapter<TestPlugin>::getDescriptor();

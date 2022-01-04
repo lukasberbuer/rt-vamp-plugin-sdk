@@ -6,7 +6,7 @@
 #include "TestPlugin.hpp"
 
 using Catch::Matchers::Equals;
-using namespace rtvamp::pluginsdk;
+using rtvamp::pluginsdk::EntryPoint;
 
 TEST_CASE("EntryPoint") {
     using EP = EntryPoint<TestPlugin, TestPlugin>;

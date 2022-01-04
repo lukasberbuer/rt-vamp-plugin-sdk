@@ -9,7 +9,8 @@
 #include "TestPluginDescriptor.hpp"
 
 using Catch::Matchers::Equals;
-using namespace rtvamp::hostsdk;
+using rtvamp::hostsdk::Plugin;
+using rtvamp::hostsdk::PluginHostAdapter;
 
 TEST_CASE("PluginHostAdapter plugin requirements") {
     SECTION("Min channel count == 1") {

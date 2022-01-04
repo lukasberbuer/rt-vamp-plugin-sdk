@@ -7,7 +7,6 @@
 #include "TestPlugin.hpp"
 
 using namespace Catch::Matchers;
-using namespace rtvamp::pluginsdk;
 
 template <typename U, typename V>
 static consteval bool strEqual(U&& u, V&& v) {
@@ -16,6 +15,8 @@ static consteval bool strEqual(U&& u, V&& v) {
 }
 
 TEST_CASE("VampPluginDescriptorWrapper") {
+    using rtvamp::pluginsdk::VampPluginDescriptorWrapper;
+
     constexpr auto d = VampPluginDescriptorWrapper<TestPlugin>::get();
 
     STATIC_REQUIRE(d.vampApiVersion == 2);
@@ -45,6 +46,9 @@ TEST_CASE("VampPluginDescriptorWrapper") {
 }
 
 TEST_CASE("VampOutputDescriptorWrapper") {
+    using rtvamp::pluginsdk::Plugin;
+    using rtvamp::pluginsdk::VampOutputDescriptorWrapper;
+
     SECTION("Default values") {
         Plugin::OutputDescriptor    descriptor{};
         VampOutputDescriptorWrapper wrapper(descriptor);
@@ -81,6 +85,8 @@ TEST_CASE("VampOutputDescriptorWrapper") {
 }
 
 TEST_CASE("VampFeatureUnionWrapper") {
+    using rtvamp::pluginsdk::VampFeatureUnionWrapper;
+
     SECTION("Default values") {
         VampFeatureUnionWrapper wrapper{};
         VampFeatureUnion*       feature = wrapper.get();
@@ -133,6 +139,8 @@ TEST_CASE("VampFeatureUnionWrapper") {
 }
 
 TEST_CASE("VampFeatureListsWrapper") {
+    using rtvamp::pluginsdk::VampFeatureListsWrapper;
+
     SECTION("Empty") {
         VampFeatureListsWrapper<0> wrapper{};
         REQUIRE(wrapper.get() == nullptr);
