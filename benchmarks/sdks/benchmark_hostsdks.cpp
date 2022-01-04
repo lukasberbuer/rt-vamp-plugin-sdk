@@ -21,6 +21,7 @@ static void BM_rtvamp(benchmark::State& state) {
         const auto result = adapter.process(inputBuffer, 0);
         benchmark::DoNotOptimize(result);
     }
+    addRateCounter(state, blockSize);
 }
 BENCHMARK(BM_rtvamp)->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 
@@ -38,6 +39,7 @@ static void BM_vamp(benchmark::State& state) {
         const auto result = adapter.process(inputBuffers.data(), Vamp::RealTime{});
         benchmark::DoNotOptimize(result);
     }
+    addRateCounter(state, blockSize);
 }
 BENCHMARK(BM_vamp)->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 
