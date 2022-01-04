@@ -2,39 +2,24 @@
 
 #include <dlfcn.h>
 
-#include "helper.hpp"
-
 namespace rtvamp::hostsdk::dll {
 
-void* load(const std::filesystem::path& path) {
+void* load(const std::filesystem::path& path) noexcept {
     dlerror();  // clear any existing error
     void* handle = dlopen(path.c_str(), RTLD_LAZY | RTLD_LOCAL);
-    if (!handle) {
-        throw std::runtime_error(
-            helper::concat("Error loading dynamic library: ", path, " (", dlerror(), ")")
-        );
-    }
     return handle;
 }
 
-void close(void* handle) {
+bool close(void* handle) noexcept {
     dlerror();  // clear any existing error
-    const int ret = dlclose(handle);
-    if (ret != 0) {
-        throw std::runtime_error(
-            helper::concat("Error closing dynamic library (", dlerror(), ")")
-        );
-    }
+    const int err = dlclose(handle);
+    return err == 0;
 }
 
-void* getFunction(void* handle, const char* name) {
+void* getFunction(void* handle, const char* name) noexcept {
     dlerror();  // clear any existing error
     void* funcPtr = dlsym(handle, name);
-    if (dlerror()) {
-        throw std::runtime_error(
-            helper::concat("Undefined symbol in dynamic library: ", name)
-        );
-    }
+    if (dlerror()) return nullptr;
     return funcPtr;
 }
 

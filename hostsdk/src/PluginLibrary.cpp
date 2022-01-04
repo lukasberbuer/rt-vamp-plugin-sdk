@@ -2,15 +2,16 @@
 
 #include <algorithm>  // transform
 
+#include "rtvamp/pluginsdk/macros.hpp"
 #include "helper.hpp"
 
 namespace rtvamp::hostsdk {
 
 namespace dll {
 
-extern void* load(const std::filesystem::path& path);
-extern void  close(void* handle);
-extern void* getFunction(void* handle, const char* name);
+extern void* load(const std::filesystem::path& path) noexcept;
+extern void* getFunction(void* handle, const char* name) noexcept;
+extern bool  close(void* handle) noexcept;
 
 }  // namespace dll
 
@@ -21,11 +22,20 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath)
     }
 
     handle_ = dll::load(libraryPath);
+    if (!handle_) {
+        throw std::runtime_error(helper::concat("Error loading dynamic library: ", libraryPath));
+    }
 
     try {
+        constexpr const char* symbol = "vampGetPluginDescriptor";
         const auto func = reinterpret_cast<VampGetPluginDescriptorFunction>(
-            dll::getFunction(handle_, "vampGetPluginDescriptor")
+            dll::getFunction(handle_, symbol)
         );
+        if (!func) {
+            throw std::runtime_error(
+                helper::concat("Undefined symbol in dynamic library: ", symbol)
+            );
+        }
 
         unsigned int i = 0;
         while (const auto* descriptor = func(VAMP_API_VERSION, i++)) {
@@ -38,10 +48,8 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath)
 }
 
 PluginLibrary::~PluginLibrary() {
-    try {
-        dll::close(handle_);
-    } catch (const std::exception&) {
-        // ...
+    if (!dll::close(handle_)) {
+        RTVAMP_DEBUG("Error closing dynamic library: ", libraryPath_);
     }
 }
 

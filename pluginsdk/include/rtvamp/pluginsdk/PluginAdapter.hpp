@@ -5,7 +5,6 @@
 #include <shared_mutex>
 #include <utility>  // cmp_less
 
-#include "rtvamp/pluginsdk/debug.hpp"
 #include "rtvamp/pluginsdk/PluginDefinition.hpp"
 #include "rtvamp/pluginsdk/VampWrapper.hpp"
 
