@@ -1,2 +1,2 @@
-# add_subdirectory(host)
+add_subdirectory(host)
 add_subdirectory(plugin)
