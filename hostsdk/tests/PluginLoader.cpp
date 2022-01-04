@@ -2,14 +2,53 @@
 
 #include <catch2/catch.hpp>
 
+#include "rtvamp/hostsdk/Plugin.hpp"
 #include "rtvamp/hostsdk/PluginLoader.hpp"
 
+using Catch::Matchers::Equals;
 using Catch::Matchers::VectorContains;
+using rtvamp::hostsdk::Plugin;
+using rtvamp::hostsdk::PluginKey;
 using rtvamp::hostsdk::PluginLoader;
 
 using namespace std::string_literals;
 
-TEST_CASE("PluginLoader::libraryPaths") {
+TEST_CASE("PluginKey") {
+    SECTION("Valid") {
+        REQUIRE_NOTHROW(PluginKey("x:y"));
+        REQUIRE_NOTHROW(PluginKey("library:y"));
+        REQUIRE_NOTHROW(PluginKey("x:identifier"));
+    }
+
+    SECTION("Invalid") {
+        REQUIRE_THROWS(PluginKey(""));
+        REQUIRE_THROWS(PluginKey("invalid"));
+        REQUIRE_THROWS(PluginKey(":invalid"));
+        REQUIRE_THROWS(PluginKey("invalid:"));
+        REQUIRE_THROWS(PluginKey("", ""));
+    }
+
+    SECTION("Valid, decompose from key") {
+        const PluginKey key("library:identifier");
+        REQUIRE_THAT(std::string(key.get()),           Equals("library:identifier"));
+        REQUIRE_THAT(std::string(key.getLibrary()),    Equals("library"));
+        REQUIRE_THAT(std::string(key.getIdentifier()), Equals("identifier"));
+    }
+
+    SECTION("Valid, compose from parts") {
+        const PluginKey key("library", "identifier");
+        REQUIRE_THAT(std::string(key.get()),           Equals("library:identifier"));
+        REQUIRE_THAT(std::string(key.getLibrary()),    Equals("library"));
+        REQUIRE_THAT(std::string(key.getIdentifier()), Equals("identifier"));
+    }
+
+    SECTION("Comparison") {
+        REQUIRE(PluginKey("a:b") == PluginKey("a:b"));
+        REQUIRE(PluginKey("a:b") < PluginKey("x:y"));
+    }
+}
+
+TEST_CASE("PluginLoader libraryPaths") {
     const auto paths = PluginLoader::getPluginPaths();
 
     REQUIRE(paths.size() >= 1);
@@ -33,7 +72,7 @@ TEST_CASE("PluginLoader::libraryPaths") {
     }
 }
 
-TEST_CASE("PluginLoader::listLibraries") {
+TEST_CASE("PluginLoader listLibraries") {
     const auto libraries = PluginLoader::listLibraries();
     REQUIRE(libraries.size() >= 1);
 
@@ -49,8 +88,23 @@ TEST_CASE("PluginLoader::listLibraries") {
     REQUIRE_THAT(librariesStem, VectorContains("invalid-plugin"s));
 }
 
-TEST_CASE("PluginLoader::listPlugins") {
+TEST_CASE("PluginLoader listPlugins") {
     const auto plugins = PluginLoader::listPlugins();
     REQUIRE(plugins.size() >= 1);
-    REQUIRE_THAT(plugins, VectorContains("example-plugin:rms"s));
+    REQUIRE_THAT(plugins, VectorContains(PluginKey("example-plugin:rms")));
+}
+
+TEST_CASE("PluginLoader loadPlugin") {
+    auto plugin = PluginLoader::loadPlugin(PluginKey("example-plugin:rms"), 48000);
+
+    REQUIRE(plugin != nullptr);
+
+    CHECK_THAT(plugin->getIdentifier(), Equals("rms"));
+    CHECK(plugin->getInputDomain() == Plugin::InputDomain::Time);
+
+    REQUIRE_NOTHROW(plugin->initialise(4, 4));
+    auto result = plugin->process(std::vector<float>{1, 1, 1, 1}, 0);
+    REQUIRE(result[0][0] == 1.0f);
+
+    REQUIRE_THROWS(plugin->process(Plugin::FrequencyDomainBuffer{}, 0));
 }
