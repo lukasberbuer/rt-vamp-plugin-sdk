@@ -4,6 +4,7 @@ set_target_properties(invalid-plugin PROPERTIES PREFIX "")
 add_executable(
     tests_hostsdk
     Common.cpp
+    DynamicLibrary.cpp
     PluginHostAdapter.cpp
     PluginLibrary.cpp
     PluginLoader.cpp

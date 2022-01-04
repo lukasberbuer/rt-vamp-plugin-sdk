@@ -5,7 +5,7 @@ add_library(
     ${LIBRARY_NAME}
     src/PluginHostAdapter.cpp
     src/PluginLibrary.cpp
-    $<IF:$<PLATFORM_ID:Windows>, src/PluginLibrary_Windows.cpp, src/PluginLibrary_Unix.cpp>
+    $<IF:$<PLATFORM_ID:Windows>, src/DynamicLibrary_Windows.cpp, src/DynamicLibrary_Unix.cpp>
     src/PluginLoader.cpp
 )
 add_library(${ALIAS_NAME} ALIAS ${LIBRARY_NAME})

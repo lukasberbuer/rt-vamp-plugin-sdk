@@ -36,6 +36,8 @@ std::string_view PluginKey::getIdentifier() const noexcept {
     return std::string_view(key_).substr(pos_ + 1);
 }
 
+/* ---------------------------------------------------------------------------------------------- */
+
 std::vector<std::filesystem::path> PluginLoader::getPluginPaths() {
     using std::filesystem::path;
 
@@ -47,7 +49,7 @@ std::vector<std::filesystem::path> PluginLoader::getPluginPaths() {
 
     const std::vector<path> staticPaths{
 #ifdef _WIN32
-        path(getenv("PROGRAMFILES")).append("Vamp Plugins"),
+        path("C:\\Program Files\\Vamp Plugins"),
 #elif __APPLE__
         path(getenv("HOME")).append("Library/Audio/Plug-Ins/Vamp"),
         path("/Library/Audio/Plug-Ins/Vamp"),
@@ -106,6 +108,9 @@ std::vector<PluginKey> PluginLoader::listPlugins() {
     return result;
 }
 
+/**
+ * Wrap DynamicLibrary RAII object in plugin to unload library after deletion.
+ */
 class PluginHostAdapterLibraryWrapper : public PluginHostAdapter {
 public:
     PluginHostAdapterLibraryWrapper(
@@ -133,7 +138,9 @@ std::unique_ptr<Plugin> PluginLoader::loadPlugin(const PluginKey& key, float inp
         throw std::invalid_argument("Plugin identifier not found in descriptors");
     }();
 
-    return std::make_unique<PluginHostAdapterLibraryWrapper>(library, *descriptor, inputSampleRate);
+    return std::make_unique<PluginHostAdapterLibraryWrapper>(
+        std::move(library), *descriptor, inputSampleRate
+    );
 }
 
 }  // namespace rtvamp::hostsdk
