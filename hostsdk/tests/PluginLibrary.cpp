@@ -45,5 +45,10 @@ TEST_CASE("PluginLibrary") {
         const auto plugins = library.getPlugins();
         REQUIRE(plugins.size() == 1);
         REQUIRE_THAT(plugins[0], Equals("rms"));
+
+        SECTION("Same handle for multiple library loads -> same plugin descriptors") {
+            PluginLibrary library2(path);
+            REQUIRE_THAT(library.getDescriptors(), Equals(library2.getDescriptors()));
+        }
     }
 }

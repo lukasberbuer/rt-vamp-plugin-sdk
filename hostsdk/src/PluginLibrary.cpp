@@ -9,6 +9,15 @@ namespace rtvamp::hostsdk {
 
 namespace dll {
 
+/**
+ * OS uses reference counting for loading/closing dynamic libraries.
+ * It's safe to load a library multiple times: the same handle will be returned.
+ * 
+ * References:
+ * - https://man7.org/linux/man-pages/man3/dlopen.3.html
+ * - https://docs.microsoft.com/en-us/windows/win32/api/libloaderapi/nf-libloaderapi-loadlibraryw
+ */
+
 extern void* load(const std::filesystem::path& path) noexcept;
 extern void* getFunction(void* handle, const char* name) noexcept;
 extern bool  close(void* handle) noexcept;
