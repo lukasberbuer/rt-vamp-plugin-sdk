@@ -4,6 +4,7 @@
 #include <functional>
 #include <string>
 #include <string_view>
+#include <map>
 #include <memory>
 #include <vector>
 
@@ -30,16 +31,20 @@ private:
 
 class PluginLoader {
 public:
+    PluginLoader();
+
     static std::vector<std::filesystem::path> getPluginPaths();
 
-    static std::vector<std::filesystem::path> listLibraries();
-
-    static std::vector<PluginKey> listPlugins();
+    std::vector<std::filesystem::path> listLibraries() const;
+    std::vector<PluginKey>             listPlugins() const;
 
     using PluginDeleter = std::function<void(Plugin*)>;
     using PluginPtr     = std::unique_ptr<Plugin, PluginDeleter>;
 
-    static PluginPtr loadPlugin(const PluginKey& key, float inputSampleRate);
+    PluginPtr loadPlugin(const PluginKey& key, float inputSampleRate) const;
+
+private:
+    std::map<PluginKey, std::filesystem::path> plugins_;
 };
 
 }  // namespace rtvamp::hostsdk

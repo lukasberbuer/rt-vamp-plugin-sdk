@@ -44,12 +44,12 @@ TEST_CASE("PluginKey") {
     }
 
     SECTION("Comparison") {
-        REQUIRE(PluginKey("a:b") == PluginKey("a:b"));
+        REQUIRE(PluginKey("a:b") == PluginKey("a", "b"));
         REQUIRE(PluginKey("a:b") < PluginKey("x:y"));
     }
 }
 
-TEST_CASE("PluginLoader libraryPaths") {
+TEST_CASE("PluginLoader getPluginPaths") {
     const auto paths = PluginLoader::getPluginPaths();
 
     REQUIRE(paths.size() >= 1);
@@ -74,7 +74,8 @@ TEST_CASE("PluginLoader libraryPaths") {
 }
 
 TEST_CASE("PluginLoader listLibraries") {
-    const auto libraries = PluginLoader::listLibraries();
+    PluginLoader loader;
+    const auto libraries = loader.listLibraries();
     REQUIRE(libraries.size() >= 1);
 
     std::vector<std::string> librariesStem(libraries.size());
@@ -86,48 +87,43 @@ TEST_CASE("PluginLoader listLibraries") {
     );
 
     REQUIRE_THAT(librariesStem, VectorContains("example-plugin"s));
-    REQUIRE_THAT(librariesStem, VectorContains("invalid-plugin"s));
+    REQUIRE_THAT(librariesStem, !VectorContains("invalid-plugin"s));
 }
 
 TEST_CASE("PluginLoader listPlugins") {
-    const auto plugins = PluginLoader::listPlugins();
+    PluginLoader loader;
+    const auto plugins = loader.listPlugins();
     REQUIRE(plugins.size() >= 1);
     REQUIRE_THAT(plugins, VectorContains(PluginKey("example-plugin:rms")));
 }
 
 TEST_CASE("PluginLoader loadPlugin") {
+    PluginLoader loader;
     SECTION("Load valid plugin") {
-        auto plugin = PluginLoader::loadPlugin("example-plugin:rms", 48000);
+        auto plugin = loader.loadPlugin("example-plugin:rms", 48000);
 
         REQUIRE(plugin != nullptr);
         REQUIRE_THAT(plugin->getIdentifier(), Equals("rms"));
     }
 
     SECTION("Load same plugin twice") {
-        auto plugin1 = PluginLoader::loadPlugin("example-plugin:rms", 48000);
-        auto plugin2 = PluginLoader::loadPlugin("example-plugin:rms", 48000);
+        auto plugin1 = loader.loadPlugin("example-plugin:rms", 48000);
+        auto plugin2 = loader.loadPlugin("example-plugin:rms", 48000);
 
         REQUIRE(plugin1.get() != plugin2.get());
     }
 
     SECTION("Invalid plugin key") {
         REQUIRE_THROWS_WITH(
-            PluginLoader::loadPlugin("invalidkey", 48000),
+            loader.loadPlugin("invalidkey", 48000),
             StartsWith("Invalid plugin key")
         );
     }
 
-    SECTION("Invalid plugin path") {
+    SECTION("Non-existing plugin") {
         REQUIRE_THROWS_WITH(
-            PluginLoader::loadPlugin("unknownlib:empty", 48000),
-            StartsWith("Plugin library not found")
-        );
-    }
-
-    SECTION("Invalid plugin identifier") {
-        REQUIRE_THROWS_WITH(
-            PluginLoader::loadPlugin("example-plugin:empty", 48000),
-            StartsWith("Plugin identifier not found")
+            loader.loadPlugin("unknownlib:empty", 48000),
+            StartsWith("Plugin not found")
         );
     }
 }

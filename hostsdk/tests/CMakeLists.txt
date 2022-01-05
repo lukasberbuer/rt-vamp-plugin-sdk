@@ -25,6 +25,6 @@ if(NOT RTVAMP_ENABLE_EXAMPLES)
         "Examples must be enabled for hostsdk tests (activate RTVAMP_ENABLE_EXAMPLES option)"
     )
 endif()
-add_dependencies(tests_hostsdk example-plugin)
+add_dependencies(tests_hostsdk example-plugin invalid-plugin)
 
 discover_and_run_tests(tests_hostsdk)

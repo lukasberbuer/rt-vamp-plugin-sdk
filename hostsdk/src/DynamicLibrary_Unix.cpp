@@ -6,7 +6,7 @@ namespace rtvamp::hostsdk {
 
 bool DynamicLibrary::load(const std::filesystem::path& path) {
     unload();
-    handle_ = dlopen(path.c_str(), RTLD_LAZY | RTLD_LOCAL);  // or RTLD_NOW?
+    handle_ = dlopen(path.c_str(), RTLD_NOW | RTLD_LOCAL);
     return handle_ != nullptr;
 }
 

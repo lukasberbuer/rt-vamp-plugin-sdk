@@ -1,5 +1,7 @@
 #include "rtvamp/hostsdk/PluginLoader.hpp"
 
+#include <array>
+#include <set>
 #include <utility>  // pair
 
 #include "rtvamp/hostsdk/PluginHostAdapter.hpp"
@@ -40,16 +42,47 @@ std::string_view PluginKey::getIdentifier() const noexcept {
 
 /* ---------------------------------------------------------------------------------------------- */
 
+static constexpr std::string_view getPluginExtension() {
+#ifdef _WIN32
+    return ".dll";
+#elif __APPLE__
+    return ".dylib";
+#else
+    return ".so";
+#endif
+}
+
+PluginLoader::PluginLoader() {
+    // discover all available plugins
+    const auto findPluginsInLibrary = [&](const std::filesystem::path& libraryPath) {
+        try {
+            PluginLibrary library(libraryPath);
+
+            for (auto&& descriptor : library.getDescriptors()) {
+                // don't overwrite existing entry with same plugin key
+                plugins_.try_emplace(
+                    PluginKey(library.getLibraryName(), descriptor->identifier),
+                    libraryPath
+                );
+            }
+        } catch(...) {}
+    };
+
+    for (auto&& path : getPluginPaths()) {
+        if (!std::filesystem::is_directory(path)) continue;
+
+        for (auto&& file : std::filesystem::directory_iterator(path)) {
+            if (file.is_regular_file() && file.path().extension() == getPluginExtension()) {
+                findPluginsInLibrary(file.path());
+            }
+        }
+    }
+}
+
 std::vector<std::filesystem::path> PluginLoader::getPluginPaths() {
     using std::filesystem::path;
 
-    std::vector<path> result;
-
-    if (const char* vampPath = std::getenv("VAMP_PATH")) {
-        result.emplace_back(vampPath);
-    }
-
-    const std::vector<path> staticPaths{
+    const std::array staticPaths{
 #ifdef _WIN32
         path("C:\\Program Files\\Vamp Plugins"),
 #elif __APPLE__
@@ -64,59 +97,40 @@ std::vector<std::filesystem::path> PluginLoader::getPluginPaths() {
 #endif
     };
 
+    std::vector<path> result;
+    result.reserve(staticPaths.size() + 1);
+
+    if (const char* vampPath = std::getenv("VAMP_PATH")) {
+        result.emplace_back(vampPath);
+    }
+
     result.insert(result.end(), staticPaths.begin(), staticPaths.end());
     return result;
 }
 
-static constexpr std::string_view getPluginExtension() {
-#ifdef _WIN32
-    return ".dll";
-#elif __APPLE__
-    return ".dylib";
-#else
-    return ".so";
-#endif
-}
-
-std::vector<std::filesystem::path> PluginLoader::listLibraries() {
-    std::vector<std::filesystem::path> result;
-
-    for (const auto& path : getPluginPaths()) {
-        if (!std::filesystem::is_directory(path)) continue;
-
-        for (const auto& file : std::filesystem::directory_iterator(path)) {
-            if (file.is_regular_file() && file.path().extension() == getPluginExtension()) {
-                result.push_back(file.path());
-            }
-        }
+std::vector<std::filesystem::path> PluginLoader::listLibraries() const {
+    std::set<std::filesystem::path> libraries;
+    for (const auto& [key, path] : plugins_) {
+        libraries.insert(path);
     }
-
-    return result;
+    return {libraries.begin(), libraries.end()};
 }
 
-std::vector<PluginKey> PluginLoader::listPlugins() {
+std::vector<PluginKey> PluginLoader::listPlugins() const {
     std::vector<PluginKey> result;
-
-    for (const auto& path : listLibraries()) {
-        try {
-            PluginLibrary library(path);
-
-            for (const auto* descriptor : library.getDescriptors()) {
-                result.emplace_back(path.stem().string(), descriptor->identifier);
-            }
-        } catch(...) {}
+    for (const auto& [key, _] : plugins_) {
+        result.push_back(key);
     }
-
     return result;
 }
 
-PluginLoader::PluginPtr PluginLoader::loadPlugin(const PluginKey& key, float inputSampleRate) {
-    const auto libraryPath = [&] {
-        for (auto&& path : listLibraries()) {
-            if (path.stem() == key.getLibrary()) return path;
-        }
-        throw std::invalid_argument(helper::concat("Plugin library not found: ", key.get()));
-    }();
+PluginLoader::PluginPtr PluginLoader::loadPlugin(
+    const PluginKey& key, float inputSampleRate
+) const {
+    if (!plugins_.contains(key)) {
+        throw std::invalid_argument(helper::concat("Plugin not found: ", key.get()));
+    }
+    const auto libraryPath = plugins_.at(key);
 
     // workaround: capture of non-copyable object / unique_ptr fails
     auto library = std::make_shared<PluginLibrary>(libraryPath);
@@ -124,7 +138,7 @@ PluginLoader::PluginPtr PluginLoader::loadPlugin(const PluginKey& key, float inp
         for (const auto* d : library->getDescriptors()) {
             if (d->identifier == key.getIdentifier()) return d;
         }
-        throw std::invalid_argument(helper::concat("Plugin identifier not found: ", key.get()));
+        throw std::invalid_argument(helper::concat("Plugin identifier not found in descriptors: ", key.get()));
     }();
 
     return std::unique_ptr<PluginHostAdapter, PluginDeleter>(
@@ -133,6 +147,7 @@ PluginLoader::PluginPtr PluginLoader::loadPlugin(const PluginKey& key, float inp
             delete p;
         }
     );
+    return {};
 }
 
 }  // namespace rtvamp::hostsdk
