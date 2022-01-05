@@ -19,7 +19,6 @@ public:
     std::vector<const VampPluginDescriptor*> getDescriptors() const;
 
 private:
-    const std::filesystem::path libraryPath_;
     DynamicLibrary dl_;
     std::vector<const VampPluginDescriptor*> descriptors_;
 };

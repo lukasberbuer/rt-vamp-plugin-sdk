@@ -4,8 +4,7 @@
 
 namespace rtvamp::hostsdk {
 
-PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath)
-    : libraryPath_(libraryPath) {
+PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath) {
     if (!std::filesystem::exists(libraryPath)) {
         throw std::runtime_error(helper::concat("Dynamic library does not exist: ", libraryPath));
     }
@@ -29,7 +28,7 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath)
 }
 
 std::string PluginLibrary::getLibraryName() const {
-    return libraryPath_.stem().string();
+    return dl_.path().value().stem().string();
 }
 
 std::vector<const VampPluginDescriptor*> PluginLibrary::getDescriptors() const {

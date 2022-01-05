@@ -132,10 +132,9 @@ PluginLoader::PluginPtr PluginLoader::loadPlugin(
     }
     const auto libraryPath = plugins_.at(key);
 
-    // workaround: capture of non-copyable object / unique_ptr fails
-    auto library = std::make_shared<PluginLibrary>(libraryPath);
+    PluginLibrary library(libraryPath);
     const auto* descriptor = [&] {
-        for (const auto* d : library->getDescriptors()) {
+        for (const auto* d : library.getDescriptors()) {
             if (d->identifier == key.getIdentifier()) return d;
         }
         throw std::invalid_argument(helper::concat("Plugin identifier not found in descriptors: ", key.get()));
@@ -147,7 +146,6 @@ PluginLoader::PluginPtr PluginLoader::loadPlugin(
             delete p;
         }
     );
-    return {};
 }
 
 }  // namespace rtvamp::hostsdk
