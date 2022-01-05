@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <functional>
 #include <string>
 #include <string_view>
 #include <memory>
@@ -34,7 +35,10 @@ public:
 
     static std::vector<PluginKey> listPlugins();
 
-    static std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate);
+    using PluginDeleter = std::function<void(Plugin*)>;
+    using PluginPtr     = std::unique_ptr<Plugin, PluginDeleter>;
+
+    static PluginPtr loadPlugin(const PluginKey& key, float inputSampleRate);
 };
 
 }  // namespace rtvamp::hostsdk

@@ -108,21 +108,7 @@ std::vector<PluginKey> PluginLoader::listPlugins() {
     return result;
 }
 
-/**
- * Wrap DynamicLibrary RAII object in plugin to unload library after deletion.
- */
-class PluginHostAdapterLibraryWrapper : public PluginHostAdapter {
-public:
-    PluginHostAdapterLibraryWrapper(
-        PluginLibrary library, const VampPluginDescriptor& descriptor, float inputSampleRate
-    )
-        : PluginHostAdapter(descriptor, inputSampleRate),
-          library_(std::move(library)) {}
-private:
-    PluginLibrary library_;
-};
-
-std::unique_ptr<Plugin> PluginLoader::loadPlugin(const PluginKey& key, float inputSampleRate) {
+PluginLoader::PluginPtr PluginLoader::loadPlugin(const PluginKey& key, float inputSampleRate) {
     const auto libraryPath = [&] {
         for (auto&& path : listLibraries()) {
             if (path.stem() == key.getLibrary()) return path;
@@ -130,16 +116,20 @@ std::unique_ptr<Plugin> PluginLoader::loadPlugin(const PluginKey& key, float inp
         throw std::invalid_argument("Plugin library not found");
     }();
 
-    PluginLibrary library(libraryPath);
+    // workaround: capture of non-copyable object / unique_ptr fails
+    auto library = std::make_shared<PluginLibrary>(libraryPath);
     const auto* descriptor = [&] {
-        for (const auto* d : library.getDescriptors()) {
+        for (const auto* d : library->getDescriptors()) {
             if (d->identifier == key.getIdentifier()) return d;
         }
         throw std::invalid_argument("Plugin identifier not found in descriptors");
     }();
 
-    return std::make_unique<PluginHostAdapterLibraryWrapper>(
-        std::move(library), *descriptor, inputSampleRate
+    return std::unique_ptr<PluginHostAdapter, PluginDeleter>(
+        new PluginHostAdapter(*descriptor, inputSampleRate),
+        [dl = std::move(library)](Plugin* p) {  // capture library to be deleted after plugin
+            delete p;
+        }
     );
 }
 
