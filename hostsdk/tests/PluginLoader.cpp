@@ -6,6 +6,7 @@
 #include "rtvamp/hostsdk/PluginLoader.hpp"
 
 using Catch::Matchers::Equals;
+using Catch::Matchers::StartsWith;
 using Catch::Matchers::VectorContains;
 using rtvamp::hostsdk::Plugin;
 using rtvamp::hostsdk::PluginKey;
@@ -95,16 +96,38 @@ TEST_CASE("PluginLoader listPlugins") {
 }
 
 TEST_CASE("PluginLoader loadPlugin") {
-    auto plugin = PluginLoader::loadPlugin(PluginKey("example-plugin:rms"), 48000);
+    SECTION("Load valid plugin") {
+        auto plugin = PluginLoader::loadPlugin("example-plugin:rms", 48000);
 
-    REQUIRE(plugin != nullptr);
+        REQUIRE(plugin != nullptr);
+        REQUIRE_THAT(plugin->getIdentifier(), Equals("rms"));
+    }
 
-    CHECK_THAT(plugin->getIdentifier(), Equals("rms"));
-    CHECK(plugin->getInputDomain() == Plugin::InputDomain::Time);
+    SECTION("Load same plugin twice") {
+        auto plugin1 = PluginLoader::loadPlugin("example-plugin:rms", 48000);
+        auto plugin2 = PluginLoader::loadPlugin("example-plugin:rms", 48000);
 
-    REQUIRE_NOTHROW(plugin->initialise(4, 4));
-    auto result = plugin->process(std::vector<float>{1, 1, 1, 1}, 0);
-    REQUIRE(result[0][0] == 1.0f);
+        REQUIRE(plugin1.get() != plugin2.get());
+    }
 
-    REQUIRE_THROWS(plugin->process(Plugin::FrequencyDomainBuffer{}, 0));
+    SECTION("Invalid plugin key") {
+        REQUIRE_THROWS_WITH(
+            PluginLoader::loadPlugin("invalidkey", 48000),
+            StartsWith("Invalid plugin key")
+        );
+    }
+
+    SECTION("Invalid plugin path") {
+        REQUIRE_THROWS_WITH(
+            PluginLoader::loadPlugin("unknownlib:empty", 48000),
+            StartsWith("Plugin library not found")
+        );
+    }
+
+    SECTION("Invalid plugin identifier") {
+        REQUIRE_THROWS_WITH(
+            PluginLoader::loadPlugin("example-plugin:empty", 48000),
+            StartsWith("Plugin identifier not found")
+        );
+    }
 }

@@ -13,7 +13,8 @@ namespace rtvamp::hostsdk {
 
 class PluginKey {
 public:
-    explicit PluginKey(std::string key);
+    PluginKey(const char* key);
+    PluginKey(std::string key);
     PluginKey(std::string_view library, std::string_view identifier);
 
     std::string_view get()           const noexcept { return key_; }

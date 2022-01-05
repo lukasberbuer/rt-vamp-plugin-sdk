@@ -9,6 +9,8 @@
 
 namespace rtvamp::hostsdk {
 
+PluginKey::PluginKey(const char* key) : PluginKey(std::string(key)) {}
+
 PluginKey::PluginKey(std::string key)
     : key_(std::move(key)) {
     if (key_.empty()) {
@@ -21,7 +23,7 @@ PluginKey::PluginKey(std::string key)
         pos_ == 0 ||                  // first character -> empty library name
         pos_ == key_.size() - 1       // last character -> empty identifier
     ) {
-        throw std::invalid_argument(helper::concat("Invalid plugin key ", key_));
+        throw std::invalid_argument(helper::concat("Invalid plugin key: ", key_));
     }
 }
 
@@ -113,7 +115,7 @@ PluginLoader::PluginPtr PluginLoader::loadPlugin(const PluginKey& key, float inp
         for (auto&& path : listLibraries()) {
             if (path.stem() == key.getLibrary()) return path;
         }
-        throw std::invalid_argument("Plugin library not found");
+        throw std::invalid_argument(helper::concat("Plugin library not found: ", key.get()));
     }();
 
     // workaround: capture of non-copyable object / unique_ptr fails
@@ -122,7 +124,7 @@ PluginLoader::PluginPtr PluginLoader::loadPlugin(const PluginKey& key, float inp
         for (const auto* d : library->getDescriptors()) {
             if (d->identifier == key.getIdentifier()) return d;
         }
-        throw std::invalid_argument("Plugin identifier not found in descriptors");
+        throw std::invalid_argument(helper::concat("Plugin identifier not found: ", key.get()));
     }();
 
     return std::unique_ptr<PluginHostAdapter, PluginDeleter>(
