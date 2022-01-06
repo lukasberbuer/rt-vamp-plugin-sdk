@@ -8,7 +8,6 @@
 using Catch::Matchers::Equals;
 using Catch::Matchers::StartsWith;
 using Catch::Matchers::VectorContains;
-using rtvamp::hostsdk::Plugin;
 using rtvamp::hostsdk::PluginKey;
 using rtvamp::hostsdk::PluginLoader;
 
@@ -108,7 +107,7 @@ TEST_CASE("PluginLoader loadPlugin") {
         auto plugin = loader.loadPlugin("example-plugin:rms", 48000);
 
         REQUIRE(plugin != nullptr);
-        REQUIRE_THAT(plugin->getIdentifier(), Equals("rms"));
+        REQUIRE_THAT(std::string(plugin->getIdentifier()), Equals("rms"));
     }
 
     SECTION("Load same plugin twice") {

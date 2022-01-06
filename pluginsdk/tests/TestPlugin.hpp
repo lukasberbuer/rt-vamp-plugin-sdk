@@ -56,7 +56,7 @@ public:
         if (id == "param") param_ = value;
     }
 
-    const char* getCurrentProgram() const override {
+    std::string_view getCurrentProgram() const override {
         return programs[programIndex_];
     }
 

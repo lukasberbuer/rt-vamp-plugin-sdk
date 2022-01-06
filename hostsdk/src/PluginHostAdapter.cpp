@@ -86,12 +86,12 @@ PluginHostAdapter::~PluginHostAdapter() {
     descriptor_.cleanup(handle_);
 }
 
-const char* PluginHostAdapter::getIdentifier()    const { return descriptor_.identifier; }
-const char* PluginHostAdapter::getName()          const { return descriptor_.name; }
-const char* PluginHostAdapter::getDescription()   const { return descriptor_.description; }
-const char* PluginHostAdapter::getMaker()         const { return descriptor_.maker; }
-const char* PluginHostAdapter::getCopyright()     const { return descriptor_.copyright; }
-int         PluginHostAdapter::getPluginVersion() const { return descriptor_.pluginVersion; }
+std::string_view PluginHostAdapter::getIdentifier()    const { return descriptor_.identifier; }
+std::string_view PluginHostAdapter::getName()          const { return descriptor_.name; }
+std::string_view PluginHostAdapter::getDescription()   const { return descriptor_.description; }
+std::string_view PluginHostAdapter::getMaker()         const { return descriptor_.maker; }
+std::string_view PluginHostAdapter::getCopyright()     const { return descriptor_.copyright; }
+int              PluginHostAdapter::getPluginVersion() const { return descriptor_.pluginVersion; }
 
 Plugin::InputDomain PluginHostAdapter::getInputDomain() const {
     return descriptor_.inputDomain == vampFrequencyDomain
@@ -119,7 +119,7 @@ Plugin::ProgramList PluginHostAdapter::getProgramList() const {
     return programs_;
 }
 
-const char* PluginHostAdapter::getCurrentProgram() const {
+std::string_view PluginHostAdapter::getCurrentProgram() const {
     const auto index = descriptor_.getCurrentProgram(handle_);
     assert(index < descriptor_.programCount);
     return programs_[index];

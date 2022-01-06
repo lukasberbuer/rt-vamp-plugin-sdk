@@ -25,13 +25,13 @@ public:
     static constexpr uint32_t outputCount = NOutputs;
 
     struct Meta {
-        const char* identifier;
-        const char* name;
-        const char* description;
-        const char* maker;
-        const char* copyright;
-        int         pluginVersion;
-        InputDomain inputDomain;
+        const char* identifier    = "";
+        const char* name          = "";
+        const char* description   = "";
+        const char* maker         = "";
+        const char* copyright     = "";
+        int         pluginVersion = 1;
+        InputDomain inputDomain   = InputDomain::Time;
     };
 
     // required static plugin descriptor
@@ -41,18 +41,18 @@ public:
     static constexpr std::array<ParameterDescriptor, 0> parameters{};
     static constexpr std::array<const char*, 0>         programs{};
 
-    constexpr const char*   getIdentifier()    const override final { return meta.identifier; }
-    constexpr const char*   getName()          const override final { return meta.name; }
-    constexpr const char*   getDescription()   const override final { return meta.description; }
-    constexpr const char*   getMaker()         const override final { return meta.maker; }
-    constexpr const char*   getCopyright()     const override final { return meta.copyright; }
-    constexpr int           getPluginVersion() const override final { return meta.pluginVersion; }
-    constexpr InputDomain   getInputDomain()   const override final { return meta.inputDomain; }
+    constexpr std::string_view getIdentifier()    const override final { return meta.identifier; }
+    constexpr std::string_view getName()          const override final { return meta.name; }
+    constexpr std::string_view getDescription()   const override final { return meta.description; }
+    constexpr std::string_view getMaker()         const override final { return meta.maker; }
+    constexpr std::string_view getCopyright()     const override final { return meta.copyright; }
+    constexpr int              getPluginVersion() const override final { return meta.pluginVersion; }
+    constexpr InputDomain      getInputDomain()   const override final { return meta.inputDomain; }
 
-    constexpr ParameterList getParameterList() const override final { return parameters; }
-    constexpr ProgramList   getProgramList()   const override final { return programs; }
+    constexpr ParameterList    getParameterList() const override final { return parameters; }
+    constexpr ProgramList      getProgramList()   const override final { return programs; }
 
-    constexpr uint32_t      getOutputCount()   const override final { return NOutputs; }
+    constexpr uint32_t         getOutputCount()   const override final { return NOutputs; }
 
 protected:
     using FeatureArray = std::array<Feature, NOutputs>;

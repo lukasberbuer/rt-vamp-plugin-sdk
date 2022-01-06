@@ -53,11 +53,11 @@ TEST_CASE("PluginHostAdapter static plugin data") {
     auto descriptor = TestPluginDescriptor::get();
     auto plugin     = PluginHostAdapter(descriptor, 48000);
 
-    CHECK_THAT(plugin.getIdentifier(),  Equals(descriptor.identifier));
-    CHECK_THAT(plugin.getName(),        Equals(descriptor.name));
-    CHECK_THAT(plugin.getDescription(), Equals(descriptor.description));
-    CHECK_THAT(plugin.getMaker(),       Equals(descriptor.maker));
-    CHECK_THAT(plugin.getCopyright(),   Equals(descriptor.copyright));
+    CHECK_THAT(std::string(plugin.getIdentifier()),  Equals(descriptor.identifier));
+    CHECK_THAT(std::string(plugin.getName()),        Equals(descriptor.name));
+    CHECK_THAT(std::string(plugin.getDescription()), Equals(descriptor.description));
+    CHECK_THAT(std::string(plugin.getMaker()),       Equals(descriptor.maker));
+    CHECK_THAT(std::string(plugin.getCopyright()),   Equals(descriptor.copyright));
 
     CHECK(plugin.getPluginVersion() == descriptor.pluginVersion);
     CHECK(plugin.getInputDomain()   == Plugin::InputDomain::Time);
@@ -70,10 +70,10 @@ TEST_CASE("PluginHostAdapter static plugin data") {
             const auto& vampParameter = TestPluginDescriptor::parameters[i];
             auto& parameter           = parameters[i];
 
-            CHECK_THAT(parameter.identifier,  Equals(vampParameter.identifier));
-            CHECK_THAT(parameter.name,        Equals(vampParameter.name));
-            CHECK_THAT(parameter.description, Equals(vampParameter.description));
-            CHECK_THAT(parameter.unit,        Equals(vampParameter.unit));
+            CHECK_THAT(std::string(parameter.identifier),  Equals(vampParameter.identifier));
+            CHECK_THAT(std::string(parameter.name),        Equals(vampParameter.name));
+            CHECK_THAT(std::string(parameter.description), Equals(vampParameter.description));
+            CHECK_THAT(std::string(parameter.unit),        Equals(vampParameter.unit));
             CHECK(parameter.minValue     == vampParameter.minValue);
             CHECK(parameter.maxValue     == vampParameter.maxValue);
             CHECK(parameter.defaultValue == vampParameter.defaultValue);
@@ -135,13 +135,13 @@ TEST_CASE("PluginHostAdapter get/set programs") {
         }
     };
 
-    REQUIRE_THAT(plugin.getCurrentProgram(), Equals(descriptor.programs[0]));
+    REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[0]));
 
     plugin.selectProgram("invalid");
-    REQUIRE_THAT(plugin.getCurrentProgram(), Equals(descriptor.programs[0]));
+    REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[0]));
 
     plugin.selectProgram(descriptor.programs[1]);
-    REQUIRE_THAT(plugin.getCurrentProgram(), Equals(descriptor.programs[1]));
+    REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[1]));
 }
 
 TEST_CASE("PluginHostAdapter preferred step/block size") {

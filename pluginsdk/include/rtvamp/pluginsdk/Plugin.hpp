@@ -3,6 +3,7 @@
 #include <complex>
 #include <span>
 #include <string>
+#include <string_view>
 #include <variant>
 #include <vector>
 
@@ -27,6 +28,7 @@ public:
     enum class InputDomain { Time, Frequency };
 
     struct ParameterDescriptor {
+        // use const char* for compile-time evaluation
         const char* identifier  = "";
         const char* name        = "";
         const char* description = "";
@@ -56,43 +58,43 @@ public:
         float quantizeStep    = 0.0f;
     };
 
-    using ParameterList           = std::span<const ParameterDescriptor>;
-    using ProgramList             = std::span<const char* const>;
-    using OutputList              = std::vector<OutputDescriptor>;
+    using ParameterList              = std::span<const ParameterDescriptor>;
+    using ProgramList                = std::span<const char* const>;
+    using OutputList                 = std::vector<OutputDescriptor>;
 
-    using TimeDomainBuffer        = std::span<const float>;
-    using FrequencyDomainBuffer   = std::span<const std::complex<float>>;
-    using InputBuffer             = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
+    using TimeDomainBuffer           = std::span<const float>;
+    using FrequencyDomainBuffer      = std::span<const std::complex<float>>;
+    using InputBuffer                = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
 
-    using Feature                 = std::vector<float>;
-    using FeatureSet              = std::span<const Feature>;
+    using Feature                    = std::vector<float>;
+    using FeatureSet                 = std::span<const Feature>;
 
-    virtual constexpr const char*   getIdentifier( )   const = 0;
-    virtual constexpr const char*   getName()          const = 0;
-    virtual constexpr const char*   getDescription()   const = 0;
-    virtual constexpr const char*   getMaker()         const = 0;
-    virtual constexpr const char*   getCopyright()     const = 0;
-    virtual constexpr int           getPluginVersion() const = 0;
-    virtual constexpr InputDomain   getInputDomain()   const = 0;
+    virtual constexpr std::string_view getIdentifier( )   const = 0;
+    virtual constexpr std::string_view getName()          const = 0;
+    virtual constexpr std::string_view getDescription()   const = 0;
+    virtual constexpr std::string_view getMaker()         const = 0;
+    virtual constexpr std::string_view getCopyright()     const = 0;
+    virtual constexpr int              getPluginVersion() const = 0;
+    virtual constexpr InputDomain      getInputDomain()   const = 0;
 
-    virtual constexpr ParameterList getParameterList()                const { return {}; }
-    virtual float                   getParameter(std::string_view id) const { return 0.0f; }
-    virtual void                    setParameter(std::string_view id, float value) {} 
+    virtual constexpr ParameterList    getParameterList()                const { return {}; }
+    virtual float                      getParameter(std::string_view id) const { return 0.0f; }
+    virtual void                       setParameter(std::string_view id, float value) {} 
 
-    virtual constexpr ProgramList   getProgramList()    const { return {}; }
-    virtual const char*             getCurrentProgram() const { return {}; }
-    virtual void                    selectProgram(std::string_view name) {}
+    virtual constexpr ProgramList      getProgramList()    const { return {}; }
+    virtual std::string_view           getCurrentProgram() const { return {}; }
+    virtual void                       selectProgram(std::string_view name) {}
 
-    virtual float                   getInputSampleRate()    const { return inputSampleRate_; };
-    virtual uint32_t                getPreferredStepSize()  const { return 0; }
-    virtual uint32_t                getPreferredBlockSize() const { return 0; }
+    virtual float                      getInputSampleRate()    const { return inputSampleRate_; };
+    virtual uint32_t                   getPreferredStepSize()  const { return 0; }
+    virtual uint32_t                   getPreferredBlockSize() const { return 0; }
 
-    virtual constexpr uint32_t      getOutputCount()       const = 0;
-    virtual OutputList              getOutputDescriptors() const = 0;
+    virtual constexpr uint32_t         getOutputCount()       const = 0;
+    virtual OutputList                 getOutputDescriptors() const = 0;
 
-    virtual bool                    initialise(uint32_t stepSize, uint32_t blockSize) = 0;
-    virtual void                    reset() = 0;
-    virtual FeatureSet              process(InputBuffer buffer, uint64_t nsec) = 0;
+    virtual bool                       initialise(uint32_t stepSize, uint32_t blockSize) = 0;
+    virtual void                       reset() = 0;
+    virtual FeatureSet                 process(InputBuffer buffer, uint64_t nsec) = 0;
 
 private:
     const float inputSampleRate_ = 0.0f;
