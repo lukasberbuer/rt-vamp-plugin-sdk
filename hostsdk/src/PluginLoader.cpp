@@ -13,8 +13,9 @@ namespace rtvamp::hostsdk {
 
 PluginKey::PluginKey(const char* key) : PluginKey(std::string(key)) {}
 
-PluginKey::PluginKey(std::string key)
-    : key_(std::move(key)) {
+PluginKey::PluginKey(std::string_view key) : PluginKey(std::string(key)) {}
+
+PluginKey::PluginKey(std::string key) : key_(std::move(key)) {
     if (key_.empty()) {
         throw std::invalid_argument("Plugin key empty");
     }

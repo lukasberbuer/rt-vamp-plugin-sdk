@@ -16,6 +16,7 @@ class PluginKey {
 public:
     PluginKey(const char* key);
     PluginKey(std::string key);
+    PluginKey(std::string_view key);
     PluginKey(std::string_view library, std::string_view identifier);
 
     std::string_view get()           const noexcept { return key_; }
