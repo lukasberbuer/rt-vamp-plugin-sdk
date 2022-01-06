@@ -10,83 +10,7 @@ This SDK for plugins and hosts targets performance-critical applications by:
 
 The SDK aims to be **well tested**, **cross-platform** and use **modern C++**.
 
-Compiler support:
-
-- GCC >= 10
-- Clang >= 11
-- MSVC >= 19.30
-
-TODOs:
-
-- handle initialise false return value in hostsdk
-- mixins for parameters in pluginsdk
-- FFT in hostsdk
-- multi-channel wrapper for hostsdk
-- more example plugins
-- benchmark analysis script?
-
-Further ideas:
-
-- Plugin tester as library and executable
-- Python bindings for host
-- Adapter library for Python plugins?
-- Adapter library for WASM plugins?
-
-## Minimal example
-
-```cpp
-class ZeroCrossing : public rtvamp::pluginsdk::PluginDefinition<1 /* one output */> {
-public:
-    using PluginDefinition::PluginDefinition;  // inherit constructor
-
-    static constexpr Meta meta{
-        .identifier    = "zerocrossing",
-        .name          = "Zero crossings",
-        .description   = "Detect and count zero crossings",
-        .maker         = "LB",
-        .copyright     = "MIT",
-        .pluginVersion = 1,
-        .inputDomain   = InputDomain::Time,
-    };
-
-    OutputList getOutputDescriptors() const override {
-        return {
-            OutputDescriptor{
-                .identifier  = "counts",
-                .name        = "Zero crossing counts",
-                .description = "The number of zero crossing points per processing block",
-                .unit        = "",
-                .binCount    = 1,
-            },
-        };
-    }
-
-    bool initialise(uint32_t stepSize, uint32_t blockSize) override {
-        initialiseFeatureSet();  // automatically resizes feature set to number of outputs and bins
-        return true;
-    };
-
-    void reset() override { previousSample_ = 0.0f; }
-
-    FeatureSet process(InputBuffer buffer, uint64_t nsec) override {
-        size_t crossings   = 0;
-        bool   wasPositive = (previousSample_ >= 0.0f);
-
-        for (const auto& sample : std::get<TimeDomainBuffer>(buffer)) {
-            const bool isPositive = (sample >= 0.0f);
-            crossings += int(isPositive != wasPositive);
-            wasPositive = isPositive;
-        }
-
-        auto& result = getFeatureSet();
-        result[0][0] = crossings;  // first and only output, first and only bin
-        return result;             // return and span/view of the results
-    };
-
-private:
-    float previousSample_ = 0.0f;
-};
-```
+Compiler support: `GCC >= 10`, `Clang >= 11`, `MSVC >= 19.30`
 
 ## Vamp ecosystem
 
@@ -97,10 +21,10 @@ private:
 
 ## Why another SDK?
 
-The [official SDK](https://github.com/c4dm/vamp-plugin-sdk) offers a convenient [C++ plugin API](https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html).
+The [official SDK](https://github.com/c4dm/vamp-plugin-sdk) offers a convenient [C++ plugin interface](https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html).
 But there are some drawbacks for real-time processing:
 
-- Huge amount of memory allocations due to the extensive use of C++ containers like vectors and lists **passed by value**.
+- Huge amount of memory allocations due to the use of C++ containers like vectors and lists **passed by value**.
 
   Let's have a look at the `process` method of the `Vamp::Plugin` class which does the main work:
 
@@ -135,3 +59,87 @@ Following features of the Vamp API `Vamp::Plugin` are restricted:
   - `Feature::hasDuration` & `Feature::duration`
 
 - Only one input channel allowed: `getMinChannelCount() == 1`
+
+## Minimal example
+
+More examples can be found here: https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/examples.
+
+### Plugin
+
+```cpp
+class ZeroCrossing : public rtvamp::pluginsdk::PluginDefinition<1 /* one output */> {
+public:
+    using PluginDefinition::PluginDefinition;  // inherit constructor
+
+    static constexpr Meta meta{
+        .identifier    = "zerocrossing",
+        .name          = "Zero crossings",
+        .description   = "Detect and count zero crossings",
+        .maker         = "LB",
+        .copyright     = "MIT",
+        .pluginVersion = 1,
+        .inputDomain   = InputDomain::Time,
+    };
+
+    OutputList getOutputDescriptors() const override {
+        return {
+            OutputDescriptor{
+                .identifier  = "counts",
+                .name        = "Zero crossing counts",
+                .description = "The number of zero crossing points per processing block",
+                .unit        = "",
+                .binCount    = 1,
+            },
+        };
+    }
+
+    bool initialise(uint32_t stepSize, uint32_t blockSize) override {
+        initialiseFeatureSet();  // automatically resizes feature set to number of outputs and bins
+        return true;
+    };
+
+    void reset() override {
+        previousSample_ = 0.0f;
+    }
+
+    FeatureSet process(InputBuffer buffer, uint64_t nsec) override {
+        size_t crossings   = 0;
+        bool   wasPositive = (previousSample_ >= 0.0f);
+
+        for (const auto& sample : std::get<TimeDomainBuffer>(buffer)) {
+            const bool isPositive = (sample >= 0.0f);
+            crossings += int(isPositive != wasPositive);
+            wasPositive = isPositive;
+        }
+
+        auto& result = getFeatureSet();
+        result[0][0] = crossings;  // first and only output, first and only bin
+        return result;             // return and span/view of the results
+    };
+
+private:
+    float previousSample_ = 0.0f;
+};
+
+RTVAMP_ENTRY_POINT(ZeroCrossing)
+```
+
+### Host
+
+```cpp
+rtvamp::hostsdk::PluginLoader loader;
+
+// list all plugins keys (library:plugin)
+for (auto&& keys : loader.listPlugins()) {
+    std::cout << keys.get() << std::endl;
+}
+
+auto plugin = loader.loadPlugin("minimal-plugin:zerocrossing", 48000 /* samplerate */);
+plugin->initialise(4096 /* step size */, 4096 /* block size */);
+
+std::vector<float> buffer(blockSize);
+// fill buffer with data from audio file, sound card, ...
+
+auto features = plugin->process(buffer, 0 /* timestamp nanoseconds */);
+std::cout << "Zero crossings: " << features[0][0] << std::endl;
+```
