@@ -4,7 +4,7 @@ Vamp is an C/C++ plugin API for audio analysis / feature extraction plugins: htt
 
 This SDK for plugins and hosts targets performance-critical applications by:
 
-- reducing memory allocations
+- reducing memory allocations, **no memory allocation** during processing
 - simplifying and restricting the plugin API
 - `constexpr` evaluation for compile-time errors instead of runtime errors
 
@@ -16,6 +16,15 @@ Compiler support:
 - Clang >= 11
 - MSVC >= 19.30
 
+TODOs:
+
+- handle initialise false return value in hostsdk
+- mixins for parameters in pluginsdk
+- FFT in hostsdk
+- multi-channel wrapper for hostsdk
+- more example plugins
+- benchmark analysis script?
+
 Further ideas:
 
 - Plugin tester as library and executable
@@ -23,9 +32,72 @@ Further ideas:
 - Adapter library for Python plugins?
 - Adapter library for WASM plugins?
 
+## Minimal example
+
+```cpp
+class ZeroCrossing : public rtvamp::pluginsdk::PluginDefinition<1 /* one output */> {
+public:
+    using PluginDefinition::PluginDefinition;  // inherit constructor
+
+    static constexpr Meta meta{
+        .identifier    = "zerocrossing",
+        .name          = "Zero crossings",
+        .description   = "Detect and count zero crossings",
+        .maker         = "LB",
+        .copyright     = "MIT",
+        .pluginVersion = 1,
+        .inputDomain   = InputDomain::Time,
+    };
+
+    OutputList getOutputDescriptors() const override {
+        return {
+            OutputDescriptor{
+                .identifier  = "counts",
+                .name        = "Zero crossing counts",
+                .description = "The number of zero crossing points per processing block",
+                .unit        = "",
+                .binCount    = 1,
+            },
+        };
+    }
+
+    bool initialise(uint32_t stepSize, uint32_t blockSize) override {
+        initialiseFeatureSet();  // automatically resizes feature set to number of outputs and bins
+        return true;
+    };
+
+    void reset() override { previousSample_ = 0.0f; }
+
+    FeatureSet process(InputBuffer buffer, uint64_t nsec) override {
+        size_t crossings   = 0;
+        bool   wasPositive = (previousSample_ >= 0.0f);
+
+        for (const auto& sample : std::get<TimeDomainBuffer>(buffer)) {
+            const bool isPositive = (sample >= 0.0f);
+            crossings += int(isPositive != wasPositive);
+            wasPositive = isPositive;
+        }
+
+        auto& result = getFeatureSet();
+        result[0][0] = crossings;  // first and only output, first and only bin
+        return result;             // return and span/view of the results
+    };
+
+private:
+    float previousSample_ = 0.0f;
+};
+```
+
+## Vamp ecosystem
+
+- [Great collection of plugins](https://www.vamp-plugins.org/download.html)
+- [Sonic Visualiser](https://www.sonicvisualiser.org/): Open-source software to visualize, analyze and annotate audio
+- [Sonic Annotator](https://vamp-plugins.org/sonic-annotator): Batch tool for feature extraction
+- [Audacity supports Vamp plugins](https://wiki.audacityteam.org/wiki/Vamp_Plug-ins)
+
 ## Why another SDK?
 
-The [official SDK](https://github.com/c4dm/vamp-plugin-sdk) offers a convinient [C++ plugin API](https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html).
+The [official SDK](https://github.com/c4dm/vamp-plugin-sdk) offers a convenient [C++ plugin API](https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html).
 But there are some drawbacks for real-time processing:
 
 - Huge amount of memory allocations due to the extensive use of C++ containers like vectors and lists **passed by value**.
@@ -45,9 +117,9 @@ But there are some drawbacks for real-time processing:
 
   On the host side, the `PluginHostAdapter` converts again from the C to the C++ representation ([code](https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-hostsdk/PluginHostAdapter.cpp#L413-L464)).
 
-## Restrictions
+## Plugin restrictions
 
-Following features of the Vamp API `Vamp::Plugin` are restricted by the `rt-vamp-plugin-sdk`:
+Following features of the Vamp API `Vamp::Plugin` are restricted:
 
 - `OutputDescriptor::hasFixedBinCount == true` for every output.
   The number of values is constant for each feature during processing.
