@@ -152,17 +152,22 @@ Plugin::OutputList PluginHostAdapter::getOutputDescriptors() const {
         auto* vampOutput = descriptor_.getOutputDescriptor(handle_, i);
         assert(vampOutput != nullptr);
 
-        output.identifier  = notNullptr(vampOutput->identifier);
-        output.name        = notNullptr(vampOutput->name);
-        output.description = notNullptr(vampOutput->description);
-        output.unit        = notNullptr(vampOutput->unit);
+        output.identifier  = vampOutput->identifier;
+        output.name        = vampOutput->name;
+        output.description = vampOutput->description;
+        output.unit        = vampOutput->unit;
 
         output.binCount = vampOutput->binCount;
-        if (vampOutput->binNames) {
-            output.binNames = std::vector<std::string>(
-                vampOutput->binNames,
-                vampOutput->binNames + vampOutput->binCount
-            );
+        if (vampOutput->hasFixedBinCount && vampOutput->binNames) {
+            bool validBinNames = false;
+            output.binNames.resize(output.binCount);
+            for (unsigned int j = 0; j < output.binCount; ++j) {
+                if (const char* binName = vampOutput->binNames[j]) {
+                    output.binNames[j] = binName;
+                    validBinNames = true;
+                }
+            }
+            if (!validBinNames) output.binNames.clear();
         }
 
         output.hasKnownExtents = vampOutput->hasKnownExtents == 1;

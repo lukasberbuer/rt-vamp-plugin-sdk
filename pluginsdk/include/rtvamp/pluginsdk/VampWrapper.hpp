@@ -97,7 +97,11 @@ private:
  */
 struct VampOutputDescriptorWrapper{
     explicit VampOutputDescriptorWrapper(const Plugin::OutputDescriptor& d)
-        : binNames_(d.binNames)
+        : identifier_(d.identifier),
+          name_(d.name),
+          description_(d.description),
+          unit_(d.unit),
+          binNames_(d.binNames)
     {
         if (!binNames_.empty()) {
             binNames_.resize(d.binCount);  // crop or fill missing names with empty strings
@@ -110,10 +114,10 @@ struct VampOutputDescriptorWrapper{
             );
         }
 
-        descriptor_.identifier       = d.identifier;
-        descriptor_.name             = d.name;
-        descriptor_.description      = d.description;
-        descriptor_.unit             = d.unit;
+        descriptor_.identifier       = identifier_.c_str();
+        descriptor_.name             = name_.c_str();
+        descriptor_.description      = description_.c_str();
+        descriptor_.unit             = unit_.c_str();
         descriptor_.hasFixedBinCount = 1;
         descriptor_.binCount         = d.binCount;
         descriptor_.binNames         = binNames_.empty() ? nullptr : binNamesConstChar_.data();
@@ -131,8 +135,11 @@ struct VampOutputDescriptorWrapper{
     VampOutputDescriptor&       get()       noexcept { return descriptor_; }
 
 private:
-    VampOutputDescriptor descriptor_;
-
+    VampOutputDescriptor     descriptor_;
+    const std::string        identifier_;
+    const std::string        name_;
+    const std::string        description_;
+    const std::string        unit_;
     std::vector<std::string> binNames_;
     std::vector<const char*> binNamesConstChar_;
 };

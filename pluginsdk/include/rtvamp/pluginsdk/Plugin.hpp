@@ -41,10 +41,10 @@ public:
     };
 
     struct OutputDescriptor {
-        const char* identifier  = "";
-        const char* name        = "";
-        const char* description = "";
-        const char* unit        = "";
+        std::string identifier;
+        std::string name;
+        std::string description;
+        std::string unit;
 
         uint32_t                 binCount = 0;
         std::vector<std::string> binNames{};
