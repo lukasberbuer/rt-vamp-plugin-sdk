@@ -105,12 +105,12 @@ void listPluginOutputs() {
     }
 }
 
-void process(std::string_view pluginKey, std::string_view wavFile) {
+void process(std::string_view pluginKey, std::string_view audiofile) {
     // load audio file
-    auto file = SndfileHandle(std::string(wavFile));
+    auto file = SndfileHandle(std::string(audiofile));
     if (file.error()) {
         throw std::runtime_error(
-            concat("Failed to open WAV audio file: ", wavFile, " (", file.strError(), ")")
+            concat("Failed to open audio file: ", audiofile, " (", file.strError(), ")")
         );
     }
 
@@ -129,7 +129,7 @@ void process(std::string_view pluginKey, std::string_view wavFile) {
     const auto output = plugin->getOutputDescriptors().at(0);  // choose first output
 
     // print summary
-    std::cout << "WAV audio file:  " << wavFile << '\n';
+    std::cout << "Audio file:      " << audiofile << '\n';
     std::cout << "- sampling rate: " << sampleRate << '\n';
     std::cout << "- channels:      " << channels << '\n';
     std::cout << "Plugin:          " << pluginKey << '\n';
@@ -177,11 +177,11 @@ void process(std::string_view pluginKey, std::string_view wavFile) {
 
 void usage(std::string_view program) {
     std::cout <<
-        "usage: " << program << " [options] [plugin] [wavfile]\n"
+        "usage: " << program << " [options] [plugin] [audiofile]\n"
         "\n"
         "positional arguments:\n"
         "  plugin          plugin identifier in the form library:plugin (as returned by --list-ids)\n"
-        "  wavfile         path to WAV audio file to extract features from\n"
+        "  audiofile       path to audio file to extract features from\n"
         "\n"
         "options:\n"
         "  --list, -l      list plugin informations in human readable format\n"
@@ -221,10 +221,10 @@ int main(int argc, char* argv[]) {
     }
 
     if (parser.nargs() == 3) {
-        const auto plugin  = parser.args()[1];
-        const auto wavFile = parser.args()[2];
+        const auto plugin    = parser.args()[1];
+        const auto audiofile = parser.args()[2];
         try {
-            process(plugin, wavFile);
+            process(plugin, audiofile);
         } catch (const std::exception& e) {
             std::cerr << Escape::Red << "[ERROR] " << e.what() << Escape::Reset << std::endl;
             return 1;

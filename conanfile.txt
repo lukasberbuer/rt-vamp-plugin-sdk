@@ -1,6 +1,7 @@
 [requires]
 benchmark/[>=1.6.0]
 catch2/[>=2.13]
+libsndfile/1.0.31
 
 [options]
 catch2:with_main=True
