@@ -36,7 +36,9 @@ public:
     static std::vector<std::filesystem::path> getPluginPaths();
 
     std::vector<std::filesystem::path> listLibraries() const;
-    std::vector<PluginKey>             listPlugins() const;
+
+    std::vector<PluginKey> listPlugins() const;
+    std::vector<PluginKey> listPluginsInLibrary(const std::filesystem::path& libraryPath) const;
 
     using PluginDeleter = std::function<void(Plugin*)>;
     using PluginPtr     = std::unique_ptr<Plugin, PluginDeleter>;

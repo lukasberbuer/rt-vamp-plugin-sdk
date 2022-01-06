@@ -124,6 +124,18 @@ std::vector<PluginKey> PluginLoader::listPlugins() const {
     return result;
 }
 
+std::vector<PluginKey> PluginLoader::listPluginsInLibrary(
+    const std::filesystem::path& libraryPath
+) const {
+    std::vector<PluginKey> result;
+    for (const auto& [key, path] : plugins_) {
+        if (path == libraryPath) {
+            result.push_back(key);
+        }
+    }
+    return result;
+}
+
 PluginLoader::PluginPtr PluginLoader::loadPlugin(
     const PluginKey& key, float inputSampleRate
 ) const {

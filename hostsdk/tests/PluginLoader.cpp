@@ -97,6 +97,11 @@ TEST_CASE("PluginLoader listPlugins") {
     REQUIRE_THAT(plugins, VectorContains(PluginKey("example-plugin:rms")));
 }
 
+TEST_CASE("PluginLoader listPluginsInLibrary") {
+    PluginLoader loader;
+    REQUIRE(loader.listPluginsInLibrary("").size() == 0);
+}
+
 TEST_CASE("PluginLoader loadPlugin") {
     PluginLoader loader;
     SECTION("Load valid plugin") {
