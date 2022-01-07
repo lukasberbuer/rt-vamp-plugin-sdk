@@ -1,5 +1,7 @@
 #include "PluginLibrary.hpp"
 
+#include <stdexcept>
+
 #include "helper.hpp"
 
 namespace rtvamp::hostsdk {

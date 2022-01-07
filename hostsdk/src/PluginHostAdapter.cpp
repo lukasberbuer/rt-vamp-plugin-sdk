@@ -5,7 +5,6 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
-#include <vector>
 
 #include "vamp/vamp.h"
 
@@ -261,8 +260,9 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
 }
 
 void PluginHostAdapter::checkRequirements() {
-    if (descriptor_.getMinChannelCount(handle_) > 1)
+    if (descriptor_.getMinChannelCount(handle_) > 1) {
         throw std::runtime_error("Minimum channel count > 1 not supported");
+    }
 
     for (size_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
         const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);

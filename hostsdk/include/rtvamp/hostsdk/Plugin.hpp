@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <span>
+#include <string_view>
+
 #include "rtvamp/pluginsdk/Plugin.hpp"
 
 namespace rtvamp::hostsdk {
