@@ -16,19 +16,19 @@ public:
     using OutputList    = std::vector<OutputDescriptor>;
     using FeatureSet    = std::span<const Feature>;
 
-    virtual std::string_view getIdentifier( )   const = 0;
-    virtual std::string_view getName()          const = 0;
-    virtual std::string_view getDescription()   const = 0;
-    virtual std::string_view getMaker()         const = 0;
-    virtual std::string_view getCopyright()     const = 0;
-    virtual int              getPluginVersion() const = 0;
-    virtual InputDomain      getInputDomain()   const = 0;
+    virtual std::string_view getIdentifier( )   const noexcept = 0;
+    virtual std::string_view getName()          const noexcept = 0;
+    virtual std::string_view getDescription()   const noexcept = 0;
+    virtual std::string_view getMaker()         const noexcept = 0;
+    virtual std::string_view getCopyright()     const noexcept = 0;
+    virtual int              getPluginVersion() const noexcept = 0;
+    virtual InputDomain      getInputDomain()   const noexcept = 0;
 
-    virtual ParameterList    getParameterList()                const { return {}; }
+    virtual ParameterList    getParameterList() const noexcept { return {}; }
     virtual float            getParameter(std::string_view id) const { return 0.0f; }
     virtual void             setParameter(std::string_view id, float value) {} 
 
-    virtual ProgramList      getProgramList()    const { return {}; }
+    virtual ProgramList      getProgramList()    const noexcept { return {}; }
     virtual std::string_view getCurrentProgram() const { return {}; }
     virtual void             selectProgram(std::string_view name) {}
 

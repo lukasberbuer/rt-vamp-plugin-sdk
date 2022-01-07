@@ -86,20 +86,36 @@ PluginHostAdapter::~PluginHostAdapter() {
     descriptor_.cleanup(handle_);
 }
 
-std::string_view PluginHostAdapter::getIdentifier()    const { return descriptor_.identifier; }
-std::string_view PluginHostAdapter::getName()          const { return descriptor_.name; }
-std::string_view PluginHostAdapter::getDescription()   const { return descriptor_.description; }
-std::string_view PluginHostAdapter::getMaker()         const { return descriptor_.maker; }
-std::string_view PluginHostAdapter::getCopyright()     const { return descriptor_.copyright; }
-int              PluginHostAdapter::getPluginVersion() const { return descriptor_.pluginVersion; }
+std::string_view PluginHostAdapter::getIdentifier() const noexcept {
+    return descriptor_.identifier;
+}
 
-Plugin::InputDomain PluginHostAdapter::getInputDomain() const {
+std::string_view PluginHostAdapter::getName() const noexcept {
+    return descriptor_.name;
+}
+
+std::string_view PluginHostAdapter::getDescription() const noexcept {
+    return descriptor_.description;
+}
+
+std::string_view PluginHostAdapter::getMaker() const noexcept {
+    return descriptor_.maker;
+}
+
+std::string_view PluginHostAdapter::getCopyright() const noexcept {
+    return descriptor_.copyright;
+}
+int PluginHostAdapter::getPluginVersion() const noexcept {
+    return descriptor_.pluginVersion;
+}
+
+Plugin::InputDomain PluginHostAdapter::getInputDomain() const noexcept {
     return descriptor_.inputDomain == vampFrequencyDomain
         ? InputDomain::Frequency
         : InputDomain::Time;
 }
 
-Plugin::ParameterList PluginHostAdapter::getParameterList() const {
+Plugin::ParameterList PluginHostAdapter::getParameterList() const noexcept {
     return parameters_;
 }
 
@@ -115,7 +131,7 @@ void PluginHostAdapter::setParameter(std::string_view id, float value) {
     descriptor_.setParameter(handle_, optionalIndex.value(), value);
 }
 
-Plugin::ProgramList PluginHostAdapter::getProgramList() const {
+Plugin::ProgramList PluginHostAdapter::getProgramList() const noexcept {
     return programs_;
 }
 

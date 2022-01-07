@@ -16,19 +16,19 @@ public:
     PluginHostAdapter(const VampPluginDescriptor& descriptor, float inputSampleRate);
     ~PluginHostAdapter();
 
-    std::string_view getIdentifier()    const override;
-    std::string_view getName()          const override;
-    std::string_view getDescription()   const override;
-    std::string_view getMaker()         const override;
-    std::string_view getCopyright()     const override;
-    int              getPluginVersion() const override;
-    InputDomain      getInputDomain()   const override;
+    std::string_view getIdentifier()    const noexcept override;
+    std::string_view getName()          const noexcept override;
+    std::string_view getDescription()   const noexcept override;
+    std::string_view getMaker()         const noexcept override;
+    std::string_view getCopyright()     const noexcept override;
+    int              getPluginVersion() const noexcept override;
+    InputDomain      getInputDomain()   const noexcept override;
 
-    ParameterList    getParameterList()                const override;
+    ParameterList    getParameterList()                const noexcept override;
     float            getParameter(std::string_view id) const override;
     void             setParameter(std::string_view id, float value) override; 
 
-    ProgramList      getProgramList()    const override;
+    ProgramList      getProgramList()    const noexcept override;
     std::string_view getCurrentProgram() const override;
     void             selectProgram(std::string_view name) override;
 

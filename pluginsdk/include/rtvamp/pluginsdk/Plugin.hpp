@@ -102,8 +102,8 @@ public:
     virtual std::string_view  getCurrentProgram() const { return {}; }
     virtual void              selectProgram(std::string_view name) {}
 
-    virtual uint32_t          getPreferredStepSize()  const noexcept { return 0; }
-    virtual uint32_t          getPreferredBlockSize() const noexcept { return 0; }
+    virtual uint32_t          getPreferredStepSize()  const { return 0; }
+    virtual uint32_t          getPreferredBlockSize() const { return 0; }
 
     virtual OutputList        getOutputDescriptors() const = 0;
 
