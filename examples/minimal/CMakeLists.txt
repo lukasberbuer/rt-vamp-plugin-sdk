@@ -5,12 +5,7 @@ target_link_libraries(
         ${PROJECT_OPTIONS}
         rtvamp-pluginsdk
 )
-set_target_properties(
-    minimal-plugin
-    PROPERTIES
-        PREFIX ""
-        WINDOWS_EXPORT_ALL_SYMBOLS TRUE
-)
+set_target_properties(minimal-plugin PROPERTIES PREFIX "")
 
 add_executable(minimal-host host.cpp)
 target_link_libraries(

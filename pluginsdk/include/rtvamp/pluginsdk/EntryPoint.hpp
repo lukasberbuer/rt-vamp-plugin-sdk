@@ -31,10 +31,26 @@ private:
 
 /* -------------------------------------------- Macro ------------------------------------------- */
 
-#define RTVAMP_ENTRY_POINT(...)                                                             \
-    extern "C" const VampPluginDescriptor* vampGetPluginDescriptor(                         \
-        unsigned int version,                                                               \
-        unsigned int index                                                                  \
-    ) {                                                                                     \
-        return ::rtvamp::pluginsdk::EntryPoint<__VA_ARGS__>::getDescriptor(version, index); \
+/**
+ * Export entry point symbol with pragma.
+ * Reference: https://docs.microsoft.com/de-de/cpp/build/reference/export-exports-a-function
+ */
+#ifdef _WIN32
+    #define RTVAMP_EXPORT_ENTRY_POINT \
+        _Pragma("comment(linker, \"/export:vampGetPluginDescriptor\")")
+#else
+    #define RTVAMP_EXPORT_ENTRY_POINT
+#endif
+
+/**
+ * Generate entry point for given PluginDefintion types and export symbol with pragma.
+ */
+#define RTVAMP_ENTRY_POINT(...)                                                                    \
+    RTVAMP_EXPORT_ENTRY_POINT                                                                      \
+                                                                                                   \
+    extern "C" const VampPluginDescriptor* vampGetPluginDescriptor(                                \
+        unsigned int version,                                                                      \
+        unsigned int index                                                                         \
+    ) {                                                                                            \
+        return ::rtvamp::pluginsdk::EntryPoint<__VA_ARGS__>::getDescriptor(version, index);        \
     }
