@@ -44,12 +44,14 @@ std::string_view PluginKey::getIdentifier() const noexcept {
 /* ---------------------------------------------------------------------------------------------- */
 
 static constexpr std::string_view getPluginExtension() {
-#ifdef _WIN32
-    return ".dll";
-#elif __APPLE__
+#if defined(__APPLE__)
     return ".dylib";
-#else
+#elif (defined(unix) || defined(__unix) || defined(__unix__)) && !defined(__CYGWIN__)
     return ".so";
+#elif defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__)
+    return ".dll";
+#else
+    return "";
 #endif
 }
 
