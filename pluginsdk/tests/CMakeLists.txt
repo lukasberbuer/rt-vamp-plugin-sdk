@@ -3,8 +3,9 @@ find_package(Threads REQUIRED)
 add_executable(
     tests_pluginsdk
     EntryPoint.cpp
-    PluginAdapter.cpp
     Plugin.cpp
+    PluginAdapter.cpp
+    PluginExt.cpp
     VampWrapper.cpp
 )
 

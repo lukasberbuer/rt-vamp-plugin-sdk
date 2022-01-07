@@ -193,7 +193,6 @@ template <size_t NOutputs>
 class VampFeatureListsWrapper {
 public:
     constexpr VampFeatureListsWrapper() {
-        if constexpr (NOutputs == 0) return;
         for (size_t i = 0; i < NOutputs; ++i) {
             featureLists_[i] = {
                 .featureCount = 1,
