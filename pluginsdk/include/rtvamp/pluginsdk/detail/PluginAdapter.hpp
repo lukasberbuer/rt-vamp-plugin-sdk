@@ -6,9 +6,9 @@
 #include <utility>  // cmp_less
 
 #include "rtvamp/pluginsdk/Plugin.hpp"
-#include "rtvamp/pluginsdk/VampWrapper.hpp"
+#include "rtvamp/pluginsdk/detail/VampWrapper.hpp"
 
-namespace rtvamp::pluginsdk {
+namespace rtvamp::pluginsdk::detail {
 
 template <IsPlugin TPlugin>
 class PluginInstanceAdapter {
@@ -272,4 +272,4 @@ private:
     inline static std::vector<std::unique_ptr<TPluginInstanceAdapter>> plugins;
 };
 
-}  // namespace rtvamp::pluginsdk
+}  // namespace rtvamp::pluginsdk::detail

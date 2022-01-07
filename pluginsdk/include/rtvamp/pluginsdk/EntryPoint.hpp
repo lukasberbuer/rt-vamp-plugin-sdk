@@ -3,7 +3,7 @@
 #include "vamp/vamp.h"
 
 #include "rtvamp/pluginsdk/Plugin.hpp"
-#include "rtvamp/pluginsdk/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk/detail/PluginAdapter.hpp"
 
 namespace rtvamp::pluginsdk {
 
@@ -23,7 +23,7 @@ private:
     static constexpr auto pluginCount = sizeof...(Plugins);
 
     static constexpr std::array<const VampPluginDescriptor*, pluginCount> descriptors{
-        {PluginAdapter<Plugins>::getDescriptor()...}
+        {detail::PluginAdapter<Plugins>::getDescriptor()...}
     };
 };
 

@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "rtvamp/pluginsdk/VampWrapper.hpp"
+#include "rtvamp/pluginsdk/detail/VampWrapper.hpp"
 
 #include "TestPlugin.hpp"
 
@@ -15,7 +15,7 @@ static consteval bool strEqual(U&& u, V&& v) {
 }
 
 TEST_CASE("VampPluginDescriptorWrapper") {
-    using rtvamp::pluginsdk::VampPluginDescriptorWrapper;
+    using rtvamp::pluginsdk::detail::VampPluginDescriptorWrapper;
 
     constexpr auto d = VampPluginDescriptorWrapper<TestPlugin>::get();
 
@@ -47,7 +47,7 @@ TEST_CASE("VampPluginDescriptorWrapper") {
 
 TEST_CASE("VampOutputDescriptorWrapper") {
     using rtvamp::pluginsdk::PluginBase;
-    using rtvamp::pluginsdk::VampOutputDescriptorWrapper;
+    using rtvamp::pluginsdk::detail::VampOutputDescriptorWrapper;
 
     SECTION("Default values") {
         PluginBase::OutputDescriptor descriptor{};
@@ -85,7 +85,7 @@ TEST_CASE("VampOutputDescriptorWrapper") {
 }
 
 TEST_CASE("VampFeatureUnionWrapper") {
-    using rtvamp::pluginsdk::VampFeatureUnionWrapper;
+    using rtvamp::pluginsdk::detail::VampFeatureUnionWrapper;
 
     SECTION("Default values") {
         VampFeatureUnionWrapper wrapper{};
@@ -139,7 +139,7 @@ TEST_CASE("VampFeatureUnionWrapper") {
 }
 
 TEST_CASE("VampFeatureListsWrapper") {
-    using rtvamp::pluginsdk::VampFeatureListsWrapper;
+    using rtvamp::pluginsdk::detail::VampFeatureListsWrapper;
 
     SECTION("Empty") {
         VampFeatureListsWrapper<0> wrapper{};

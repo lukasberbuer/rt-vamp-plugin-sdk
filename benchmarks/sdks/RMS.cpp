@@ -2,7 +2,7 @@
 
 #include <vamp-sdk/PluginAdapter.h>
 
-#include "rtvamp/pluginsdk/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk/detail/PluginAdapter.hpp"
 
 const VampPluginDescriptor* getVampDescriptor() {
     static Vamp::PluginAdapter<RMSvamp> adapter;
@@ -10,5 +10,5 @@ const VampPluginDescriptor* getVampDescriptor() {
 }
 
 const VampPluginDescriptor* getRtvampDescriptor() {
-    return rtvamp::pluginsdk::PluginAdapter<RMS>::getDescriptor();
+    return rtvamp::pluginsdk::detail::PluginAdapter<RMS>::getDescriptor();
 }

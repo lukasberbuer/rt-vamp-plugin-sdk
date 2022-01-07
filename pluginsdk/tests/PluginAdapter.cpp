@@ -5,12 +5,12 @@
 
 #include <vamp/vamp.h>
 
-#include "rtvamp/pluginsdk/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk/detail/PluginAdapter.hpp"
 
 #include "TestPlugin.hpp"
 
 using Catch::Matchers::Equals;
-using rtvamp::pluginsdk::PluginAdapter;
+using rtvamp::pluginsdk::detail::PluginAdapter;
 
 TEST_CASE("PluginAdapter descriptor") {
     const VampPluginDescriptor* d = PluginAdapter<TestPlugin>::getDescriptor();

@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <vamp-sdk/PluginAdapter.h>
 
-#include "rtvamp/pluginsdk/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk/detail/PluginAdapter.hpp"
 
 #include "helper.hpp"
 #include "RMS.hpp"
@@ -28,7 +28,7 @@ static void BM_plugin(benchmark::State& state, const VampPluginDescriptor* descr
 }
 
 const auto BM_rtvamp = [](benchmark::State& state) {
-    constexpr auto* descriptor = rtvamp::pluginsdk::PluginAdapter<RMS>::getDescriptor();
+    constexpr auto* descriptor = rtvamp::pluginsdk::detail::PluginAdapter<RMS>::getDescriptor();
     BM_plugin(state, descriptor);
 };
 BENCHMARK(BM_rtvamp)->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
