@@ -46,13 +46,13 @@ TEST_CASE("VampPluginDescriptorWrapper") {
 }
 
 TEST_CASE("VampOutputDescriptorWrapper") {
-    using rtvamp::pluginsdk::Plugin;
+    using rtvamp::pluginsdk::PluginBase;
     using rtvamp::pluginsdk::VampOutputDescriptorWrapper;
 
     SECTION("Default values") {
-        Plugin::OutputDescriptor    descriptor{};
-        VampOutputDescriptorWrapper wrapper(descriptor);
-        VampOutputDescriptor&       d = wrapper.get();
+        PluginBase::OutputDescriptor descriptor{};
+        VampOutputDescriptorWrapper  wrapper(descriptor);
+        VampOutputDescriptor&        d = wrapper.get();
 
         CHECK_THAT(d.identifier,  Equals(""));
         CHECK_THAT(d.name,        Equals(""));
@@ -71,7 +71,7 @@ TEST_CASE("VampOutputDescriptorWrapper") {
     }
 
     SECTION("Non-matching binCount and binNames size") {
-        Plugin::OutputDescriptor descriptor;
+        PluginBase::OutputDescriptor descriptor;
         descriptor.binCount = 3;
         descriptor.binNames = {"a", "b"};
 

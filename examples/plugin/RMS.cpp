@@ -17,7 +17,7 @@ struct square {
     }
 };
 
-RMS::FeatureSet RMS::process(InputBuffer inputBuffer, uint64_t /* nsec */) {
+const RMS::FeatureSet& RMS::process(InputBuffer inputBuffer, uint64_t /* nsec */) {
     auto signal = std::get<TimeDomainBuffer>(inputBuffer);
 
     const float sumSquares = std::accumulate(

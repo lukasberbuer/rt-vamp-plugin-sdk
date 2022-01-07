@@ -67,9 +67,9 @@ More examples can be found here: https://github.com/lukasberbuer/rt-vamp-plugin-
 ### Plugin
 
 ```cpp
-class ZeroCrossing : public rtvamp::pluginsdk::PluginDefinition<1 /* one output */> {
+class ZeroCrossing : public rtvamp::pluginsdk::Plugin<1 /* one output */> {
 public:
-    using PluginDefinition::PluginDefinition;  // inherit constructor
+    using Plugin::Plugin;  // inherit constructor
 
     static constexpr Meta meta{
         .identifier    = "zerocrossing",
@@ -102,7 +102,7 @@ public:
         previousSample_ = 0.0f;
     }
 
-    FeatureSet process(InputBuffer buffer, uint64_t nsec) override {
+    const FeatureSet& process(InputBuffer buffer, uint64_t nsec) override {
         size_t crossings   = 0;
         bool   wasPositive = (previousSample_ >= 0.0f);
 

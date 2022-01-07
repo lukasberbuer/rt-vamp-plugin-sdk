@@ -1,10 +1,10 @@
 #pragma once
 
-#include "rtvamp/pluginsdk/PluginDefinition.hpp"
+#include "rtvamp/pluginsdk/Plugin.hpp"
 
-class TestPlugin : public rtvamp::pluginsdk::PluginDefinition<1> {
+class TestPlugin : public rtvamp::pluginsdk::Plugin<1> {
 public:
-    using PluginDefinition::PluginDefinition;  // inherit constructor
+    using Plugin::Plugin;  // inherit constructor
 
     static constexpr Meta meta{
         .identifier    = "test",
@@ -76,7 +76,7 @@ public:
         return true;
     };
 
-    FeatureSet process(InputBuffer buffer, uint64_t nsec) override {
+    const FeatureSet& process(InputBuffer buffer, uint64_t nsec) override {
         auto  signal = std::get<TimeDomainBuffer>(buffer);
         auto& result = getFeatureSet();
         if (signal.size() >= 3) {

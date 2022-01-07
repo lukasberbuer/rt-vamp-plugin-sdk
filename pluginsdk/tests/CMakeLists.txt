@@ -4,7 +4,7 @@ add_executable(
     tests_pluginsdk
     EntryPoint.cpp
     PluginAdapter.cpp
-    PluginDefinition.cpp
+    Plugin.cpp
     VampWrapper.cpp
 )
 

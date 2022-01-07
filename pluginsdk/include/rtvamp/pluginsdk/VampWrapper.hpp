@@ -10,29 +10,28 @@
 #include "vamp/vamp.h"
 
 #include "rtvamp/pluginsdk/Plugin.hpp"
-#include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
 namespace rtvamp::pluginsdk {
 
 /**
  * Generate plugin descriptor from plugin definition at compile time.
  */
-template <IsPluginDefinition TPluginDefinition>
+template <IsPlugin TPlugin>
 class VampPluginDescriptorWrapper {
 public:
     static consteval VampPluginDescriptor get() {
         VampPluginDescriptor d{};
         // static plugin information
         d.vampApiVersion = 2;
-        d.identifier     = TPluginDefinition::meta.identifier;
-        d.name           = TPluginDefinition::meta.name;
-        d.description    = TPluginDefinition::meta.description;
-        d.maker          = TPluginDefinition::meta.maker;
-        d.pluginVersion  = TPluginDefinition::meta.pluginVersion;
-        d.copyright      = TPluginDefinition::meta.copyright;
-        d.parameterCount = TPluginDefinition::parameters.size();
+        d.identifier     = TPlugin::meta.identifier;
+        d.name           = TPlugin::meta.name;
+        d.description    = TPlugin::meta.description;
+        d.maker          = TPlugin::meta.maker;
+        d.pluginVersion  = TPlugin::meta.pluginVersion;
+        d.copyright      = TPlugin::meta.copyright;
+        d.parameterCount = TPlugin::parameters.size();
         d.parameters     = getParameters();
-        d.programCount   = TPluginDefinition::programs.size();
+        d.programCount   = TPlugin::programs.size();
         d.programs       = getPrograms();
         d.inputDomain    = getVampInputDomain();
         // function pointers set to nullptr by aggregate initializer
@@ -41,7 +40,7 @@ public:
 
 private:
     static consteval auto getVampInputDomain() {
-        return TPluginDefinition::meta.inputDomain == Plugin::InputDomain::Frequency
+        return TPlugin::meta.inputDomain == PluginBase::InputDomain::Frequency
             ? vampFrequencyDomain
             : vampTimeDomain;
     }
@@ -52,16 +51,16 @@ private:
     }
 
     static consteval const char** getPrograms() {
-        if (TPluginDefinition::programs.empty()) return nullptr;
-        return const_cast<const char**>(TPluginDefinition::programs.data());
+        if (TPlugin::programs.empty()) return nullptr;
+        return const_cast<const char**>(TPlugin::programs.data());
     }
 
-    static constexpr auto parameterCount = TPluginDefinition::parameters.size();
+    static constexpr auto parameterCount = TPlugin::parameters.size();
 
     static constexpr auto vampParameters = [] {
         std::array<VampParameterDescriptor, parameterCount> result{};
         for (size_t i = 0; i < parameterCount; ++i) {
-            const auto& p = TPluginDefinition::parameters[i];
+            const auto& p = TPlugin::parameters[i];
             auto& vp      = result[i];
 
             vp.identifier   = p.identifier;
@@ -96,7 +95,7 @@ private:
  * therefore not copied.
  */
 struct VampOutputDescriptorWrapper{
-    explicit VampOutputDescriptorWrapper(const Plugin::OutputDescriptor& d)
+    explicit VampOutputDescriptorWrapper(const PluginBase::OutputDescriptor& d)
         : identifier_(d.identifier),
           name_(d.name),
           description_(d.description),
@@ -171,7 +170,7 @@ public:
         v1.values     = values_.empty() ? nullptr : values_.data();  // might got reallocated
     }
 
-    void assignValues(const Plugin::Feature& values) {
+    void assignValues(const PluginBase::Feature& values) {
         if (const auto n = values.size(); getValueCount() != n) {
             setValueCount(n);
         }
@@ -193,7 +192,8 @@ private:
 template <size_t NOutputs>
 class VampFeatureListsWrapper {
 public:
-    VampFeatureListsWrapper() {
+    constexpr VampFeatureListsWrapper() {
+        if constexpr (NOutputs == 0) return;
         for (size_t i = 0; i < NOutputs; ++i) {
             featureLists_[i] = {
                 .featureCount = 1,
@@ -202,12 +202,12 @@ public:
         }
     }
 
-    void assignValues(size_t outputNumber, const Plugin::Feature& values) {
+    void assignValues(size_t outputNumber, const PluginBase::Feature& values) {
         assert(outputNumber < NOutputs);
         featureUnionWrappers_[outputNumber].assignValues(values);
     }
 
-    void assignValues(std::span<const Plugin::Feature> values) {
+    void assignValues(std::span<const PluginBase::Feature> values) {
         assert(values.size() == NOutputs);
         for (size_t i = 0; i < NOutputs; ++i) {
             assignValues(i, values[i]);

@@ -6,12 +6,12 @@
 #include "vamp/vamp.h"
 #include <vamp-sdk/Plugin.h>
 
-#include "rtvamp/pluginsdk/PluginDefinition.hpp"
+#include "rtvamp/pluginsdk/Plugin.hpp"
 #include "helper.hpp"
 
-class RMS : public rtvamp::pluginsdk::PluginDefinition<1 /* 1 output */> {
+class RMS : public rtvamp::pluginsdk::Plugin<1 /* 1 output */> {
 public:
-    using PluginDefinition::PluginDefinition;
+    using Plugin::Plugin;
 
     static constexpr Meta meta {
         .identifier    = "rms",
@@ -43,7 +43,7 @@ public:
 
     void reset() override {}
 
-    FeatureSet process(InputBuffer inputBuffer, uint64_t /* nsec */) override {
+    const FeatureSet& process(InputBuffer inputBuffer, uint64_t /* nsec */) override {
         auto signal = std::get<TimeDomainBuffer>(inputBuffer);
 
         const float sumSquares = std::accumulate(

@@ -1,6 +1,8 @@
 #pragma once
 
+#include <array>
 #include <complex>
+#include <cstdint>
 #include <span>
 #include <string>
 #include <string_view>
@@ -16,14 +18,11 @@ static_assert(sizeof(unsigned int) >= sizeof(uint32_t), "Size type must have at 
 namespace rtvamp::pluginsdk {
 
 /**
- * Base class for feature extraction plugins.
- * 
- * Implementations must derive from the PluginDefinition class.
+ * Plugin base class with common type definitions of pluginsdk and hostsdk.
  */
-class Plugin {
+class PluginBase {
 public:
-    explicit constexpr Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
-    virtual ~Plugin() = default;
+    virtual ~PluginBase() = default;
 
     enum class InputDomain { Time, Frequency };
 
@@ -58,51 +57,101 @@ public:
         float quantizeStep    = 0.0f;
     };
 
-    using ParameterList              = std::span<const ParameterDescriptor>;
-    using ProgramList                = std::span<const char* const>;
-    using OutputList                 = std::vector<OutputDescriptor>;
+    using TimeDomainBuffer      = std::span<const float>;
+    using FrequencyDomainBuffer = std::span<const std::complex<float>>;
+    using InputBuffer           = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
+    using Feature               = std::vector<float>;
+};
 
-    using TimeDomainBuffer           = std::span<const float>;
-    using FrequencyDomainBuffer      = std::span<const std::complex<float>>;
-    using InputBuffer                = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
+/**
+ * Base class to implement feature extraction plugins.
+ * 
+ * The number of outputs is provided as a template parameter.
+ */
+template <uint32_t NOutputs>
+class Plugin : public PluginBase {
+public:
+    explicit constexpr Plugin(float inputSampleRate)
+        : inputSampleRate_(inputSampleRate) {}
 
-    using Feature                    = std::vector<float>;
-    using FeatureSet                 = std::span<const Feature>;
+    using OutputList = std::array<OutputDescriptor, NOutputs>;
+    using FeatureSet = std::array<Feature, NOutputs>;
 
-    virtual constexpr std::string_view getIdentifier( )   const = 0;
-    virtual constexpr std::string_view getName()          const = 0;
-    virtual constexpr std::string_view getDescription()   const = 0;
-    virtual constexpr std::string_view getMaker()         const = 0;
-    virtual constexpr std::string_view getCopyright()     const = 0;
-    virtual constexpr int              getPluginVersion() const = 0;
-    virtual constexpr InputDomain      getInputDomain()   const = 0;
+    static constexpr uint32_t outputCount = NOutputs;
 
-    virtual constexpr ParameterList    getParameterList()                const { return {}; }
-    virtual float                      getParameter(std::string_view id) const { return 0.0f; }
-    virtual void                       setParameter(std::string_view id, float value) {} 
+    // required static plugin descriptor
+    struct Meta {
+        const char* identifier    = "";
+        const char* name          = "";
+        const char* description   = "";
+        const char* maker         = "";
+        const char* copyright     = "";
+        int         pluginVersion = 1;
+        InputDomain inputDomain   = InputDomain::Time;
+    };
 
-    virtual constexpr ProgramList      getProgramList()    const { return {}; }
-    virtual std::string_view           getCurrentProgram() const { return {}; }
-    virtual void                       selectProgram(std::string_view name) {}
+    static constexpr Meta meta{};
 
-    virtual float                      getInputSampleRate()    const { return inputSampleRate_; };
-    virtual uint32_t                   getPreferredStepSize()  const { return 0; }
-    virtual uint32_t                   getPreferredBlockSize() const { return 0; }
+    // optional static descriptors, default: 0 parameters, 0 programs
+    static constexpr std::array<ParameterDescriptor, 0> parameters{};
+    static constexpr std::array<const char*, 0>         programs{};
 
-    virtual constexpr uint32_t         getOutputCount()       const = 0;
-    virtual OutputList                 getOutputDescriptors() const = 0;
+    virtual float             getParameter(std::string_view id) const { return 0.0f; }
+    virtual void              setParameter(std::string_view id, float value) {} 
 
-    virtual bool                       initialise(uint32_t stepSize, uint32_t blockSize) = 0;
-    virtual void                       reset() = 0;
-    virtual FeatureSet                 process(InputBuffer buffer, uint64_t nsec) = 0;
+    virtual std::string_view  getCurrentProgram() const { return {}; }
+    virtual void              selectProgram(std::string_view name) {}
+
+    virtual uint32_t          getPreferredStepSize()  const noexcept { return 0; }
+    virtual uint32_t          getPreferredBlockSize() const noexcept { return 0; }
+
+    virtual OutputList        getOutputDescriptors() const = 0;
+
+    virtual bool              initialise(uint32_t stepSize, uint32_t blockSize) = 0;
+    virtual void              reset() = 0;
+    virtual const FeatureSet& process(InputBuffer buffer, uint64_t nsec) = 0;
+
+protected:
+    float       getInputSampleRate() const noexcept { return inputSampleRate_; };
+    FeatureSet& getFeatureSet() noexcept { return featureSet_; }
+    void        initialiseFeatureSet();
 
 private:
-    const float inputSampleRate_ = 0.0f;
+    const float inputSampleRate_;
+    FeatureSet  featureSet_;
 };
+
+/* --------------------------------------- Implementation --------------------------------------- */
+
+template <uint32_t NOutputs>
+void Plugin<NOutputs>::initialiseFeatureSet() {
+    const auto outputs     = getOutputDescriptors();
+    auto&      featureSet  = getFeatureSet();
+    for (size_t i = 0; i < outputCount; ++i) {
+        featureSet[i].resize(outputs[i].binCount);
+    }
+}
 
 /* ------------------------------------------- Concept ------------------------------------------ */
 
+namespace detail {
+
+/**
+ * Check if type is derived from Plugin.
+ * Some workaround to make it work with integer template parameter for output count.
+ */
+template <typename T, size_t MaxOutputCount = 32>
+consteval bool isPlugin() {
+    return []<std::size_t... Ns>(std::index_sequence<Ns...>) {
+        return std::disjunction<
+            std::is_base_of<Plugin<Ns>, T>...
+        >::value;
+    }(std::make_index_sequence<MaxOutputCount>{});
+}
+
+}  // namespace detail
+
 template <typename T>
-concept IsPlugin = std::is_base_of_v<Plugin, T>;
+concept IsPlugin = detail::isPlugin<T>();
 
 }  // namespace rtvamp::pluginsdk

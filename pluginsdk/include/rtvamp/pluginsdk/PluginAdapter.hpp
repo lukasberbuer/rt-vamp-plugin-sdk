@@ -5,12 +5,12 @@
 #include <shared_mutex>
 #include <utility>  // cmp_less
 
-#include "rtvamp/pluginsdk/PluginDefinition.hpp"
+#include "rtvamp/pluginsdk/Plugin.hpp"
 #include "rtvamp/pluginsdk/VampWrapper.hpp"
 
 namespace rtvamp::pluginsdk {
 
-template <IsPluginDefinition TPluginDefinition>
+template <IsPlugin TPlugin>
 class PluginInstanceAdapter {
 public:
     explicit PluginInstanceAdapter(float inputSampleRate) : plugin_(inputSampleRate) {
@@ -30,17 +30,17 @@ public:
 
     float getParameter(int index) const {
         // bounds checking in descriptor lambda
-        return plugin_.getParameter(TPluginDefinition::parameters[index].identifier); 
+        return plugin_.getParameter(TPlugin::parameters[index].identifier); 
     }
 
     void setParameter(int index, float value) {
         // bounds checking in descriptor lambda
-        plugin_.setParameter(TPluginDefinition::parameters[index].identifier, value);
+        plugin_.setParameter(TPlugin::parameters[index].identifier, value);
         outputsNeedUpdate_ = true;
     }
 
     unsigned int getCurrentProgram() const {
-        const auto& programs = TPluginDefinition::programs;
+        const auto& programs = TPlugin::programs;
         const auto  program  = plugin_.getCurrentProgram();
         for (size_t i = 0; i < programs.size(); ++i) {
             if (programs[i] == program) return i;
@@ -50,7 +50,7 @@ public:
 
     void selectProgram(unsigned int index) {
         // bounds checking in descriptor lambda
-        plugin_.selectProgram(TPluginDefinition::programs[index]);
+        plugin_.selectProgram(TPlugin::programs[index]);
         outputsNeedUpdate_ = true;
     }
 
@@ -65,8 +65,8 @@ public:
         const auto*   buffer    = inputBuffers[0];  // only first channel
         const int64_t timestamp = 1'000'000'000 * sec + nsec;
 
-        const auto getInputBuffer = [&]() -> Plugin::InputBuffer {
-            if constexpr (TPluginDefinition::meta.inputDomain == Plugin::InputDomain::Time) {
+        const auto getInputBuffer = [&]() -> PluginBase::InputBuffer {
+            if constexpr (TPlugin::meta.inputDomain == PluginBase::InputDomain::Time) {
                 return std::span(buffer, blockSize_);
             } else {
                 // casts between interleaved arrays and std::complex are guaranteed to be valid
@@ -88,7 +88,7 @@ public:
         return empty.data();
     }
 
-    const TPluginDefinition& get() const noexcept { return plugin_; }
+    const TPlugin& get() const noexcept { return plugin_; }
 
 private:
     void updateOutputDescriptors() {
@@ -107,9 +107,9 @@ private:
         }
     }
 
-    static constexpr auto outputCount = TPluginDefinition::outputCount;
+    static constexpr auto outputCount = TPlugin::outputCount;
 
-    TPluginDefinition                        plugin_;
+    TPlugin                                  plugin_;
     size_t                                   blockSize_{0};
     std::shared_mutex                        mutex_;
     std::atomic<bool>                        outputsNeedUpdate_{true};
@@ -117,13 +117,13 @@ private:
     VampFeatureListsWrapper<outputCount>     featureListsWrapper_;
 };
 
-template <IsPluginDefinition TPluginDefinition>
+template <IsPlugin TPlugin>
 class PluginAdapter {
 public:
     static consteval const VampPluginDescriptor* getDescriptor() { return &descriptor; }
 
 private:
-    using TPluginInstanceAdapter = PluginInstanceAdapter<TPluginDefinition>;
+    using TPluginInstanceAdapter = PluginInstanceAdapter<TPlugin>;
 
     static VampPluginHandle vampInstantiate(
         const VampPluginDescriptor* desc, float inputSampleRate
@@ -161,19 +161,19 @@ private:
     }
 
     static constexpr bool isValidParameterIndex(auto index) {
-        return index >= 0 && std::cmp_less(index, TPluginDefinition::parameters.size());
+        return index >= 0 && std::cmp_less(index, TPlugin::parameters.size());
     }
 
     static constexpr bool isValidProgramIndex(auto index) {
-        return index >= 0 && std::cmp_less(index, TPluginDefinition::programs.size());
+        return index >= 0 && std::cmp_less(index, TPlugin::programs.size());
     }
 
     static constexpr bool isValidOutputIndex(auto index) {
-        return index >= 0 && std::cmp_less(index, TPluginDefinition::outputCount);
+        return index >= 0 && std::cmp_less(index, TPlugin::outputCount);
     }
 
     static constexpr VampPluginDescriptor descriptor = [] {
-        auto d = VampPluginDescriptorWrapper<TPluginDefinition>::get();
+        auto d = VampPluginDescriptorWrapper<TPlugin>::get();
 
         d.instantiate = vampInstantiate;
         d.cleanup     = vampCleanup;
@@ -240,7 +240,7 @@ private:
         };
 
         d.getOutputCount = [](VampPluginHandle) {
-            return TPluginDefinition::outputCount;
+            return TPlugin::outputCount;
         };
 
         d.getOutputDescriptor = [](VampPluginHandle handle, unsigned int index) -> VampOutputDescriptor* {

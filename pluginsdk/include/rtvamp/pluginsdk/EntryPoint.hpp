@@ -2,12 +2,12 @@
 
 #include "vamp/vamp.h"
 
+#include "rtvamp/pluginsdk/Plugin.hpp"
 #include "rtvamp/pluginsdk/PluginAdapter.hpp"
-#include "rtvamp/pluginsdk/PluginDefinition.hpp"
 
 namespace rtvamp::pluginsdk {
 
-template <IsPluginDefinition... Plugins>
+template <IsPlugin... Plugins>
 class EntryPoint {
 public:
     static constexpr const VampPluginDescriptor* getDescriptor(

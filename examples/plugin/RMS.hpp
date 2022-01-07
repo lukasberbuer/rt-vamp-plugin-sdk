@@ -1,10 +1,10 @@
 #pragma once
 
-#include "rtvamp/pluginsdk/PluginDefinition.hpp"
+#include "rtvamp/pluginsdk/Plugin.hpp"
 
-class RMS : public rtvamp::pluginsdk::PluginDefinition<1> {
+class RMS : public rtvamp::pluginsdk::Plugin<1> {
 public:
-    using PluginDefinition::PluginDefinition;  // inherit constructor
+    using Plugin::Plugin;  // inherit constructor
 
     static constexpr Meta meta {
         .identifier    = "rms",
@@ -32,5 +32,5 @@ public:
     bool initialise(uint32_t stepSize, uint32_t blockSize) override;
     void reset() override;
 
-    FeatureSet process(InputBuffer inputBuffer, uint64_t nsec) override;
+    const FeatureSet& process(InputBuffer inputBuffer, uint64_t nsec) override;
 };
