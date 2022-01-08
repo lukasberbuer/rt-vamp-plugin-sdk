@@ -129,7 +129,9 @@ void process(std::string_view pluginKey, std::string_view audiofile) {
     const size_t blockSize = preferredBlockSize ? preferredBlockSize : 1024;
     const size_t stepSize  = blockSize;
 
-    plugin->initialise(stepSize, blockSize);
+    const bool success = plugin->initialise(stepSize, blockSize);
+    if (!success) throw std::runtime_error("Initialisation failed");
+
     const auto output = plugin->getOutputDescriptors().at(0);  // choose first output
 
     // print summary
