@@ -63,7 +63,7 @@ bool PluginExt<Self, NOutputs>::setParameter(std::string_view id, float value) {
     if (const auto index = findParameterIndex(id)) {
         const auto& descriptor = Self::parameters[index.value()];
 
-        if (descriptor.isQuantized) {
+        if (descriptor.isQuantized && descriptor.quantizeStep != 0.0f) {
             value = std::round(value / descriptor.quantizeStep) * descriptor.quantizeStep;
         }
         if (descriptor.minValue) {
