@@ -90,37 +90,54 @@ TEST_CASE("PluginExt get/set parameter") {
     }
 
     SECTION("Set/get") {
-        plugin.setParameter("free", 1e9f);
+        REQUIRE(plugin.setParameter("free", 1e9f));
         REQUIRE(plugin.getParameter("free").value() == 1e9f);
 
-        plugin.setParameter("limited", 1.1f);
+        REQUIRE(plugin.setParameter("limited", 1.1f));
         REQUIRE(plugin.getParameter("limited").value() == 1.1f);
 
-        plugin.setParameter("quantized", 10.0f);
+        REQUIRE(plugin.setParameter("quantized", 10.0f));
         REQUIRE(plugin.getParameter("quantized").value() == 10.0f);
+
+        REQUIRE_FALSE(plugin.setParameter("invalid", 0.0f));
     }
 
     SECTION("Clamp to limits") {
-        plugin.setParameter("limited", 1e9f);
+        REQUIRE(plugin.setParameter("limited", 1e9f));
         REQUIRE(plugin.getParameter("limited").value() == 10.0f);
 
-        plugin.setParameter("limited", -11.f);
+        REQUIRE(plugin.setParameter("limited", -11.f));
         REQUIRE(plugin.getParameter("limited").value() == -10.0f);
     }
 
     SECTION("Quantization") {
-        plugin.setParameter("quantized", 0.0f);
+        REQUIRE(plugin.setParameter("quantized", 0.0f));
         REQUIRE(plugin.getParameter("quantized").value() == 0.0f);
 
-        plugin.setParameter("quantized", 1.1f);
+        REQUIRE(plugin.setParameter("quantized", 1.1f));
         REQUIRE(plugin.getParameter("quantized").value() == 1.0f);
 
-        plugin.setParameter("quantized", -1.9f);
+        REQUIRE(plugin.setParameter("quantized", -1.9f));
         REQUIRE(plugin.getParameter("quantized").value() == -2.0f);
 
-        plugin.setParameter("quantized", 55.5f);
+        REQUIRE(plugin.setParameter("quantized", 55.5f));
         REQUIRE(plugin.getParameter("quantized").value() == 56.0f);
     }
+}
+
+TEST_CASE("PluginExt get/select program") {
+    TestPluginExt plugin(48000);
+
+    // convert to string for Catch2 matchers
+    const auto currentProgram = [&] { return std::string(plugin.getCurrentProgram()); };
+
+    REQUIRE_THAT(currentProgram(), Equals("default"));
+
+    REQUIRE_FALSE(plugin.selectProgram("invalid"));
+    REQUIRE_THAT(currentProgram(), Equals("default"));
+
+    REQUIRE(plugin.selectProgram("new"));
+    REQUIRE_THAT(currentProgram(), Equals("new"));
 }
 
 TEST_CASE("PluginExt onParameterChange callback") {
@@ -160,21 +177,6 @@ TEST_CASE("PluginExt onProgramChange callback") {
         plugin.selectProgram("new");
         CHECK(plugin.onProgramChangeName == "new");
     }
-}
-
-TEST_CASE("PluginExt get/select program") {
-    TestPluginExt plugin(48000);
-
-    // convert to string for Catch2 matchers
-    const auto currentProgram = [&] { return std::string(plugin.getCurrentProgram()); };
-
-    REQUIRE_THAT(currentProgram(), Equals("default"));
-
-    plugin.selectProgram("invalid");
-    REQUIRE_THAT(currentProgram(), Equals("default"));
-
-    plugin.selectProgram("new");
-    REQUIRE_THAT(currentProgram(), Equals("new"));
 }
 
 TEST_CASE("PluginExt within PluginAdapter") {

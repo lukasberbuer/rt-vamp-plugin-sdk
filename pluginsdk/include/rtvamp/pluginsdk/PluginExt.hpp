@@ -30,10 +30,10 @@ public:
     explicit PluginExt(float inputSampleRate) : Plugin<NOutputs>(inputSampleRate) {}
 
     std::optional<float> getParameter(std::string_view id) const override final;
-    void                 setParameter(std::string_view id, float value) override final;
+    bool                 setParameter(std::string_view id, float value) override final;
 
     std::string_view     getCurrentProgram() const override final;
-    void                 selectProgram(std::string_view name) override final;
+    bool                 selectProgram(std::string_view name) override final;
 
     // custom logic can be implemented with following callbacks
     virtual void         onParameterChange(std::string_view id, float newValue) {}
@@ -59,7 +59,7 @@ std::optional<float> PluginExt<Self, NOutputs>::getParameter(std::string_view id
 }
 
 template <typename Self, uint32_t NOutputs>
-void PluginExt<Self, NOutputs>::setParameter(std::string_view id, float value) {
+bool PluginExt<Self, NOutputs>::setParameter(std::string_view id, float value) {
     if (const auto index = findParameterIndex(id)) {
         const auto& descriptor = Self::parameters[index.value()];
 
@@ -75,7 +75,9 @@ void PluginExt<Self, NOutputs>::setParameter(std::string_view id, float value) {
 
         parameterValues_[index.value()] = value;
         onParameterChange(id, value);
+        return true;
     }
+    return false;
 }
 
 template <typename Self, uint32_t NOutputs>
@@ -85,11 +87,13 @@ std::string_view PluginExt<Self, NOutputs>::getCurrentProgram() const {
 }
 
 template <typename Self, uint32_t NOutputs>
-void PluginExt<Self, NOutputs>::selectProgram(std::string_view name) {
+bool PluginExt<Self, NOutputs>::selectProgram(std::string_view name) {
     if (const auto index = findProgramIndex(name)) {
         programIndex_ = index.value();
         onProgramChange(name);
+        return true;
     }
+    return false;
 }
 
 template <typename Self, uint32_t NOutputs>

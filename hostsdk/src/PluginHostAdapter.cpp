@@ -124,10 +124,11 @@ std::optional<float> PluginHostAdapter::getParameter(std::string_view id) const 
     return descriptor_.getParameter(handle_, optionalIndex.value());
 }
 
-void PluginHostAdapter::setParameter(std::string_view id, float value) {
+bool PluginHostAdapter::setParameter(std::string_view id, float value) {
     const auto optionalIndex = findParameterIndex(descriptor_, id);
-    if (!optionalIndex) return;
+    if (!optionalIndex) return false;
     descriptor_.setParameter(handle_, optionalIndex.value(), value);
+    return true;
 }
 
 Plugin::ProgramList PluginHostAdapter::getProgramList() const noexcept {
@@ -140,10 +141,11 @@ std::string_view PluginHostAdapter::getCurrentProgram() const {
     return programs_[index];
 }
 
-void PluginHostAdapter::selectProgram(std::string_view name) {
+bool PluginHostAdapter::selectProgram(std::string_view name) {
     const auto optionalIndex = findProgramIndex(descriptor_, name);
-    if (!optionalIndex) return;
+    if (!optionalIndex) return false;
     descriptor_.selectProgram(handle_, optionalIndex.value());
+    return true;
 }
 
 uint32_t PluginHostAdapter::getPreferredStepSize() const {

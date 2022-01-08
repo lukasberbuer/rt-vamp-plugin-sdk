@@ -98,10 +98,10 @@ public:
     static constexpr std::array<const char*, 0>         programs{};
 
     virtual std::optional<float> getParameter(std::string_view id) const { return {}; }
-    virtual void                 setParameter(std::string_view id, float value) {} 
+    virtual bool                 setParameter(std::string_view id, float value) { return false; } 
 
     virtual std::string_view     getCurrentProgram() const { return {}; }
-    virtual void                 selectProgram(std::string_view name) {}
+    virtual bool                 selectProgram(std::string_view name) { return false; }
 
     virtual uint32_t             getPreferredStepSize()  const { return 0; }
     virtual uint32_t             getPreferredBlockSize() const { return 0; }

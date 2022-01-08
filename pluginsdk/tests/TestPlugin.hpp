@@ -53,21 +53,26 @@ public:
         return {};
     }
 
-    void setParameter(std::string_view id, float value) override {
-        if (id == "param") param_ = value;
+    bool setParameter(std::string_view id, float value) override {
+        if (id == "param") {
+            param_ = value;
+            return true;
+        }
+        return false;
     }
 
     std::string_view getCurrentProgram() const override {
         return programs[programIndex_];
     }
 
-    void selectProgram(std::string_view program) override {
+    bool selectProgram(std::string_view program) override {
         for (size_t i = 0; i < programs.size(); ++i) {
             if (programs[i] == program) {
                 programIndex_ = i;
-                return;
+                return true;
             }
         }
+        return false;
     }
 
     void reset() override {};

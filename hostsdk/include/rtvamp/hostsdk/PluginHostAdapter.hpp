@@ -28,11 +28,11 @@ public:
 
     ParameterList        getParameterList()                const noexcept override;
     std::optional<float> getParameter(std::string_view id) const override;
-    void                 setParameter(std::string_view id, float value) override; 
+    bool                 setParameter(std::string_view id, float value) override; 
 
     ProgramList          getProgramList()    const noexcept override;
     std::string_view     getCurrentProgram() const override;
-    void                 selectProgram(std::string_view name) override;
+    bool                 selectProgram(std::string_view name) override;
 
     uint32_t             getPreferredStepSize()  const override;
     uint32_t             getPreferredBlockSize() const override;

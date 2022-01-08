@@ -109,14 +109,14 @@ TEST_CASE("PluginHostAdapter get/set parameter") {
     };
 
     REQUIRE_FALSE(plugin.getParameter("invalid").has_value());
-    REQUIRE_NOTHROW(plugin.setParameter("invalid", 0.0f));
+    REQUIRE_FALSE(plugin.setParameter("invalid", 0.0f));
 
     REQUIRE(plugin.getParameter("param1").value() == 1.0f);
-    plugin.setParameter("param1", 2.0f);
+    REQUIRE(plugin.setParameter("param1", 2.0f));
     REQUIRE(plugin.getParameter("param1").value() == 2.0f);
 
     REQUIRE(plugin.getParameter("param2").value() == -1.0f);
-    plugin.setParameter("param2", -5.0f);
+    REQUIRE(plugin.setParameter("param2", -5.0f));
     REQUIRE(plugin.getParameter("param2").value() == -5.0f);
 }
 
@@ -137,10 +137,10 @@ TEST_CASE("PluginHostAdapter get/set programs") {
 
     REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[0]));
 
-    plugin.selectProgram("invalid");
+    REQUIRE_FALSE(plugin.selectProgram("invalid"));
     REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[0]));
 
-    plugin.selectProgram(descriptor.programs[1]);
+    REQUIRE(plugin.selectProgram(descriptor.programs[1]));
     REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[1]));
 }
 

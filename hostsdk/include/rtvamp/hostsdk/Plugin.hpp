@@ -31,11 +31,11 @@ public:
 
     virtual ParameterList        getParameterList() const noexcept = 0;
     virtual std::optional<float> getParameter(std::string_view id) const = 0;
-    virtual void                 setParameter(std::string_view id, float value) = 0;
+    virtual bool                 setParameter(std::string_view id, float value) = 0;
 
     virtual ProgramList          getProgramList()    const noexcept = 0;
     virtual std::string_view     getCurrentProgram() const = 0;
-    virtual void                 selectProgram(std::string_view name) = 0;
+    virtual bool                 selectProgram(std::string_view name) = 0;
 
     virtual uint32_t             getPreferredStepSize()  const = 0;
     virtual uint32_t             getPreferredBlockSize() const = 0;
