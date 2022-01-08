@@ -36,14 +36,14 @@ static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
         parameter.maxValue     = vampParameter->maxValue;
         parameter.quantizeStep = createOptional(vampParameter->quantizeStep, vampParameter->isQuantized == 1);
 
-        if (vampParameter->isQuantized && vampParameter->valueNames) {
-            size_t count = 0;
-            for (auto ptr = vampParameter->valueNames; *ptr != nullptr; ++ptr) { ++count; }
-            parameter.valueNames = std::vector<std::string_view>(
-                vampParameter->valueNames,
-                vampParameter->valueNames + count
-            );
-        }
+        // if (vampParameter->isQuantized && vampParameter->valueNames) {
+        //     size_t count = 0;
+        //     for (auto ptr = vampParameter->valueNames; *ptr != nullptr; ++ptr) { ++count; }
+        //     parameter.valueNames = std::vector<std::string_view>(
+        //         vampParameter->valueNames,
+        //         vampParameter->valueNames + count
+        //     );
+        // }
     }
     return result;
 }
