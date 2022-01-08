@@ -68,8 +68,8 @@ private:
             vp.description  = p.description;
             vp.unit         = p.unit;
             vp.defaultValue = p.defaultValue;
-            vp.minValue     = p.minValue;
-            vp.maxValue     = p.maxValue;
+            vp.minValue     = p.minValue.value_or(0.0f);
+            vp.maxValue     = p.maxValue.value_or(0.0f);
             vp.isQuantized  = static_cast<int>(p.quantizeStep.has_value());
             vp.quantizeStep = p.quantizeStep.value_or(0.0f);
         }

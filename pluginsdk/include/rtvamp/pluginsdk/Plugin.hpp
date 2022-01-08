@@ -19,7 +19,7 @@ static_assert(sizeof(unsigned int) >= sizeof(uint32_t), "Size type must have at 
 namespace rtvamp::pluginsdk {
 
 /**
- * Plugin base class with common type definitions of pluginsdk and hostsdk.
+ * Non-templated plugin base class with type definitions.
  */
 class PluginBase {
 public:
@@ -29,28 +29,28 @@ public:
 
     struct ParameterDescriptor {
         // use const char* for compile-time evaluation and mapping to C API
-        const char*          identifier   = "";
-        const char*          name         = "";
-        const char*          description  = "";
-        const char*          unit         = "";
-        float                defaultValue = 0.0f;
-        float                minValue     = 0.0f;
-        float                maxValue     = 0.0f;
-        std::optional<float> quantizeStep = std::nullopt;
+        const char*               identifier   = "";
+        const char*               name         = "";
+        const char*               description  = "";
+        const char*               unit         = "";
+        float                     defaultValue = 0.0f;
+        std::optional<float>      minValue     = std::nullopt;
+        std::optional<float>      maxValue     = std::nullopt;
+        std::optional<float>      quantizeStep = std::nullopt;
         // std::vector<const char*> valueNames{};  // currently not possible -> wait for constexpr vectors
     };
 
     struct OutputDescriptor {
-        std::string              identifier;
-        std::string              name;
-        std::string              description;
-        std::string              unit;
-        uint32_t                 binCount = 0;
-        std::vector<std::string> binNames{};
-        bool                     hasKnownExtents = false;
-        float                    minValue        = 0.0f;
-        float                    maxValue        = 0.0f;
-        std::optional<float>     quantizeStep    = std::nullopt;
+        std::string               identifier;
+        std::string               name;
+        std::string               description;
+        std::string               unit;
+        uint32_t                  binCount = 0;
+        std::vector<std::string>  binNames{};
+        bool                      hasKnownExtents = false;
+        float                     minValue        = 0.0f;
+        float                     maxValue        = 0.0f;
+        std::optional<float>      quantizeStep    = std::nullopt;
     };
 
     using TimeDomainBuffer      = std::span<const float>;
@@ -69,27 +69,23 @@ class Plugin : public PluginBase {
 public:
     explicit constexpr Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
 
-    using OutputList = std::array<OutputDescriptor, NOutputs>;
-    using FeatureSet = std::array<Feature, NOutputs>;
-
-    static constexpr uint32_t outputCount = NOutputs;
-
-    // required static plugin descriptor
     struct Meta {
-        const char* identifier    = "";
-        const char* name          = "";
-        const char* description   = "";
-        const char* maker         = "";
-        const char* copyright     = "";
-        int         pluginVersion = 1;
-        InputDomain inputDomain   = InputDomain::Time;
+        const char*  identifier    = "";
+        const char*  name          = "";
+        const char*  description   = "";
+        const char*  maker         = "";
+        const char*  copyright     = "";
+        int          pluginVersion = 1;
+        InputDomain  inputDomain   = InputDomain::Time;
     };
 
-    static constexpr Meta meta{};
+    static constexpr Meta                               meta{};        // required static plugin descriptor
+    static constexpr std::array<ParameterDescriptor, 0> parameters{};  // optional parameters (default: none)
+    static constexpr std::array<const char*, 0>         programs{};    // optional programs (default: none)
+    static constexpr uint32_t                           outputCount = NOutputs;
 
-    // optional static descriptors, default: 0 parameters, 0 programs
-    static constexpr std::array<ParameterDescriptor, 0> parameters{};
-    static constexpr std::array<const char*, 0>         programs{};
+    using OutputList = std::array<OutputDescriptor, NOutputs>;
+    using FeatureSet = std::array<Feature, NOutputs>;
 
     virtual std::optional<float> getParameter(std::string_view id) const { return {}; }
     virtual bool                 setParameter(std::string_view id, float value) { return false; } 
