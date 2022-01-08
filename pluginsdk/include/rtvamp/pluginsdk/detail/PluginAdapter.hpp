@@ -71,7 +71,7 @@ public:
             } else {
                 // casts between interleaved arrays and std::complex are guaranteed to be valid
                 // https://en.cppreference.com/w/cpp/numeric/complex
-                return std::span(reinterpret_cast<const std::complex<float>*>(buffer), blockSize_ + 2);
+                return std::span(reinterpret_cast<const std::complex<float>*>(buffer), blockSize_ / 2 + 1);
             }
         };
 
