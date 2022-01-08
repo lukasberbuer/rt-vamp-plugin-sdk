@@ -1,5 +1,6 @@
 #include "rtvamp/pluginsdk/EntryPoint.hpp"
 
 #include "RMS.hpp"
+#include "SpectralRolloff.hpp"
 
-RTVAMP_ENTRY_POINT(RMS)
+RTVAMP_ENTRY_POINT(RMS, SpectralRolloff)

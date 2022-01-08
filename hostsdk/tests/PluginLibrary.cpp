@@ -28,11 +28,11 @@ TEST_CASE("PluginLibrary") {
         PluginLibrary library(path);
 
         REQUIRE_THAT(library.getLibraryName(), Equals("example-plugin"));
-        REQUIRE(library.getDescriptors().size() == 1);
 
         const auto descriptors = library.getDescriptors();
-        REQUIRE(descriptors.size() == 1);
+        REQUIRE(descriptors.size() >= 2);
         REQUIRE_THAT(descriptors[0]->identifier, Equals("rms"));
+        REQUIRE_THAT(descriptors[1]->identifier, Equals("spectralrolloff"));
 
         SECTION("Same handle for multiple library loads -> same plugin descriptors") {
             PluginLibrary library2(path);

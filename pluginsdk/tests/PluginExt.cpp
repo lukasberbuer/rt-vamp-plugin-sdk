@@ -182,5 +182,5 @@ TEST_CASE("PluginExt onProgramChange callback") {
 TEST_CASE("PluginExt within PluginAdapter") {
     using rtvamp::pluginsdk::detail::PluginAdapter;
 
-    STATIC_REQUIRE(PluginAdapter<TestPluginExt>::getDescriptor() != nullptr);
+    REQUIRE(PluginAdapter<TestPluginExt>::getDescriptor() != nullptr);
 }
