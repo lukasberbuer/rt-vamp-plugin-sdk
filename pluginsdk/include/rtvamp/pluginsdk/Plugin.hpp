@@ -34,9 +34,9 @@ public:
         const char* description = "";
         const char* unit        = "";
 
+        float defaultValue = 0.0f;
         float minValue     = 0.0f;
         float maxValue     = 0.0f;
-        float defaultValue = 0.0f;
         bool  isQuantized  = false;
         float quantizeStep = 0.0f;
         // std::vector<const char*> valueNames{};  // currently not possible -> wait for constexpr vectors

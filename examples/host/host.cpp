@@ -48,9 +48,9 @@ void listPlugins() {
                     std::cout << "    - Name:             " << p.name << '\n';
                     std::cout << "    - Description:      " << p.description << '\n';
                     std::cout << "    - Unit:             " << p.unit << '\n';
+                    std::cout << "    - Default value:    " << p.defaultValue << '\n';
                     std::cout << "    - Minimum value:    " << p.minValue << '\n';
                     std::cout << "    - Maximum value:    " << p.maxValue << '\n';
-                    std::cout << "    - Default value:    " << p.defaultValue << '\n';
                     std::cout << "    - Quantized:        " << p.isQuantized << '\n';
                     std::cout << "    - Quantize step:    " << p.quantizeStep  << '\n';
                 }

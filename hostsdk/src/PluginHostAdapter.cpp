@@ -30,9 +30,9 @@ static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
         parameter.name         = notNullptr(vampParameter->name);
         parameter.description  = notNullptr(vampParameter->description);
         parameter.unit         = notNullptr(vampParameter->unit);
+        parameter.defaultValue = vampParameter->defaultValue;
         parameter.minValue     = vampParameter->minValue;
         parameter.maxValue     = vampParameter->maxValue;
-        parameter.defaultValue = vampParameter->defaultValue;
         parameter.isQuantized  = vampParameter->isQuantized == 1 ? true : false;
         parameter.quantizeStep = vampParameter->quantizeStep;
     }

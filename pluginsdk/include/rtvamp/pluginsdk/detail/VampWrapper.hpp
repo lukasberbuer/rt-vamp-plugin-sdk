@@ -67,9 +67,9 @@ private:
             vp.name         = p.name;
             vp.description  = p.description;
             vp.unit         = p.unit;
+            vp.defaultValue = p.defaultValue;
             vp.minValue     = p.minValue;
             vp.maxValue     = p.maxValue;
-            vp.defaultValue = p.defaultValue;
             vp.isQuantized  = p.isQuantized;
             vp.quantizeStep = p.quantizeStep;
         }

@@ -34,9 +34,9 @@ TEST_CASE("VampPluginDescriptorWrapper") {
     STATIC_REQUIRE(strEqual(p->name, "Parameter"));
     STATIC_REQUIRE(strEqual(p->description, "Some random parameter"));
     STATIC_REQUIRE(strEqual(p->unit, ""));
+    STATIC_REQUIRE(p->defaultValue == 1.0f);
     STATIC_REQUIRE(p->minValue == 0.0f);
     STATIC_REQUIRE(p->maxValue == 2.0f);
-    STATIC_REQUIRE(p->defaultValue == 1.0f);
     STATIC_REQUIRE(p->isQuantized == true);
     STATIC_REQUIRE(p->quantizeStep == 1.0f);
 

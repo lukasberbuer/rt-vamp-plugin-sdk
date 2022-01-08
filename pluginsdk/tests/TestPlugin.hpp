@@ -22,9 +22,9 @@ public:
             .name         = "Parameter",
             .description  = "Some random parameter",
             .unit         = "",
+            .defaultValue = 1.0f,
             .minValue     = 0.0f,
             .maxValue     = 2.0f,
-            .defaultValue = 1.0f,
             .isQuantized  = true,
             .quantizeStep = 1.0f,
         }

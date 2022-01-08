@@ -22,9 +22,9 @@ public:
             .name         = "Roll-off factor",
             .description  = "Some random parameter",
             .unit         = "",
+            .defaultValue = 0.9f,
             .minValue     = 0.0f,
             .maxValue     = 1.0f,
-            .defaultValue = 0.9f,
             // default values for quantization (disabled)
         }
     };
