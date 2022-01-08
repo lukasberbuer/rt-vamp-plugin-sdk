@@ -18,13 +18,15 @@ public:
     PluginHostAdapter(const VampPluginDescriptor& descriptor, float inputSampleRate);
     ~PluginHostAdapter();
 
-    std::string_view     getIdentifier()    const noexcept override;
-    std::string_view     getName()          const noexcept override;
-    std::string_view     getDescription()   const noexcept override;
-    std::string_view     getMaker()         const noexcept override;
-    std::string_view     getCopyright()     const noexcept override;
-    int                  getPluginVersion() const noexcept override;
-    InputDomain          getInputDomain()   const noexcept override;
+    uint32_t             getVampApiVersion() const noexcept override;
+
+    std::string_view     getIdentifier()     const noexcept override;
+    std::string_view     getName()           const noexcept override;
+    std::string_view     getDescription()    const noexcept override;
+    std::string_view     getMaker()          const noexcept override;
+    std::string_view     getCopyright()      const noexcept override;
+    int                  getPluginVersion()  const noexcept override;
+    InputDomain          getInputDomain()    const noexcept override;
 
     ParameterList        getParameterList()                const noexcept override;
     std::optional<float> getParameter(std::string_view id) const override;

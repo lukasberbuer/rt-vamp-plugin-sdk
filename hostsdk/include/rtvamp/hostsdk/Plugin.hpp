@@ -51,13 +51,15 @@ public:
     using Feature                = std::vector<float>;
     using FeatureSet             = std::span<const Feature>;
 
-    virtual std::string_view     getIdentifier( )   const noexcept = 0;
-    virtual std::string_view     getName()          const noexcept = 0;
-    virtual std::string_view     getDescription()   const noexcept = 0;
-    virtual std::string_view     getMaker()         const noexcept = 0;
-    virtual std::string_view     getCopyright()     const noexcept = 0;
-    virtual int                  getPluginVersion() const noexcept = 0;
-    virtual InputDomain          getInputDomain()   const noexcept = 0;
+    virtual uint32_t             getVampApiVersion() const noexcept = 0;
+
+    virtual std::string_view     getIdentifier( )    const noexcept = 0;
+    virtual std::string_view     getName()           const noexcept = 0;
+    virtual std::string_view     getDescription()    const noexcept = 0;
+    virtual std::string_view     getMaker()          const noexcept = 0;
+    virtual std::string_view     getCopyright()      const noexcept = 0;
+    virtual int                  getPluginVersion()  const noexcept = 0;
+    virtual InputDomain          getInputDomain()    const noexcept = 0;
 
     virtual ParameterList        getParameterList() const noexcept = 0;
     virtual std::optional<float> getParameter(std::string_view id) const = 0;

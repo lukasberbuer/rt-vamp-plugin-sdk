@@ -94,6 +94,10 @@ PluginHostAdapter::~PluginHostAdapter() {
     descriptor_.cleanup(handle_);
 }
 
+uint32_t PluginHostAdapter::getVampApiVersion() const noexcept {
+    return descriptor_.vampApiVersion;
+}
+
 std::string_view PluginHostAdapter::getIdentifier() const noexcept {
     return descriptor_.identifier;
 }

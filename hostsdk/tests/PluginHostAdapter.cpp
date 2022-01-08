@@ -53,6 +53,8 @@ TEST_CASE("PluginHostAdapter static plugin data") {
     auto descriptor = TestPluginDescriptor::get();
     auto plugin     = PluginHostAdapter(descriptor, 48000);
 
+    CHECK(plugin.getVampApiVersion() == 2);
+
     CHECK_THAT(std::string(plugin.getIdentifier()),  Equals(descriptor.identifier));
     CHECK_THAT(std::string(plugin.getName()),        Equals(descriptor.name));
     CHECK_THAT(std::string(plugin.getDescription()), Equals(descriptor.description));
