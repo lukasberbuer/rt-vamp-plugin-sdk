@@ -108,16 +108,16 @@ TEST_CASE("PluginHostAdapter get/set parameter") {
         parameters.at(index) = value;
     };
 
-    REQUIRE(plugin.getParameter("invalid") == 0.0f);
+    REQUIRE_FALSE(plugin.getParameter("invalid").has_value());
     REQUIRE_NOTHROW(plugin.setParameter("invalid", 0.0f));
 
-    REQUIRE(plugin.getParameter("param1") == 1.0f);
+    REQUIRE(plugin.getParameter("param1").value() == 1.0f);
     plugin.setParameter("param1", 2.0f);
-    REQUIRE(plugin.getParameter("param1") == 2.0f);
+    REQUIRE(plugin.getParameter("param1").value() == 2.0f);
 
-    REQUIRE(plugin.getParameter("param2") == -1.0f);
+    REQUIRE(plugin.getParameter("param2").value() == -1.0f);
     plugin.setParameter("param2", -5.0f);
-    REQUIRE(plugin.getParameter("param2") == -5.0f);
+    REQUIRE(plugin.getParameter("param2").value() == -5.0f);
 }
 
 TEST_CASE("PluginHostAdapter get/set programs") {

@@ -118,9 +118,9 @@ Plugin::ParameterList PluginHostAdapter::getParameterList() const noexcept {
     return parameters_;
 }
 
-float PluginHostAdapter::getParameter(std::string_view id) const {
+std::optional<float> PluginHostAdapter::getParameter(std::string_view id) const {
     const auto optionalIndex = findParameterIndex(descriptor_, id);
-    if (!optionalIndex) return 0.0f;
+    if (!optionalIndex) return {};
     return descriptor_.getParameter(handle_, optionalIndex.value());
 }
 

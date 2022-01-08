@@ -83,43 +83,43 @@ TEST_CASE("PluginExt get/set parameter") {
     TestPluginExt plugin(48000);
 
     SECTION("Default values") {
-        REQUIRE(plugin.getParameter("free") == 0.0f);
-        REQUIRE(plugin.getParameter("limited") == 10.0f);
-        REQUIRE(plugin.getParameter("quantized") == 1.0f);
-        REQUIRE(plugin.getParameter("invalid") == 0.0f);
+        REQUIRE(plugin.getParameter("free").value() == 0.0f);
+        REQUIRE(plugin.getParameter("limited").value() == 10.0f);
+        REQUIRE(plugin.getParameter("quantized").value() == 1.0f);
+        REQUIRE_FALSE(plugin.getParameter("invalid").has_value());
     }
 
     SECTION("Set/get") {
         plugin.setParameter("free", 1e9f);
-        REQUIRE(plugin.getParameter("free") == 1e9f);
+        REQUIRE(plugin.getParameter("free").value() == 1e9f);
 
         plugin.setParameter("limited", 1.1f);
-        REQUIRE(plugin.getParameter("limited") == 1.1f);
+        REQUIRE(plugin.getParameter("limited").value() == 1.1f);
 
         plugin.setParameter("quantized", 10.0f);
-        REQUIRE(plugin.getParameter("quantized") == 10.0f);
+        REQUIRE(plugin.getParameter("quantized").value() == 10.0f);
     }
 
     SECTION("Clamp to limits") {
         plugin.setParameter("limited", 1e9f);
-        REQUIRE(plugin.getParameter("limited") == 10.0f);
+        REQUIRE(plugin.getParameter("limited").value() == 10.0f);
 
         plugin.setParameter("limited", -11.f);
-        REQUIRE(plugin.getParameter("limited") == -10.0f);
+        REQUIRE(plugin.getParameter("limited").value() == -10.0f);
     }
 
     SECTION("Quantization") {
         plugin.setParameter("quantized", 0.0f);
-        REQUIRE(plugin.getParameter("quantized") == 0.0f);
+        REQUIRE(plugin.getParameter("quantized").value() == 0.0f);
 
         plugin.setParameter("quantized", 1.1f);
-        REQUIRE(plugin.getParameter("quantized") == 1.0f);
+        REQUIRE(plugin.getParameter("quantized").value() == 1.0f);
 
         plugin.setParameter("quantized", -1.9f);
-        REQUIRE(plugin.getParameter("quantized") == -2.0f);
+        REQUIRE(plugin.getParameter("quantized").value() == -2.0f);
 
         plugin.setParameter("quantized", 55.5f);
-        REQUIRE(plugin.getParameter("quantized") == 56.0f);
+        REQUIRE(plugin.getParameter("quantized").value() == 56.0f);
     }
 }
 

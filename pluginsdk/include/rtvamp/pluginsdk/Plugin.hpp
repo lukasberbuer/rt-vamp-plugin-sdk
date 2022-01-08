@@ -3,6 +3,7 @@
 #include <array>
 #include <complex>
 #include <cstdint>
+#include <optional>
 #include <span>
 #include <string>
 #include <string_view>
@@ -96,20 +97,20 @@ public:
     static constexpr std::array<ParameterDescriptor, 0> parameters{};
     static constexpr std::array<const char*, 0>         programs{};
 
-    virtual float             getParameter(std::string_view id) const { return 0.0f; }
-    virtual void              setParameter(std::string_view id, float value) {} 
+    virtual std::optional<float> getParameter(std::string_view id) const { return {}; }
+    virtual void                 setParameter(std::string_view id, float value) {} 
 
-    virtual std::string_view  getCurrentProgram() const { return {}; }
-    virtual void              selectProgram(std::string_view name) {}
+    virtual std::string_view     getCurrentProgram() const { return {}; }
+    virtual void                 selectProgram(std::string_view name) {}
 
-    virtual uint32_t          getPreferredStepSize()  const { return 0; }
-    virtual uint32_t          getPreferredBlockSize() const { return 0; }
+    virtual uint32_t             getPreferredStepSize()  const { return 0; }
+    virtual uint32_t             getPreferredBlockSize() const { return 0; }
 
-    virtual OutputList        getOutputDescriptors() const = 0;
+    virtual OutputList           getOutputDescriptors() const = 0;
 
-    virtual bool              initialise(uint32_t stepSize, uint32_t blockSize) = 0;
-    virtual void              reset() = 0;
-    virtual const FeatureSet& process(InputBuffer buffer, uint64_t nsec) = 0;
+    virtual bool                 initialise(uint32_t stepSize, uint32_t blockSize) = 0;
+    virtual void                 reset() = 0;
+    virtual const FeatureSet&    process(InputBuffer buffer, uint64_t nsec) = 0;
 
 protected:
     float       getInputSampleRate() const noexcept { return inputSampleRate_; };

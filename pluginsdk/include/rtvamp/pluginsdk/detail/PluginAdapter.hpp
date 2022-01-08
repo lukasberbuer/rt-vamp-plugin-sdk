@@ -30,7 +30,7 @@ public:
 
     float getParameter(int index) const {
         // bounds checking in descriptor lambda
-        return plugin_.getParameter(TPlugin::parameters[index].identifier); 
+        return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0f); 
     }
 
     void setParameter(int index, float value) {

@@ -29,15 +29,15 @@ class PluginExt : public Plugin<NOutputs> {
 public:
     explicit PluginExt(float inputSampleRate) : Plugin<NOutputs>(inputSampleRate) {}
 
-    float            getParameter(std::string_view id) const override final;
-    void             setParameter(std::string_view id, float value) override final;
+    std::optional<float> getParameter(std::string_view id) const override final;
+    void                 setParameter(std::string_view id, float value) override final;
 
-    std::string_view getCurrentProgram() const override final;
-    void             selectProgram(std::string_view name) override final;
+    std::string_view     getCurrentProgram() const override final;
+    void                 selectProgram(std::string_view name) override final;
 
     // custom logic can be implemented with following callbacks
-    virtual void     onParameterChange(std::string_view id, float newValue) {}
-    virtual void     onProgramChange(std::string_view newProgram) {}
+    virtual void         onParameterChange(std::string_view id, float newValue) {}
+    virtual void         onProgramChange(std::string_view newProgram) {}
 
 private:
     static constexpr std::vector<float>    defaultParameterValues();
@@ -51,11 +51,11 @@ private:
 /* --------------------------------------- Implementation --------------------------------------- */
 
 template <typename Self, uint32_t NOutputs>
-float PluginExt<Self, NOutputs>::getParameter(std::string_view id) const {
+std::optional<float> PluginExt<Self, NOutputs>::getParameter(std::string_view id) const {
     if (const auto index = findParameterIndex(id)) {
         return parameterValues_[index.value()];
     }
-    return 0.0f;
+    return {};
 }
 
 template <typename Self, uint32_t NOutputs>

@@ -48,8 +48,9 @@ public:
         };
     }
 
-    float getParameter(std::string_view id) const override {
-        return id == "param" ? param_ : 0.0f;
+    std::optional<float> getParameter(std::string_view id) const override {
+        if (id == "param") return param_;
+        return {};
     }
 
     void setParameter(std::string_view id, float value) override {
