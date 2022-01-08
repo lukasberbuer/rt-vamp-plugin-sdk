@@ -28,34 +28,29 @@ public:
     enum class InputDomain { Time, Frequency };
 
     struct ParameterDescriptor {
-        // use const char* for compile-time evaluation
-        const char* identifier  = "";
-        const char* name        = "";
-        const char* description = "";
-        const char* unit        = "";
-
-        float defaultValue = 0.0f;
-        float minValue     = 0.0f;
-        float maxValue     = 0.0f;
-        bool  isQuantized  = false;
-        float quantizeStep = 0.0f;
+        // use const char* for compile-time evaluation and mapping to C API
+        const char*          identifier   = "";
+        const char*          name         = "";
+        const char*          description  = "";
+        const char*          unit         = "";
+        float                defaultValue = 0.0f;
+        float                minValue     = 0.0f;
+        float                maxValue     = 0.0f;
+        std::optional<float> quantizeStep = std::nullopt;
         // std::vector<const char*> valueNames{};  // currently not possible -> wait for constexpr vectors
     };
 
     struct OutputDescriptor {
-        std::string identifier;
-        std::string name;
-        std::string description;
-        std::string unit;
-
+        std::string              identifier;
+        std::string              name;
+        std::string              description;
+        std::string              unit;
         uint32_t                 binCount = 0;
         std::vector<std::string> binNames{};
-
-        bool  hasKnownExtents = false;
-        float minValue        = 0.0f;
-        float maxValue        = 0.0f;
-        bool  isQuantized     = false;
-        float quantizeStep    = 0.0f;
+        bool                     hasKnownExtents = false;
+        float                    minValue        = 0.0f;
+        float                    maxValue        = 0.0f;
+        std::optional<float>     quantizeStep    = std::nullopt;
     };
 
     using TimeDomainBuffer      = std::span<const float>;

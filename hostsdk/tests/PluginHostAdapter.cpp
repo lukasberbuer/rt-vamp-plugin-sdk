@@ -77,8 +77,8 @@ TEST_CASE("PluginHostAdapter static plugin data") {
             CHECK(parameter.defaultValue == vampParameter.defaultValue);
             CHECK(parameter.minValue     == vampParameter.minValue);
             CHECK(parameter.maxValue     == vampParameter.maxValue);
-            CHECK(parameter.isQuantized  == (vampParameter.isQuantized == 1));
-            CHECK(parameter.quantizeStep == vampParameter.quantizeStep);
+            CHECK(parameter.quantizeStep.has_value()    == (vampParameter.isQuantized == 1));
+            CHECK(parameter.quantizeStep.value_or(0.0f) == vampParameter.quantizeStep);
         }
     };
 
@@ -184,8 +184,8 @@ TEST_CASE("PluginHostAdapter outputs") {
         CHECK(output.hasKnownExtents == vampOutput.hasKnownExtents);
         CHECK(output.minValue        == vampOutput.minValue);
         CHECK(output.maxValue        == vampOutput.maxValue);
-        CHECK(output.isQuantized     == (vampOutput.isQuantized == 1));
-        CHECK(output.quantizeStep    == vampOutput.quantizeStep);
+        CHECK(output.quantizeStep.has_value()    == (vampOutput.isQuantized == 1));
+        CHECK(output.quantizeStep.value_or(0.0f) == vampOutput.quantizeStep);
     }
 }
 

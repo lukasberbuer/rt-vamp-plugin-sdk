@@ -14,6 +14,12 @@
 using rtvamp::hostsdk::Plugin;
 using rtvamp::hostsdk::PluginLoader;
 
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const std::optional<T>& opt) {
+    if (!opt) return os << "null";
+    return os << opt.value();
+}
+
 std::ostream& operator<<(std::ostream& os, const Plugin::InputDomain& d) {
     return os << (d == Plugin::InputDomain::Frequency ? "Frequency" : "Time");
 }
@@ -51,8 +57,7 @@ void listPlugins() {
                     std::cout << "    - Default value:    " << p.defaultValue << '\n';
                     std::cout << "    - Minimum value:    " << p.minValue << '\n';
                     std::cout << "    - Maximum value:    " << p.maxValue << '\n';
-                    std::cout << "    - Quantized:        " << p.isQuantized << '\n';
-                    std::cout << "    - Quantize step:    " << p.quantizeStep  << '\n';
+                    std::cout << "    - Quantize step:    " << p.quantizeStep << '\n';
                 }
 
                 std::cout << "- Outputs:\n";
@@ -68,8 +73,7 @@ void listPlugins() {
                     std::cout << "    - Known extends:    " << o.hasKnownExtents << '\n';
                     std::cout << "    - Minimum value:    " << o.minValue << '\n';
                     std::cout << "    - Maximum value:    " << o.maxValue << '\n';
-                    std::cout << "    - Quantized:        " << o.isQuantized << '\n';
-                    std::cout << "    - Quantize step:    " << o.quantizeStep  << '\n';
+                    std::cout << "    - Quantize step:    " << o.quantizeStep << '\n';
                 }
             } catch (const std::exception& e) {
                 std::cout << Escape::Red << "[ERROR] " << e.what() << Escape::Reset << '\n';

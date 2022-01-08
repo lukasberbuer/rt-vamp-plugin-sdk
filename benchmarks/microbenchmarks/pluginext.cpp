@@ -16,8 +16,7 @@ public:
             .defaultValue = 0.0f,
             .minValue     = 0.0f,
             .maxValue     = 0.0f,
-            .isQuantized  = false,
-            .quantizeStep = 0.0f,
+            .quantizeStep = std::nullopt,
         },
         ParameterDescriptor{
             .identifier   = "limited",
@@ -27,8 +26,7 @@ public:
             .defaultValue = 10.0f,
             .minValue     = -10.0f,
             .maxValue     = 10.0f,
-            .isQuantized  = false,
-            .quantizeStep = 0.0f,
+            .quantizeStep = std::nullopt,
         },
         ParameterDescriptor{
             .identifier   = "quantized",
@@ -38,7 +36,6 @@ public:
             .defaultValue = 1.0f,
             .minValue     = 0.0f,
             .maxValue     = 100.0f,
-            .isQuantized  = true,
             .quantizeStep = 1.0f,
         },
     };

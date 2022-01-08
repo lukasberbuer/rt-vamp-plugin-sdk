@@ -25,7 +25,6 @@ public:
             .defaultValue = 1.0f,
             .minValue     = 0.0f,
             .maxValue     = 2.0f,
-            .isQuantized  = true,
             .quantizeStep = 1.0f,
         }
     };

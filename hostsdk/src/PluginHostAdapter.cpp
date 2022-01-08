@@ -17,6 +17,12 @@ static const char* notNullptr(const char* s) {
     return s;
 }
 
+template <typename T>
+static std::optional<T> createOptional(T value, bool notNull) {
+    if (notNull) return value;
+    return {};
+}
+
 static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
     const VampPluginDescriptor& descriptor
 ) {
@@ -33,8 +39,7 @@ static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
         parameter.defaultValue = vampParameter->defaultValue;
         parameter.minValue     = vampParameter->minValue;
         parameter.maxValue     = vampParameter->maxValue;
-        parameter.isQuantized  = vampParameter->isQuantized == 1 ? true : false;
-        parameter.quantizeStep = vampParameter->quantizeStep;
+        parameter.quantizeStep = createOptional(vampParameter->quantizeStep, vampParameter->isQuantized == 1);
     }
     return result;
 }
@@ -190,8 +195,7 @@ Plugin::OutputList PluginHostAdapter::getOutputDescriptors() const {
         output.hasKnownExtents = vampOutput->hasKnownExtents == 1;
         output.minValue        = vampOutput->minValue;
         output.maxValue        = vampOutput->maxValue;
-        output.isQuantized     = vampOutput->isQuantized == 1;
-        output.quantizeStep    = vampOutput->quantizeStep;
+        output.quantizeStep    = createOptional(vampOutput->quantizeStep, vampOutput->isQuantized == 1);
 
         descriptor_.releaseOutputDescriptor(vampOutput);
     }

@@ -70,8 +70,8 @@ private:
             vp.defaultValue = p.defaultValue;
             vp.minValue     = p.minValue;
             vp.maxValue     = p.maxValue;
-            vp.isQuantized  = p.isQuantized;
-            vp.quantizeStep = p.quantizeStep;
+            vp.isQuantized  = static_cast<int>(p.quantizeStep.has_value());
+            vp.quantizeStep = p.quantizeStep.value_or(0.0f);
         }
         return result;
     }();
@@ -123,8 +123,8 @@ struct VampOutputDescriptorWrapper{
         descriptor_.hasKnownExtents  = static_cast<int>(d.hasKnownExtents);
         descriptor_.minValue         = d.minValue;
         descriptor_.maxValue         = d.maxValue;
-        descriptor_.isQuantized      = static_cast<int>(d.isQuantized);
-        descriptor_.quantizeStep     = d.quantizeStep;
+        descriptor_.isQuantized      = static_cast<int>(d.quantizeStep.has_value());
+        descriptor_.quantizeStep     = d.quantizeStep.value_or(0.0f);
         descriptor_.sampleType       = vampOneSamplePerStep;
         descriptor_.sampleRate       = 0.0f;
         descriptor_.hasDuration      = 0;

@@ -63,8 +63,9 @@ bool PluginExt<Self, NOutputs>::setParameter(std::string_view id, float value) {
     if (const auto index = findParameterIndex(id)) {
         const auto& descriptor = Self::parameters[index.value()];
 
-        if (descriptor.isQuantized && descriptor.quantizeStep != 0.0f) {
-            value = std::round(value / descriptor.quantizeStep) * descriptor.quantizeStep;
+        if (descriptor.quantizeStep) {
+            const auto quantizeStep = descriptor.quantizeStep.value();
+            value = std::round(value / quantizeStep) * quantizeStep;
         }
         if (descriptor.minValue) {
             value = std::max(value, descriptor.minValue);
