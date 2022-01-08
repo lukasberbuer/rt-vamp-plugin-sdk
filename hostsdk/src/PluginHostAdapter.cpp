@@ -230,14 +230,22 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
     assert(initialised_ && "Plugin must be initialised before process");
 
     const auto getInputBuffer = [&] {
-        if (getInputDomain() == InputDomain::Frequency) {
+        const bool isTimeDomain = getInputDomain() == InputDomain::Time;
+        const bool validInput   = std::holds_alternative<TimeDomainBuffer>(buffer) == isTimeDomain;
+
+        if (!validInput && isTimeDomain)
+            throw std::invalid_argument("Wrong input buffer type: Time domain required");
+        if (!validInput && !isTimeDomain)
+            throw std::invalid_argument("Wrong input buffer type: Frequency domain required");
+
+        if (isTimeDomain) {
+            return std::get<TimeDomainBuffer>(buffer).data();
+        } else {
             // casts between interleaved arrays and std::complex are guaranteed to be valid
             // https://en.cppreference.com/w/cpp/numeric/complex
             return reinterpret_cast<const float*>(
                 std::get<FrequencyDomainBuffer>(buffer).data()
             );
-        } else {
-            return std::get<TimeDomainBuffer>(buffer).data();
         }
     };
 
