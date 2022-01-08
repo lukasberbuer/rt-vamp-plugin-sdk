@@ -63,7 +63,7 @@ public:
 
     VampFeatureList* process(const float* const* inputBuffers, int sec, int nsec) {
         const auto*   buffer    = inputBuffers[0];  // only first channel
-        const int64_t timestamp = 1'000'000'000 * sec + nsec;
+        const int64_t timestamp = static_cast<uint64_t>(1'000'000'000) * sec + nsec;
 
         const auto getInputBuffer = [&]() -> TPlugin::InputBuffer {
             if constexpr (TPlugin::meta.inputDomain == TPlugin::InputDomain::Time) {
