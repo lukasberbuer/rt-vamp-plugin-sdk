@@ -12,8 +12,6 @@ add_library(${ALIAS_NAME} ALIAS ${LIBRARY_NAME})
 
 target_link_libraries(
     ${LIBRARY_NAME}
-    PUBLIC
-        rtvamp-pluginsdk
     PRIVATE
         ${PROJECT_OPTIONS}
         ${CMAKE_DL_LIBS}

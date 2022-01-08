@@ -67,8 +67,7 @@ public:
 template <uint32_t NOutputs>
 class Plugin : public PluginBase {
 public:
-    explicit constexpr Plugin(float inputSampleRate)
-        : inputSampleRate_(inputSampleRate) {}
+    explicit constexpr Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
 
     using OutputList = std::array<OutputDescriptor, NOutputs>;
     using FeatureSet = std::array<Feature, NOutputs>;

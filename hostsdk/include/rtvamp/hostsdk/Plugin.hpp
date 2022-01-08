@@ -1,25 +1,55 @@
 #pragma once
 
+#include <complex>
 #include <cstdint>
 #include <optional>
 #include <span>
 #include <string_view>
-
-#include "rtvamp/pluginsdk/Plugin.hpp"
+#include <variant>
+#include <vector>
 
 namespace rtvamp::hostsdk {
 
-using PluginBase = rtvamp::pluginsdk::PluginBase;  // share same base class with pluginsdk
-
-class Plugin : public PluginBase {
+class Plugin {
 public:
-    explicit Plugin(float inputSampleRate)
-        : inputSampleRate_(inputSampleRate) {}
+    explicit Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
+    virtual ~Plugin() = default;
 
-    using ParameterList = std::span<const ParameterDescriptor>;
-    using ProgramList   = std::span<const char* const>;
-    using OutputList    = std::vector<OutputDescriptor>;
-    using FeatureSet    = std::span<const Feature>;
+    enum class InputDomain { Time, Frequency };
+
+    struct ParameterDescriptor {
+        std::string_view         identifier;
+        std::string_view         name;
+        std::string_view         description;
+        std::string_view         unit;
+        float                    defaultValue;
+        float                    minValue;
+        float                    maxValue;
+        std::optional<float>     quantizeStep;
+        std::vector<std::string_view> valueNames;
+    };
+
+    struct OutputDescriptor {
+        std::string              identifier;
+        std::string              name;
+        std::string              description;
+        std::string              unit;
+        uint32_t                 binCount;
+        std::vector<std::string> binNames;
+        bool                     hasKnownExtents;
+        float                    minValue;
+        float                    maxValue;
+        std::optional<float>     quantizeStep;
+    };
+
+    using ParameterList          = std::span<const ParameterDescriptor>;
+    using ProgramList            = std::span<const char* const>;
+    using OutputList             = std::vector<OutputDescriptor>;
+    using TimeDomainBuffer       = std::span<const float>;
+    using FrequencyDomainBuffer  = std::span<const std::complex<float>>;
+    using InputBuffer            = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
+    using Feature                = std::vector<float>;
+    using FeatureSet             = std::span<const Feature>;
 
     virtual std::string_view     getIdentifier( )   const noexcept = 0;
     virtual std::string_view     getName()          const noexcept = 0;

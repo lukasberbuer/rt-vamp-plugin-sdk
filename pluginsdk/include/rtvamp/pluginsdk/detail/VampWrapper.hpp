@@ -40,7 +40,7 @@ public:
 
 private:
     static consteval auto getVampInputDomain() {
-        return TPlugin::meta.inputDomain == PluginBase::InputDomain::Frequency
+        return TPlugin::meta.inputDomain == TPlugin::InputDomain::Frequency
             ? vampFrequencyDomain
             : vampTimeDomain;
     }

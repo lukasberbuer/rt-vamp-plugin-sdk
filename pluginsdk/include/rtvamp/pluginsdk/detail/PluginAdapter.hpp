@@ -65,8 +65,8 @@ public:
         const auto*   buffer    = inputBuffers[0];  // only first channel
         const int64_t timestamp = 1'000'000'000 * sec + nsec;
 
-        const auto getInputBuffer = [&]() -> PluginBase::InputBuffer {
-            if constexpr (TPlugin::meta.inputDomain == PluginBase::InputDomain::Time) {
+        const auto getInputBuffer = [&]() -> TPlugin::InputBuffer {
+            if constexpr (TPlugin::meta.inputDomain == TPlugin::InputDomain::Time) {
                 return std::span(buffer, blockSize_);
             } else {
                 // casts between interleaved arrays and std::complex are guaranteed to be valid
