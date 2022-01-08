@@ -58,6 +58,7 @@ struct TestPluginDescriptor {
         return d;
     }
 
+    static constexpr std::array parameterValueNames{"a", "b", "c"};
     static constexpr std::array parameters{
         VampParameterDescriptor{
             .identifier   = "param1",
@@ -69,7 +70,7 @@ struct TestPluginDescriptor {
             .defaultValue = 1.0f,
             .isQuantized  = 1,
             .quantizeStep = 1.0f,
-            .valueNames   = nullptr,
+            .valueNames   = const_cast<const char**>(parameterValueNames.data()),
         },
         VampParameterDescriptor{
             .identifier   = "param2",

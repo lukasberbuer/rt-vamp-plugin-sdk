@@ -12,11 +12,6 @@
 
 namespace rtvamp::hostsdk {
 
-static const char* notNullptr(const char* s) {
-    if (s == nullptr) return "";
-    return s;
-}
-
 template <typename T>
 static std::optional<T> createOptional(T value, bool notNull) {
     if (notNull) return value;
@@ -32,14 +27,23 @@ static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
         auto* vampParameter = descriptor.parameters[i];
         auto& parameter     = result[i];
 
-        parameter.identifier   = notNullptr(vampParameter->identifier);
-        parameter.name         = notNullptr(vampParameter->name);
-        parameter.description  = notNullptr(vampParameter->description);
-        parameter.unit         = notNullptr(vampParameter->unit);
+        parameter.identifier   = vampParameter->identifier;
+        parameter.name         = vampParameter->name;
+        parameter.description  = vampParameter->description;
+        parameter.unit         = vampParameter->unit;
         parameter.defaultValue = vampParameter->defaultValue;
         parameter.minValue     = vampParameter->minValue;
         parameter.maxValue     = vampParameter->maxValue;
         parameter.quantizeStep = createOptional(vampParameter->quantizeStep, vampParameter->isQuantized == 1);
+
+        if (vampParameter->isQuantized && vampParameter->valueNames) {
+            size_t count = 0;
+            for (auto ptr = vampParameter->valueNames; *ptr != nullptr; ++ptr) { ++count; }
+            parameter.valueNames = std::vector<std::string_view>(
+                vampParameter->valueNames,
+                vampParameter->valueNames + count
+            );
+        }
     }
     return result;
 }

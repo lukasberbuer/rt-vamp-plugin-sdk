@@ -79,6 +79,16 @@ TEST_CASE("PluginHostAdapter static plugin data") {
             CHECK(parameter.maxValue     == vampParameter.maxValue);
             CHECK(parameter.quantizeStep.has_value()    == (vampParameter.isQuantized == 1));
             CHECK(parameter.quantizeStep.value_or(0.0f) == vampParameter.quantizeStep);
+
+            if (vampParameter.valueNames) {
+                CHECK_FALSE(parameter.valueNames.empty());
+                for (size_t j = 0; j < parameter.valueNames.size(); ++j) {
+                    CHECK_THAT(
+                        std::string(parameter.valueNames[j]),
+                        Equals(vampParameter.valueNames[j])
+                    );
+                }
+            }
         }
     };
 
