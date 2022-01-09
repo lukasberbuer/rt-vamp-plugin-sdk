@@ -6,7 +6,7 @@
 #include <benchmark/benchmark.h>
 
 inline void addRateCounter(benchmark::State& state, size_t samplesPerIteration = 1) {
-    state.counters["Rate"] = benchmark::Counter(
+    state.counters["rate"] = benchmark::Counter(
         static_cast<double>(state.iterations()) * static_cast<double>(samplesPerIteration),
         benchmark::Counter::kIsRate
     );

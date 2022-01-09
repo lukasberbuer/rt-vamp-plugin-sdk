@@ -48,7 +48,7 @@ public:
 
         auto& result = getFeatureSet();
         result[0][0] = crossings;  // first and only output, first and only bin
-        return result;             // return and span/view of the results
+        return result;             // return span/view of the results
     };
 
 private:

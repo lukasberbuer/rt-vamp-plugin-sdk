@@ -41,6 +41,21 @@ But there are some drawbacks for real-time processing:
 
   On the host side, the `PluginHostAdapter` converts again from the C to the C++ representation ([code](https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-hostsdk/PluginHostAdapter.cpp#L413-L464)).
 
+## Performance
+
+Following benchmarks compare the performance/overhead of the plugin SDKs based on a simple [RMS plugin](benchmarks/sdks/RMS.hpp).
+The performance is measured as throughput (number of processed samples per second).
+
+**Results with an i7-9850H CPU (12 cores):**
+
+| Throughput vs. block size                          | Multithreading                                                    |
+| -------------------------------------------------- | ----------------------------------------------------------------- |
+| ![](benchmarks/sdks/results/benchmark_sdks_i7.png) | ![](benchmarks/sdks/results/benchmark_sdks_i7_multithreading.png) |
+
+**Results with an ARMv7 CPU**:
+[Throughput vs block size](benchmarks/sdks/results/benchmark_sdks_armv7.png),
+[Multithreading](benchmarks/sdks/results/benchmark_sdks_armv7_multithreading.png)
+
 ## Plugin restrictions
 
 Following features of the Vamp API `Vamp::Plugin` are restricted:
@@ -114,7 +129,7 @@ public:
 
         auto& result = getFeatureSet();
         result[0][0] = crossings;  // first and only output, first and only bin
-        return result;             // return and span/view of the results
+        return result;             // return span/view of the results
     };
 
 private:
@@ -137,7 +152,7 @@ for (auto&& keys : loader.listPlugins()) {
 auto plugin = loader.loadPlugin("minimal-plugin:zerocrossing", 48000 /* samplerate */);
 plugin->initialise(4096 /* step size */, 4096 /* block size */);
 
-std::vector<float> buffer(blockSize);
+std::vector<float> buffer(4096);
 // fill buffer with data from audio file, sound card, ...
 
 auto features = plugin->process(buffer, 0 /* timestamp nanoseconds */);

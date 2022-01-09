@@ -36,6 +36,7 @@ BENCHMARK(BM_rtvamp)->Args({4096})->Threads(1)->UseRealTime();
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(2)->UseRealTime();
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(4)->UseRealTime();
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(8)->UseRealTime();
+BENCHMARK(BM_rtvamp)->Args({4096})->Threads(12)->UseRealTime();
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(16)->UseRealTime();
 
 const auto BM_vamp = [](benchmark::State& state) {
@@ -47,6 +48,7 @@ BENCHMARK(BM_vamp)->Args({4096})->Threads(1)->UseRealTime();
 BENCHMARK(BM_vamp)->Args({4096})->Threads(2)->UseRealTime();
 BENCHMARK(BM_vamp)->Args({4096})->Threads(4)->UseRealTime();
 BENCHMARK(BM_vamp)->Args({4096})->Threads(8)->UseRealTime();
+BENCHMARK(BM_vamp)->Args({4096})->Threads(12)->UseRealTime();
 BENCHMARK(BM_vamp)->Args({4096})->Threads(16)->UseRealTime();
 
 BENCHMARK_MAIN();
