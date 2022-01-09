@@ -1,6 +1,8 @@
 #pragma once
 
+#include <charconv>
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -28,11 +30,22 @@ public:
         return it != args_.end();
     }
 
-    std::string_view getValue(std::string_view option) const {
+    std::optional<std::string_view> getValue(std::string_view option) const {
         auto it = std::find(args_.begin() + 1, args_.end(), option);
         if (it != args_.end()) ++it;
         if (it != args_.end()) return *it;
         return {};
+    }
+
+    template <typename T>
+    std::optional<T> getValueAs(std::string_view option) const {
+        const auto str = getValue(option);
+        if (!str) return {};
+
+        T result{};
+        const auto [ptr, ec] { std::from_chars(str->data(), str->data() + str->size(), result) };
+        if (ec != std::errc()) return {};
+        return result;
     }
 
 private:

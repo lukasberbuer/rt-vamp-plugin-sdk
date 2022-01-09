@@ -111,7 +111,12 @@ void listPluginOutputs() {
     }
 }
 
-void process(std::string_view pluginKey, std::string_view audiofile) {
+void process(
+    std::string_view      pluginKey,
+    std::string_view      audiofile,
+    std::optional<size_t> optionalOutputIndex,
+    std::optional<size_t> optionalBlockSize
+) {
     // load audio file
     auto file = SndfileHandle(std::string(audiofile));
     if (file.error()) {
@@ -127,14 +132,30 @@ void process(std::string_view pluginKey, std::string_view audiofile) {
     PluginLoader loader;
     auto plugin = loader.loadPlugin(pluginKey, sampleRate);
 
-    const size_t preferredBlockSize = plugin->getPreferredBlockSize();
-    const size_t blockSize = preferredBlockSize ? preferredBlockSize : 1024;
+    const auto getBlockSize = [&]() -> size_t {
+        if (optionalBlockSize) {
+            return optionalBlockSize.value();
+        }
+        if (const auto preferredBlockSize = plugin->getPreferredBlockSize()) {
+            return preferredBlockSize;
+        }
+        return 1024;
+    };
+
+    const size_t blockSize = getBlockSize();
     const size_t stepSize  = blockSize;
 
     const bool success = plugin->initialise(stepSize, blockSize);
     if (!success) throw std::runtime_error("Initialisation failed");
 
-    const auto output = plugin->getOutputDescriptors().at(0);  // choose first output
+    const auto outputIndex = optionalOutputIndex.value_or(0);
+    const auto output = [&] {
+        try {
+            return plugin->getOutputDescriptors().at(outputIndex);
+        } catch (const std::out_of_range&) {
+            throw std::runtime_error("Output index is out of range");
+        }
+    }();
 
     // print summary
     std::cout << "Audio file:      " << audiofile << '\n';
@@ -193,7 +214,7 @@ void process(std::string_view pluginKey, std::string_view audiofile) {
         auto featureSet = plugin->process(getInputBuffer(), nsec);
 
         std::cout << std::fixed << nsec / 1e9 << '\t';
-        for (auto&& feature : featureSet[0]) {
+        for (auto&& feature : featureSet[outputIndex]) {
             std::cout << feature << '\t';
         }
         std::cout << '\n';
@@ -217,10 +238,14 @@ void usage(std::string_view program) {
         "  audiofile       path to audio file to extract features from\n"
         "\n"
         "options:\n"
+        "  --output        output index (default: 0)\n"
+        "  --blocksize     block size (default: preferred block size of plugin or 1024)\n"
+        "\n"
         "  --list, -l      list plugin informations in human readable format\n"
         "  --list-paths    list plugin search paths\n"
         "  --list-ids      list plugins in the form library:plugin\n"
         "  --list-outputs  list plugins and outputs in the form library:plugin:output\n"
+        "\n"
         "  --help, -h      show help\n"
         << std::flush;
 }
@@ -253,11 +278,14 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    if (parser.nargs() == 3) {
-        const auto plugin    = parser.args()[1];
-        const auto audiofile = parser.args()[2];
+    if (parser.nargs() >= 3) {
+        const auto plugin      = parser.args()[parser.nargs() - 2];
+        const auto audiofile   = parser.args()[parser.nargs() - 1];
+        const auto outputIndex = parser.getValueAs<size_t>("--output");
+        const auto blockSize   = parser.getValueAs<size_t>("--blocksize");
+
         try {
-            process(plugin, audiofile);
+            process(plugin, audiofile, outputIndex, blockSize);
         } catch (const std::exception& e) {
             std::cerr << Escape::Red << "[ERROR] " << e.what() << Escape::Reset << std::endl;
             return 1;
