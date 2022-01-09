@@ -5,7 +5,7 @@ if(SndFile_FOUND)
 
     add_executable(
         example-host
-        host.cpp
+        main.cpp
         FFT.cpp
         $<IF:$<BOOL:${kissfft_FOUND}>, FFT_Kiss.cpp, FFT_NotFound.cpp>
     )
