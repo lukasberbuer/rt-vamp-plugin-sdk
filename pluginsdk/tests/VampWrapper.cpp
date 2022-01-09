@@ -37,7 +37,7 @@ TEST_CASE("VampPluginDescriptorWrapper") {
     STATIC_REQUIRE(p->defaultValue == 1.0f);
     STATIC_REQUIRE(p->minValue == 0.0f);
     STATIC_REQUIRE(p->maxValue == 2.0f);
-    STATIC_REQUIRE(p->isQuantized == true);
+    STATIC_REQUIRE(p->isQuantized == 1);
     STATIC_REQUIRE(p->quantizeStep == 1.0f);
 
     STATIC_REQUIRE(d.programCount == 2);

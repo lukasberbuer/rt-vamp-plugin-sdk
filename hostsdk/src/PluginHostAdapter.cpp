@@ -48,20 +48,20 @@ static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
     return result;
 }
 
-static std::optional<size_t> findParameterIndex(
+static std::optional<int> findParameterIndex(
     const VampPluginDescriptor& descriptor, std::string_view identifier
 ) {
-    for (size_t i = 0; i < descriptor.parameterCount; ++i) {
+    for (int i = 0; i < static_cast<int>(descriptor.parameterCount); ++i) {
         if (std::string_view(descriptor.parameters[i]->identifier) == identifier)
             return i;
     }
     return {};
 }
 
-static std::optional<size_t> findProgramIndex(
+static std::optional<int> findProgramIndex(
     const VampPluginDescriptor& descriptor, std::string_view program
 ) {
-    for (size_t i = 0; i < descriptor.programCount; ++i) {
+    for (int i = 0; i < static_cast<int>(descriptor.programCount); ++i) {
         if (std::string_view(descriptor.programs[i]) == program)
             return i;
     }
@@ -177,9 +177,9 @@ Plugin::OutputList PluginHostAdapter::getOutputDescriptors() const {
     const auto outputCount = getOutputCount();
     std::vector<OutputDescriptor> outputs(outputCount);
 
-    for (size_t i = 0; i < outputCount; ++i) {
+    for (uint32_t i = 0; i < outputCount; ++i) {
         auto& output     = outputs[i];
-        auto* vampOutput = descriptor_.getOutputDescriptor(handle_, i);
+        auto* vampOutput = descriptor_.getOutputDescriptor(handle_, static_cast<int>(i));
         assert(vampOutput != nullptr);
 
         output.identifier  = vampOutput->identifier;
@@ -255,8 +255,8 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
     auto* vampFeatureLists = descriptor_.process(
         handle_,
         inputBuffers,
-        nsec / 1'000'000'000,
-        nsec % 1'000'000'000
+        static_cast<int>(nsec / 1'000'000'000),
+        static_cast<int>(nsec % 1'000'000'000)
     );
 
     for (size_t i = 0; i < outputCount_; ++i) {
@@ -286,7 +286,7 @@ void PluginHostAdapter::checkRequirements() {
         throw std::runtime_error("Minimum channel count > 1 not supported");
     }
 
-    for (size_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
+    for (uint32_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
         const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
         if (outputDescriptor->hasFixedBinCount != 1) {
             throw std::runtime_error(

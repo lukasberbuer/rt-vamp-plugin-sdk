@@ -193,7 +193,7 @@ TEST_CASE("PluginHostAdapter outputs") {
             }
         }
 
-        CHECK(output.hasKnownExtents == vampOutput.hasKnownExtents);
+        CHECK(output.hasKnownExtents == bool(vampOutput.hasKnownExtents));
         CHECK(output.minValue        == vampOutput.minValue);
         CHECK(output.maxValue        == vampOutput.maxValue);
         CHECK(output.quantizeStep.has_value()    == (vampOutput.isQuantized == 1));
@@ -261,7 +261,7 @@ TEST_CASE("PluginHostAdapter process") {
 
     static std::vector<float>              values{1.1f, 2.2f, 3.3f};
     static std::array<VampFeatureUnion, 2> featureUnion{};
-    featureUnion[0].v1.valueCount = values.size();
+    featureUnion[0].v1.valueCount = static_cast<unsigned int>(values.size());
     featureUnion[0].v1.values     = values.data();
     static VampFeatureList featureList{
         .featureCount = 1,

@@ -29,9 +29,9 @@ public:
         d.maker          = TPlugin::meta.maker;
         d.pluginVersion  = TPlugin::meta.pluginVersion;
         d.copyright      = TPlugin::meta.copyright;
-        d.parameterCount = TPlugin::parameters.size();
+        d.parameterCount = static_cast<unsigned int>(TPlugin::parameters.size());
         d.parameters     = getParameters();
-        d.programCount   = TPlugin::programs.size();
+        d.programCount   = static_cast<unsigned int>(TPlugin::programs.size());
         d.programs       = getPrograms();
         d.inputDomain    = getVampInputDomain();
         // function pointers set to nullptr by aggregate initializer
@@ -164,9 +164,10 @@ public:
     size_t getValueCount() const noexcept { return values_.size(); }
 
     void setValueCount(size_t n) {
+        assert(static_cast<unsigned int>(n) == n);
         values_.resize(n);
         auto& v1 = getV1();
-        v1.valueCount = n;
+        v1.valueCount = static_cast<unsigned int>(n);
         v1.values     = values_.empty() ? nullptr : values_.data();  // might got reallocated
     }
 

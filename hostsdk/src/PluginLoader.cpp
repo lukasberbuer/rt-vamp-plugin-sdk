@@ -89,11 +89,11 @@ std::vector<std::filesystem::path> PluginLoader::getPluginPaths() {
 #ifdef _WIN32
         path("C:\\Program Files\\Vamp Plugins"),
 #elif __APPLE__
-        path(getenv("HOME")).append("Library/Audio/Plug-Ins/Vamp"),
+        path(std::getenv("HOME")).append("Library/Audio/Plug-Ins/Vamp"),
         path("/Library/Audio/Plug-Ins/Vamp"),
 #elif __linux__
-        path(getenv("HOME")).append("vamp"),
-        path(getenv("HOME")).append(".vamp"),
+        path(std::getenv("HOME")).append("vamp"),
+        path(std::getenv("HOME")).append(".vamp"),
         path("/usr/lib/vamp"),
         path("/usr/lib/x86_64-linux-gnu/vamp"),
         path("/usr/local/lib/vamp"),

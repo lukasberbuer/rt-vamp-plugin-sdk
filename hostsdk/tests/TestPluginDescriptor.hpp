@@ -15,9 +15,9 @@ struct TestPluginDescriptor {
         d.maker          = "LB";
         d.pluginVersion  = 1;
         d.copyright      = "MIT";
-        d.parameterCount = parameters.size();
+        d.parameterCount = static_cast<unsigned int>(parameters.size());
         d.parameters     = const_cast<const VampParameterDescriptor**>(parametersPtr.data());
-        d.programCount   = programs.size();
+        d.programCount   = static_cast<unsigned int>(programs.size());
         d.programs       = const_cast<const char**>(programs.data());
         d.inputDomain    = vampTimeDomain;
 
@@ -40,7 +40,7 @@ struct TestPluginDescriptor {
         d.getMinChannelCount    = [](VampPluginHandle) { return 0u; };
         d.getMaxChannelCount    = [](VampPluginHandle) { return 0u; };
 
-        d.getOutputCount = [](VampPluginHandle) -> unsigned int { return outputs.size(); };
+        d.getOutputCount = [](VampPluginHandle) { return static_cast<unsigned int>(outputs.size()); };
 
         d.getOutputDescriptor = [](VampPluginHandle, unsigned int) {
             return const_cast<VampOutputDescriptor*>(outputs.data());

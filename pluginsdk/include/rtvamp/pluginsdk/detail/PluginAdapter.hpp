@@ -42,7 +42,7 @@ public:
     unsigned int getCurrentProgram() const {
         const auto& programs = TPlugin::programs;
         const auto  program  = plugin_.getCurrentProgram();
-        for (size_t i = 0; i < programs.size(); ++i) {
+        for (unsigned int i = 0; i < static_cast<unsigned int>(programs.size()); ++i) {
             if (programs[i] == program) return i;
         }
         return 0;

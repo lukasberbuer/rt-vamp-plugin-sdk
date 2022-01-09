@@ -36,6 +36,7 @@ if(MSVC)
             /permissive-
             # disabled warnings:
             /wd4100  # unreferenced parameter
+            /wd4996  # use _dupenv_s instead of std::getenv
     )
 else()
     target_compile_options(
