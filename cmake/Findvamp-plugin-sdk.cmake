@@ -1,9 +1,9 @@
 # Find vamp-plugin-sdk.
 #
 # This module defines:
-#  vamp-plugin-sdk_INCLUDE_DIRS, the include dirs for vamp-plugin-sdk
-#  vamp-plugin-sdk_LIBRARIES, the vamp-plugin-sdk libraries.
-#  vamp-plugin-sdk_FOUND, If false, vamp-plugin-sdk was not found.
+#  vamp-plugin-sdk_INCLUDE_DIRS
+#  vamp-plugin-sdk_LIBRARIES
+#  vamp-plugin-sdk_FOUND
 #
 # If you have vamp-plugin-sdk installed in a non-standard place, you can define
 # vamp-plugin-sdk_PREFIX to tell cmake where it is.

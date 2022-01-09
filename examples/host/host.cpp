@@ -1,4 +1,5 @@
 #include <iostream>
+#include <optional>
 #include <stdexcept>
 #include <string>
 #include <string_view>
@@ -9,6 +10,7 @@
 #include "rtvamp/hostsdk/Plugin.hpp"
 #include "rtvamp/hostsdk/PluginLoader.hpp"
 
+#include "FFT.hpp"
 #include "helper.hpp"
 
 using rtvamp::hostsdk::Plugin;
@@ -150,10 +152,19 @@ void process(std::string_view pluginKey, std::string_view audiofile) {
             << Escape::Reset << "\n\n";
     }
 
+
+    // setup FFT if required
+    std::optional<FFT> fft;
+    if (plugin->getInputDomain() == Plugin::InputDomain::Frequency) {
+        fft = FFT();
+        fft->initialise(blockSize);
+    }
+
     // initialise buffer
     const sf_count_t   readSize = blockSize * channels;
     std::vector<float> bufferInterleavedChannels(readSize);
     std::vector<float> bufferChannel(blockSize);
+    std::vector<float> window(hanning(blockSize));
 
     // process audio block-wise, print timestamps and features
     const uint64_t nsecIncrement = (1'000'000'000 * blockSize) / sampleRate;
@@ -168,7 +179,19 @@ void process(std::string_view pluginKey, std::string_view audiofile) {
             bufferChannel[i] = bufferInterleavedChannels[i * channels + channel];
         }
 
-        auto featureSet = plugin->process(bufferChannel, nsec);
+        const auto getInputBuffer = [&]() -> Plugin::InputBuffer {
+            if (plugin->getInputDomain() == Plugin::InputDomain::Frequency) {
+                // multiply buffer with window (inplace)
+                for (size_t i = 0; i < blockSize; ++i) {
+                    bufferChannel[i] *= window[i];
+                }
+                return fft->compute(bufferChannel);
+            } else {
+                return bufferChannel;
+            }
+        };
+
+        auto featureSet = plugin->process(getInputBuffer(), nsec);
 
         std::cout << std::fixed << nsec / 1e9 << '\t';
         for (auto&& feature : featureSet[0]) {

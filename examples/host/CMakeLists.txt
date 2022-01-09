@@ -1,13 +1,22 @@
 find_package(SndFile)
 
 if(SndFile_FOUND)
-    add_executable(example-host host.cpp)
+    find_package(kissfft)
+
+    add_executable(
+        example-host
+        host.cpp
+        FFT.cpp
+        $<IF:$<BOOL:${kissfft_FOUND}>, FFT_Kiss.cpp, FFT_NotFound.cpp>
+    )
+
     target_link_libraries(
         example-host
         PRIVATE
             ${PROJECT_OPTIONS}
             rtvamp-hostsdk
             SndFile::sndfile
+            $<$<BOOL:${kissfft_FOUND}>:kissfft::kissfft>
     )
 else()
     message(WARNING "example-host won't be built because libsndfile was not found")

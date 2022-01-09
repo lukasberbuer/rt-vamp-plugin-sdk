@@ -1,9 +1,9 @@
 # Find libsndfile.
 #
 # This module defines:
-#  SndFile_INCLUDE_DIRS, the include dirs for vamp-plugin-sdk
-#  SndFile_LIBRARIES, the vamp-plugin-sdk libraries.
-#  SndFile_FOUND, If false, vamp-plugin-sdk was not found.
+#  SndFile_INCLUDE_DIRS
+#  SndFile_LIBRARIES
+#  SndFile_FOUND
 
 find_path(
     SndFile_INCLUDE_DIR
