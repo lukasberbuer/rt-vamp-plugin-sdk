@@ -152,7 +152,6 @@ void process(std::string_view pluginKey, std::string_view audiofile) {
             << Escape::Reset << "\n\n";
     }
 
-
     // setup FFT if required
     std::optional<FFT> fft;
     if (plugin->getInputDomain() == Plugin::InputDomain::Frequency) {
@@ -201,6 +200,11 @@ void process(std::string_view pluginKey, std::string_view audiofile) {
 
         nsec += nsecIncrement;
     }
+
+    if (file.error()) {
+        throw std::runtime_error(concat("Error while reading file: ", file.strError()));
+    }
+
     std::cout << std::flush;
 }
 
