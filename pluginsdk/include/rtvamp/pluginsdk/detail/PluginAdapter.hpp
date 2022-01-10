@@ -2,6 +2,7 @@
 
 #include <array>
 #include <atomic>
+#include <memory>
 #include <shared_mutex>
 #include <utility>  // cmp_less
 
@@ -11,129 +12,23 @@
 namespace rtvamp::pluginsdk::detail {
 
 template <IsPlugin TPlugin>
-class PluginInstanceAdapter {
-public:
-    explicit PluginInstanceAdapter(float inputSampleRate) : plugin_(inputSampleRate) {
-        updateOutputDescriptors();
-    }
-
-    int initialise(unsigned int /* inputChannels */, unsigned int stepSize, unsigned int blockSize) {
-        blockSize_ = blockSize;
-        const bool result = plugin_.initialise(stepSize, blockSize);
-        outputsNeedUpdate_ = true;
-        return result ? 1 : 0;
-    }
-
-    void reset() {
-        plugin_.reset();
-    }
-
-    float getParameter(int index) const {
-        // bounds checking in descriptor lambda
-        return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0f); 
-    }
-
-    void setParameter(int index, float value) {
-        // bounds checking in descriptor lambda
-        plugin_.setParameter(TPlugin::parameters[index].identifier, value);
-        outputsNeedUpdate_ = true;
-    }
-
-    unsigned int getCurrentProgram() const {
-        const auto& programs = TPlugin::programs;
-        const auto  program  = plugin_.getCurrentProgram();
-        for (unsigned int i = 0; i < static_cast<unsigned int>(programs.size()); ++i) {
-            if (programs[i] == program) return i;
-        }
-        return 0;
-    }
-
-    void selectProgram(unsigned int index) {
-        // bounds checking in descriptor lambda
-        plugin_.selectProgram(TPlugin::programs[index]);
-        outputsNeedUpdate_ = true;
-    }
-
-    VampOutputDescriptor* getOutputDescriptor(unsigned int index) {
-        updateOutputDescriptors();
-        std::shared_lock readerLock(mutex_);
-        // bounds checking in descriptor lambda
-        return &outputDescriptorWrappers_[index].get();
-    }
-
-    VampFeatureList* process(const float* const* inputBuffers, int sec, int nsec) {
-        const auto*   buffer    = inputBuffers[0];  // only first channel
-        const int64_t timestamp = static_cast<uint64_t>(1'000'000'000) * sec + nsec;
-
-        const auto getInputBuffer = [&]() -> TPlugin::InputBuffer {
-            if constexpr (TPlugin::meta.inputDomain == TPlugin::InputDomain::Time) {
-                return std::span(buffer, blockSize_);
-            } else {
-                // casts between interleaved arrays and std::complex are guaranteed to be valid
-                // https://en.cppreference.com/w/cpp/numeric/complex
-                return std::span(reinterpret_cast<const std::complex<float>*>(buffer), blockSize_ / 2 + 1);
-            }
-        };
-
-        const auto& result = plugin_.process(getInputBuffer(), timestamp);
-
-        assert(result.size() == outputCount);
-
-        featureListsWrapper_.assignValues(result);
-        return featureListsWrapper_.get();
-    }
-
-    VampFeatureList* getRemainingFeatures() {
-        static std::array<VampFeatureList, outputCount> empty{};  // aggregate initialization to set to {0, nullptr}
-        return empty.data();
-    }
-
-    const TPlugin& get() const noexcept { return plugin_; }
-
-private:
-    void updateOutputDescriptors() {
-        if (outputsNeedUpdate_) {
-            std::unique_lock writerLock(mutex_);
-
-            const auto descriptors = plugin_.getOutputDescriptors();
-
-            // (re)generate vamp output descriptors
-            outputDescriptorWrappers_.clear();
-            for (const auto& d : descriptors) {
-                outputDescriptorWrappers_.emplace_back(d);
-            }
-
-            outputsNeedUpdate_ = false;
-        }
-    }
-
-    static constexpr auto outputCount = TPlugin::outputCount;
-
-    TPlugin                                  plugin_;
-    size_t                                   blockSize_{0};
-    std::shared_mutex                        mutex_;
-    std::atomic<bool>                        outputsNeedUpdate_{true};
-    std::vector<VampOutputDescriptorWrapper> outputDescriptorWrappers_;
-    VampFeatureListsWrapper<outputCount>     featureListsWrapper_;
-};
-
-template <IsPlugin TPlugin>
 class PluginAdapter {
 public:
     static consteval const VampPluginDescriptor* getDescriptor() { return &descriptor; }
 
 private:
-    using TPluginInstanceAdapter = PluginInstanceAdapter<TPlugin>;
+    class Instance;
 
     static VampPluginHandle vampInstantiate(
         const VampPluginDescriptor* desc, float inputSampleRate
     ) {
         // should the host create plugins with others descriptors? -> shared state
+        // possible solution: overwrite function pointer in entry point and dispatch to adapters there
         if (desc != getDescriptor()) return nullptr;
 
         std::unique_lock writeLock(mutex);
         auto& adapter = plugins.emplace_back(
-            std::make_unique<TPluginInstanceAdapter>(inputSampleRate)
+            std::make_unique<Instance>(inputSampleRate)
         );
         return adapter.get();
     }
@@ -150,7 +45,7 @@ private:
         }
     }
 
-    static TPluginInstanceAdapter* findPlugin(VampPluginHandle handle) {
+    static Instance* findPlugin(VampPluginHandle handle) {
         std::shared_lock readerLock(mutex);
         auto it = std::find_if(
             plugins.begin(),
@@ -269,7 +164,116 @@ private:
     }();
 
     inline static std::shared_mutex mutex;
-    inline static std::vector<std::unique_ptr<TPluginInstanceAdapter>> plugins;
+    inline static std::vector<std::unique_ptr<Instance>> plugins;
+};
+
+/* ------------------------------------------ Instance ------------------------------------------ */
+
+template <IsPlugin TPlugin>
+class PluginAdapter<TPlugin>::Instance {
+public:
+    explicit Instance(float inputSampleRate) : plugin_(inputSampleRate) {
+        updateOutputDescriptors();
+    }
+
+    int initialise(unsigned int /* inputChannels */, unsigned int stepSize, unsigned int blockSize) {
+        blockSize_ = blockSize;
+        const bool result = plugin_.initialise(stepSize, blockSize);
+        outputsNeedUpdate_ = true;
+        return result ? 1 : 0;
+    }
+
+    void reset() {
+        plugin_.reset();
+    }
+
+    float getParameter(int index) const {
+        // bounds checking in descriptor lambda
+        return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0f); 
+    }
+
+    void setParameter(int index, float value) {
+        // bounds checking in descriptor lambda
+        plugin_.setParameter(TPlugin::parameters[index].identifier, value);
+        outputsNeedUpdate_ = true;
+    }
+
+    unsigned int getCurrentProgram() const {
+        const auto& programs = TPlugin::programs;
+        const auto  program  = plugin_.getCurrentProgram();
+        for (unsigned int i = 0; i < static_cast<unsigned int>(programs.size()); ++i) {
+            if (programs[i] == program) return i;
+        }
+        return 0;
+    }
+
+    void selectProgram(unsigned int index) {
+        // bounds checking in descriptor lambda
+        plugin_.selectProgram(TPlugin::programs[index]);
+        outputsNeedUpdate_ = true;
+    }
+
+    VampOutputDescriptor* getOutputDescriptor(unsigned int index) {
+        updateOutputDescriptors();
+        std::shared_lock readerLock(mutex_);
+        // bounds checking in descriptor lambda
+        return &outputDescriptorWrappers_[index].get();
+    }
+
+    VampFeatureList* process(const float* const* inputBuffers, int sec, int nsec) {
+        const auto*   buffer    = inputBuffers[0];  // only first channel
+        const int64_t timestamp = static_cast<uint64_t>(1'000'000'000) * sec + nsec;
+
+        const auto getInputBuffer = [&]() -> TPlugin::InputBuffer {
+            if constexpr (TPlugin::meta.inputDomain == TPlugin::InputDomain::Time) {
+                return std::span(buffer, blockSize_);
+            } else {
+                // casts between interleaved arrays and std::complex are guaranteed to be valid
+                // https://en.cppreference.com/w/cpp/numeric/complex
+                return std::span(reinterpret_cast<const std::complex<float>*>(buffer), blockSize_ / 2 + 1);
+            }
+        };
+
+        const auto& result = plugin_.process(getInputBuffer(), timestamp);
+
+        assert(result.size() == outputCount);
+
+        featureListsWrapper_.assignValues(result);
+        return featureListsWrapper_.get();
+    }
+
+    VampFeatureList* getRemainingFeatures() {
+        static std::array<VampFeatureList, outputCount> empty{};  // aggregate initialization to set to {0, nullptr}
+        return empty.data();
+    }
+
+    const TPlugin& get() const noexcept { return plugin_; }
+
+private:
+    void updateOutputDescriptors() {
+        if (outputsNeedUpdate_) {
+            std::unique_lock writerLock(mutex_);
+
+            const auto descriptors = plugin_.getOutputDescriptors();
+
+            // (re)generate vamp output descriptors
+            outputDescriptorWrappers_.clear();
+            for (const auto& d : descriptors) {
+                outputDescriptorWrappers_.emplace_back(d);
+            }
+
+            outputsNeedUpdate_ = false;
+        }
+    }
+
+    static constexpr auto outputCount = TPlugin::outputCount;
+
+    TPlugin                                  plugin_;
+    size_t                                   blockSize_{0};
+    std::shared_mutex                        mutex_;
+    std::atomic<bool>                        outputsNeedUpdate_{true};
+    std::vector<VampOutputDescriptorWrapper> outputDescriptorWrappers_;
+    VampFeatureListsWrapper<outputCount>     featureListsWrapper_;
 };
 
 }  // namespace rtvamp::pluginsdk::detail
