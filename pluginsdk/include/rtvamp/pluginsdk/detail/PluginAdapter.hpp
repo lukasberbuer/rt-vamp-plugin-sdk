@@ -18,6 +18,25 @@ public:
 
 private:
     class Instance;
+    class InstanceMap;
+
+    [[nodiscard]] static auto getWriterLock() { return std::unique_lock(mutex); }
+    [[nodiscard]] static auto getReaderLock() { return std::shared_lock(mutex); }
+
+    // not thread-safe -> acquire lock outside
+    static auto findPluginIterator(VampPluginHandle handle) {
+        return std::find_if(
+            plugins.begin(),
+            plugins.end(),
+            [&](const auto& adapter) { return adapter.get() == handle; }
+        );
+    }
+
+    // not thread-safe -> acquire lock outside
+    static Instance* findPlugin(VampPluginHandle handle) {
+        auto it = findPluginIterator(handle);
+        return it == plugins.end() ? nullptr : (*it).get();
+    }
 
     static VampPluginHandle vampInstantiate(
         const VampPluginDescriptor* desc, float inputSampleRate
@@ -26,7 +45,7 @@ private:
         // possible solution: overwrite function pointer in entry point and dispatch to adapters there
         if (desc != getDescriptor()) return nullptr;
 
-        std::unique_lock writeLock(mutex);
+        const auto lock = getWriterLock();
         auto& adapter = plugins.emplace_back(
             std::make_unique<Instance>(inputSampleRate)
         );
@@ -34,25 +53,11 @@ private:
     }
 
     static void vampCleanup(VampPluginHandle handle) {
-        std::unique_lock writerLock(mutex);
-        auto it = std::find_if(
-            plugins.begin(),
-            plugins.end(),
-            [&](const auto& adapter) { return adapter.get() == handle; }
-        );
+        const auto lock = getWriterLock();
+        auto it = findPluginIterator(handle);
         if (it != plugins.end()) {
             plugins.erase(it);
         }
-    }
-
-    static Instance* findPlugin(VampPluginHandle handle) {
-        std::shared_lock readerLock(mutex);
-        auto it = std::find_if(
-            plugins.begin(),
-            plugins.end(),
-            [&](const auto& adapter) { return adapter.get() == handle; }
-        );
-        return it == plugins.end() ? nullptr : (*it).get();
     }
 
     static constexpr bool isValidParameterIndex(auto index) {
@@ -76,13 +81,15 @@ private:
         d.initialise = [](
             VampPluginHandle handle, unsigned int inputChannels, unsigned int stepSize, unsigned int blockSize
         ) -> int {
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             if (!adapter) return 0;
             return adapter->initialise(inputChannels, stepSize, blockSize);
         };
 
         d.reset = [](VampPluginHandle handle) {
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             if (!adapter) return;
             adapter->reset();
         };
@@ -90,7 +97,8 @@ private:
         d.getParameter = [](VampPluginHandle handle, int index) {
             // check index before dispatching
             if (!isValidParameterIndex(index)) return 0.0f;
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             if (!adapter) return 0.0f;
             return adapter->getParameter(index);
         };
@@ -98,31 +106,36 @@ private:
         d.setParameter = [](VampPluginHandle handle, int index, float value) {
             // check index before dispatching
             if (!isValidParameterIndex(index)) return;
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             if (!adapter) return;
             return adapter->setParameter(index, value);
         };
 
         d.getCurrentProgram = [](VampPluginHandle handle) {
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             return adapter ? adapter->getCurrentProgram() : 0;
         };
 
         d.selectProgram = [](VampPluginHandle handle, unsigned int index) {
             // check index before dispatching
             if (!isValidProgramIndex(index)) return;
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             if (!adapter) return;
             adapter->selectProgram(index);
         };
 
         d.getPreferredStepSize = [](VampPluginHandle handle) {
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             return adapter ? adapter->get().getPreferredStepSize() : 0;
         };
 
         d.getPreferredBlockSize = [](VampPluginHandle handle) {
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             return adapter ? adapter->get().getPreferredBlockSize() : 0;
         };
 
@@ -140,7 +153,8 @@ private:
 
         d.getOutputDescriptor = [](VampPluginHandle handle, unsigned int index) -> VampOutputDescriptor* {
             if (!isValidOutputIndex(index)) return nullptr;
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             return adapter ? adapter->getOutputDescriptor(index) : nullptr;
         };
 
@@ -149,12 +163,14 @@ private:
         d.process = [](
             VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec
         ) {
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             return adapter ? adapter->process(inputBuffers, sec, nsec) : nullptr;
         };
 
         d.getRemainingFeatures = [](VampPluginHandle handle) {
-            auto* adapter = findPlugin(handle);
+            const auto lock    = getReaderLock();
+            auto*      adapter = findPlugin(handle);
             return adapter ? adapter->getRemainingFeatures() : nullptr;
         };
 
