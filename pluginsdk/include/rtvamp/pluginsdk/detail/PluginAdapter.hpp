@@ -15,7 +15,7 @@ namespace rtvamp::pluginsdk::detail {
 template <IsPlugin TPlugin>
 class PluginAdapter {
 public:
-    static consteval const VampPluginDescriptor* getDescriptor() { return &descriptor; }
+    static constexpr const VampPluginDescriptor* getDescriptor() { return &descriptor; }
 
 private:
     class Instance;
@@ -47,7 +47,7 @@ private:
     ) {
         // should the host create plugins with others descriptors? -> shared state
         // possible solution: overwrite function pointer in entry point and dispatch to adapters there
-        if (desc != getDescriptor()) return nullptr;
+        if (desc != &descriptor) return nullptr;
 
         const auto lock = getWriterLock();
         auto& adapter = plugins.emplace_back(
