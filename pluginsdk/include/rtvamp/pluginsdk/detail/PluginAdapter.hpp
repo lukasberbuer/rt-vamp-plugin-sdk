@@ -7,6 +7,7 @@
 #include <utility>  // cmp_less
 
 #include "rtvamp/pluginsdk/Plugin.hpp"
+#include "rtvamp/pluginsdk/detail/macros.hpp"
 #include "rtvamp/pluginsdk/detail/VampWrapper.hpp"
 
 namespace rtvamp::pluginsdk::detail {
@@ -194,38 +195,66 @@ public:
 
     int initialise(unsigned int /* inputChannels */, unsigned int stepSize, unsigned int blockSize) {
         blockSize_ = blockSize;
-        const bool result = plugin_.initialise(stepSize, blockSize);
-        outputsNeedUpdate_ = true;
-        return result ? 1 : 0;
+        try {
+            const bool success = plugin_.initialise(stepSize, blockSize);
+            outputsNeedUpdate_ = true;
+            return success ? 1 : 0;
+        } catch (const std::exception& e) {
+            RTVAMP_ERROR("rtvamp::Plugin::initialise: ", e.what());
+            outputsNeedUpdate_ = true;
+            return 0;
+        }
     }
 
     void reset() {
-        plugin_.reset();
+        try {
+            plugin_.reset();
+        } catch (const std::exception& e) {
+            RTVAMP_ERROR("rtvamp::Plugin::reset: ", e.what());
+        }
     }
 
     float getParameter(int index) const {
         // bounds checking in descriptor lambda
-        return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0f); 
+        try {
+            return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0f); 
+        } catch (const std::exception& e) {
+            RTVAMP_ERROR("rtvamp::Plugin::getParameter: ", e.what());
+            return 0.0f;
+        }
     }
 
     void setParameter(int index, float value) {
         // bounds checking in descriptor lambda
-        plugin_.setParameter(TPlugin::parameters[index].identifier, value);
+        try {
+            plugin_.setParameter(TPlugin::parameters[index].identifier, value);
+        } catch (const std::exception& e) {
+            RTVAMP_ERROR("rtvamp::Plugin::setParameter: ", e.what());
+        }
         outputsNeedUpdate_ = true;
     }
 
     unsigned int getCurrentProgram() const {
-        const auto& programs = TPlugin::programs;
-        const auto  program  = plugin_.getCurrentProgram();
-        for (unsigned int i = 0; i < static_cast<unsigned int>(programs.size()); ++i) {
-            if (programs[i] == program) return i;
+        try {
+            const auto& programs = TPlugin::programs;
+            const auto  program  = plugin_.getCurrentProgram();
+            for (unsigned int i = 0; i < static_cast<unsigned int>(programs.size()); ++i) {
+                if (programs[i] == program) return i;
+            }
+            return 0;
+        } catch (const std::exception& e) {
+            RTVAMP_ERROR("rtvamp::Plugin::getCurrentProgram: ", e.what());
+            return 0;
         }
-        return 0;
     }
 
     void selectProgram(unsigned int index) {
         // bounds checking in descriptor lambda
-        plugin_.selectProgram(TPlugin::programs[index]);
+        try {
+            plugin_.selectProgram(TPlugin::programs[index]);
+        } catch (const std::exception& e) {
+            RTVAMP_ERROR("rtvamp::Plugin::selectProgram: ", e.what());
+        }
         outputsNeedUpdate_ = true;
     }
 
@@ -250,12 +279,15 @@ public:
             }
         };
 
-        const auto& result = plugin_.process(getInputBuffer(), timestamp);
+        try {
+            const auto& result = plugin_.process(getInputBuffer(), timestamp);
+            assert(result.size() == outputCount);
+            featureListsWrapper_.assignValues(result);
+        } catch (const std::exception& e) {
+            RTVAMP_ERROR("rtvamp::Plugin::process: ", e.what());
+        }
 
-        assert(result.size() == outputCount);
-
-        featureListsWrapper_.assignValues(result);
-        return featureListsWrapper_.get();
+        return featureListsWrapper_.get();  // return last feature list if exception is thrown - better return nans?
     }
 
     VampFeatureList* getRemainingFeatures() {
@@ -268,17 +300,20 @@ public:
 private:
     void updateOutputDescriptors() {
         if (outputsNeedUpdate_) {
-            std::unique_lock writerLock(mutex_);
+            try {
+                std::unique_lock writerLock(mutex_);
+                const auto descriptors = plugin_.getOutputDescriptors();
 
-            const auto descriptors = plugin_.getOutputDescriptors();
+                // (re)generate vamp output descriptors
+                outputDescriptorWrappers_.clear();
+                for (const auto& d : descriptors) {
+                    outputDescriptorWrappers_.emplace_back(d);
+                }
 
-            // (re)generate vamp output descriptors
-            outputDescriptorWrappers_.clear();
-            for (const auto& d : descriptors) {
-                outputDescriptorWrappers_.emplace_back(d);
+                outputsNeedUpdate_ = false;
+            } catch (const std::exception& e) {
+                RTVAMP_ERROR("rtvamp::Plugin::getOutputDescriptors: ", e.what());
             }
-
-            outputsNeedUpdate_ = false;
         }
     }
 
