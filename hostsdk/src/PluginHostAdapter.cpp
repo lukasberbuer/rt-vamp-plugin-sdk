@@ -227,7 +227,9 @@ Plugin::OutputList PluginHostAdapter::getOutputDescriptors() const {
     for (uint32_t i = 0; i < outputCount; ++i) {
         auto& output     = outputs[i];
         auto* vampOutput = descriptor_.getOutputDescriptor(handle_, static_cast<int>(i));
-        assert(vampOutput != nullptr);
+
+        if (!vampOutput)
+            throw std::runtime_error(helper::concat("Output descriptor ", i, " is null"));
 
         output.identifier  = vampOutput->identifier;
         output.name        = vampOutput->name;
@@ -306,6 +308,9 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
         static_cast<int>(nsec % 1'000'000'000)
     );
 
+    if (!vampFeatureLists)
+        throw std::runtime_error("Returned feature list is null");
+
     for (size_t i = 0; i < outputCount_; ++i) {
         const auto& vampFeatureList = vampFeatureLists[i];
         const auto& vampFeatureV1   = vampFeatureList.features[0].v1;
@@ -339,6 +344,10 @@ void PluginHostAdapter::checkRequirements() {
 
     for (uint32_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
         const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
+
+        if (!outputDescriptor)
+            throw Error(helper::concat("Output descriptor ", outputIndex, " is null"));
+
         if (outputDescriptor->hasFixedBinCount != 1) {
             throw Error(
                 helper::concat(
