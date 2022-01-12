@@ -21,6 +21,9 @@ private:
     class Instance;
     class InstanceMap;
 
+    inline static std::shared_mutex mutex;
+    inline static std::vector<std::unique_ptr<Instance>> plugins;
+
     [[nodiscard]] static auto getWriterLock() { return std::unique_lock(mutex); }
     [[nodiscard]] static auto getReaderLock() { return std::shared_lock(mutex); }
 
@@ -179,9 +182,6 @@ private:
 
         return d;
     }();
-
-    inline static std::shared_mutex mutex;
-    inline static std::vector<std::unique_ptr<Instance>> plugins;
 };
 
 /* ------------------------------------------ Instance ------------------------------------------ */
