@@ -17,12 +17,6 @@ foreach(config ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${config} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 endforeach()
 
-# find packages installed with Conan
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_BINARY_DIR})
-list(APPEND CMAKE_PREFIX_PATH ${CMAKE_BINARY_DIR})
-
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-
 set(PROJECT_OPTIONS "${PROJECT_NAME}_project_options")
 add_library(${PROJECT_OPTIONS} INTERFACE)
 
@@ -53,27 +47,16 @@ else()
     )
 endif()
 
+include(cmake/Conan.cmake)
 include(cmake/Sanitizers.cmake)
 include(cmake/StaticAnalyzers.cmake)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)  # for find_package if Conan disabled
 
 option(RTVAMP_ENABLE_TESTS "Enable tests" OFF)
 if(RTVAMP_ENABLE_TESTS)
     message(STATUS "Tests enabled")
-
-    find_package(Catch2)  # target Catch2::Catch2 or Catch2::Catch2WithMain
-    if(NOT Catch2_FOUND)
-        message(STATUS "Install catch2")
-        set(CATCH_BUILD_STATIC_LIBRARY ON CACHE INTERNAL "")  # enable Catch2WithMain target
-        include(FetchContent)
-        FetchContent_Declare(
-            Catch2
-            GIT_REPOSITORY https://github.com/catchorg/Catch2.git
-            GIT_TAG        v2.13.7
-        )
-        FetchContent_MakeAvailable(Catch2)
-        list(APPEND CMAKE_MODULE_PATH ${Catch2_SOURCE_DIR}/contrib)
-    endif()
-
+    find_package(Catch2 REQUIRED)
     include(cmake/Tests.cmake)
     enable_testing()
 endif()
