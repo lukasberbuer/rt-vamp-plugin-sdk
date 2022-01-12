@@ -13,8 +13,17 @@ using rtvamp::hostsdk::Plugin;
 using rtvamp::hostsdk::PluginHostAdapter;
 
 TEST_CASE("PluginHostAdapter plugin requirements") {
+    auto descriptor = TestPluginDescriptor::get();
+
+    SECTION("Missing function pointer") {
+        descriptor.getOutputCount = nullptr;
+        REQUIRE_THROWS_WITH(
+            PluginHostAdapter(descriptor, 48000),
+            "Missing function pointer to getOutputCount"
+        );
+    }
+
     SECTION("Min channel count == 1") {
-        auto descriptor = TestPluginDescriptor::get();
         descriptor.getMinChannelCount = [](VampPluginHandle) { return 2u; };
         REQUIRE_THROWS_WITH(
             PluginHostAdapter(descriptor, 48000),
@@ -23,7 +32,6 @@ TEST_CASE("PluginHostAdapter plugin requirements") {
     }
 
     SECTION("hasFixedBinCount == false") {
-        auto descriptor = TestPluginDescriptor::get();
         static auto outputs = TestPluginDescriptor::outputs;
         outputs[0].hasFixedBinCount = 0;
         descriptor.getOutputDescriptor = [](VampPluginHandle, unsigned int) {
@@ -36,7 +44,6 @@ TEST_CASE("PluginHostAdapter plugin requirements") {
     }
 
     SECTION("sampleType != vampOneSamplePerStep") {
-        auto descriptor = TestPluginDescriptor::get();
         static auto outputs = TestPluginDescriptor::outputs;
         outputs[0].sampleType = GENERATE(vampFixedSampleRate, vampVariableSampleRate);
         descriptor.getOutputDescriptor = [](VampPluginHandle, unsigned int) {
@@ -101,6 +108,16 @@ TEST_CASE("PluginHostAdapter static plugin data") {
         for (size_t i = 0; i < descriptor.programCount; ++i) {
             CHECK_THAT(programs[i], Equals(descriptor.programs[i]));
         }
+    }
+}
+
+TEST_CASE("PluginHostAdapter handle nullptr in static plugin data") {
+    auto descriptor = TestPluginDescriptor::get();
+    
+    SECTION("Nullptr string") {
+        descriptor.identifier = nullptr;
+        auto plugin = PluginHostAdapter(descriptor, 48000);
+        REQUIRE(plugin.getIdentifier().empty());
     }
 }
 

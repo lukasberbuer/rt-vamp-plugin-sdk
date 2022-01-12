@@ -12,9 +12,13 @@
 
 namespace rtvamp::hostsdk {
 
+static const char* notNull(const char* str) {
+    return str ? str : "";
+}
+
 template <typename T>
-static std::optional<T> createOptional(T value, bool notNull) {
-    if (notNull) return value;
+static std::optional<T> createOptional(T value, bool hasValue) {
+    if (hasValue) return value;
     return {};
 }
 
@@ -27,10 +31,10 @@ static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
         auto* vampParameter = descriptor.parameters[i];
         auto& parameter     = result[i];
 
-        parameter.identifier   = vampParameter->identifier;
-        parameter.name         = vampParameter->name;
-        parameter.description  = vampParameter->description;
-        parameter.unit         = vampParameter->unit;
+        parameter.identifier   = notNull(vampParameter->identifier);
+        parameter.name         = notNull(vampParameter->name);
+        parameter.description  = notNull(vampParameter->description);
+        parameter.unit         = notNull(vampParameter->unit);
         parameter.defaultValue = vampParameter->defaultValue;
         parameter.minValue     = vampParameter->minValue;
         parameter.maxValue     = vampParameter->maxValue;
@@ -68,9 +72,52 @@ static std::optional<int> findProgramIndex(
     return {};
 }
 
+static void checkPluginDescriptor(const VampPluginDescriptor& d) {
+    using Error = std::runtime_error;
+
+    if (!d.instantiate)
+        throw Error("Missing function pointer to instantiate");
+    if (!d.cleanup)
+        throw Error("Missing function pointer to clean");
+    if (!d.initialise)
+        throw Error("Missing function pointer to initialise");
+    if (!d.reset)
+        throw Error("Missing function pointer to reset");
+    if (!d.getParameter)
+        throw Error("Missing function pointer to getParameter");
+    if (!d.setParameter)
+        throw Error("Missing function pointer to setParameter");
+    if (!d.getCurrentProgram)
+        throw Error("Missing function pointer to getCurrentProgram");
+    if (!d.selectProgram)
+        throw Error("Missing function pointer to selectProgram");
+    if (!d.getPreferredStepSize)
+        throw Error("Missing function pointer to getPreferredStepSize");
+    if (!d.getPreferredBlockSize)
+        throw Error("Missing function pointer to getPreferredBlockSize");
+    if (!d.getMinChannelCount)
+        throw Error("Missing function pointer to getMinChannelCount");
+    if (!d.getMaxChannelCount)
+        throw Error("Missing function pointer to getMaxChannelCount");
+    if (!d.getOutputCount)
+        throw Error("Missing function pointer to getOutputCount");
+    if (!d.getOutputDescriptor)
+        throw Error("Missing function pointer to getOutputDescriptor");
+    if (!d.releaseOutputDescriptor)
+        throw Error("Missing function pointer to releaseOutputDescriptor");
+    if (!d.process)
+        throw Error("Missing function pointer to process");
+    if (!d.getRemainingFeatures)
+        throw Error("Missing function pointer to getRemainingFeatures");
+    if (!d.releaseFeatureSet)
+        throw Error("Missing function pointer to releaseFeatureSet");
+}
+
 PluginHostAdapter::PluginHostAdapter(
     const VampPluginDescriptor& descriptor, float inputSampleRate
 ) : Plugin(inputSampleRate), descriptor_{descriptor} {
+    checkPluginDescriptor(descriptor_);
+
     handle_ = descriptor_.instantiate(&descriptor_, inputSampleRate);
     if (!handle_) {
         throw std::runtime_error("Plugin instantiation failed");
@@ -99,23 +146,23 @@ uint32_t PluginHostAdapter::getVampApiVersion() const noexcept {
 }
 
 std::string_view PluginHostAdapter::getIdentifier() const noexcept {
-    return descriptor_.identifier;
+    return notNull(descriptor_.identifier);
 }
 
 std::string_view PluginHostAdapter::getName() const noexcept {
-    return descriptor_.name;
+    return notNull(descriptor_.name);
 }
 
 std::string_view PluginHostAdapter::getDescription() const noexcept {
-    return descriptor_.description;
+    return notNull(descriptor_.description);
 }
 
 std::string_view PluginHostAdapter::getMaker() const noexcept {
-    return descriptor_.maker;
+    return notNull(descriptor_.maker);
 }
 
 std::string_view PluginHostAdapter::getCopyright() const noexcept {
-    return descriptor_.copyright;
+    return notNull(descriptor_.copyright);
 }
 int PluginHostAdapter::getPluginVersion() const noexcept {
     return descriptor_.pluginVersion;
@@ -282,14 +329,18 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
 }
 
 void PluginHostAdapter::checkRequirements() {
-    if (descriptor_.getMinChannelCount(handle_) > 1) {
-        throw std::runtime_error("Minimum channel count > 1 not supported");
-    }
+    using Error = std::runtime_error;
+
+    if (descriptor_.vampApiVersion < 1 || descriptor_.vampApiVersion > 2)
+        throw Error("Only Vamp API versions 1 and 2 supported");
+
+    if (descriptor_.getMinChannelCount(handle_) > 1)
+        throw Error("Minimum channel count > 1 not supported");
 
     for (uint32_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
         const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
         if (outputDescriptor->hasFixedBinCount != 1) {
-            throw std::runtime_error(
+            throw Error(
                 helper::concat(
                     "Dynamic bin count of output \"",
                     outputDescriptor->identifier,
@@ -298,7 +349,7 @@ void PluginHostAdapter::checkRequirements() {
             );
         }
         if (outputDescriptor->sampleType != vampOneSamplePerStep) {
-            throw std::runtime_error(
+            throw Error(
                 helper::concat(
                     "Sample type of output \"",
                     outputDescriptor->identifier,
