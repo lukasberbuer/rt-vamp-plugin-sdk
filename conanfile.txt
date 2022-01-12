@@ -6,6 +6,7 @@ kissfft/131.1.0
 
 [options]
 catch2:with_main=True
+libsndfile:with_external_libs=False
 
 [generators]
 cmake_find_package
