@@ -112,10 +112,10 @@ void listPluginOutputs() {
 }
 
 void process(
-    std::string_view      pluginKey,
-    std::string_view      audiofile,
-    std::optional<size_t> optionalOutputIndex,
-    std::optional<size_t> optionalBlockSize
+    std::string_view        pluginKey,
+    std::string_view        audiofile,
+    std::optional<uint32_t> optionalOutputIndex,
+    std::optional<uint32_t> optionalBlockSize
 ) {
     // load audio file
     auto file = SndfileHandle(std::string(audiofile));
@@ -132,7 +132,7 @@ void process(
     PluginLoader loader;
     auto plugin = loader.loadPlugin(pluginKey, sampleRate);
 
-    const auto getBlockSize = [&]() -> size_t {
+    const auto getBlockSize = [&]() -> uint32_t {
         if (optionalBlockSize) {
             return optionalBlockSize.value();
         }
@@ -142,8 +142,8 @@ void process(
         return 1024;
     };
 
-    const size_t blockSize = getBlockSize();
-    const size_t stepSize  = blockSize;
+    const uint32_t blockSize = getBlockSize();
+    const uint32_t stepSize  = blockSize;
 
     const bool success = plugin->initialise(stepSize, blockSize);
     if (!success) throw std::runtime_error("Initialisation failed");
@@ -281,8 +281,8 @@ int main(int argc, char* argv[]) {
     if (parser.nargs() >= 3) {
         const auto plugin      = parser.args()[parser.nargs() - 2];
         const auto audiofile   = parser.args()[parser.nargs() - 1];
-        const auto outputIndex = parser.getValueAs<size_t>("--output");
-        const auto blockSize   = parser.getValueAs<size_t>("--blocksize");
+        const auto outputIndex = parser.getValueAs<uint32_t>("--output");
+        const auto blockSize   = parser.getValueAs<uint32_t>("--blocksize");
 
         try {
             process(plugin, audiofile, outputIndex, blockSize);

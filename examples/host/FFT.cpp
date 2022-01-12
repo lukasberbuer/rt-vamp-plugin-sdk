@@ -24,5 +24,5 @@ std::vector<float> hanning(size_t length) {
 }
 
 std::vector<float> hamming(size_t length) {
-    return cosineSum(length, 0.54, 0.46, 0, 0);
+    return cosineSum(length, 0.54f, 0.46f, 0.0f, 0.0f);
 }
