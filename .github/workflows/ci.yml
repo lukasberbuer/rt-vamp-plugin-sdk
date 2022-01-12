@@ -40,3 +40,22 @@ jobs:
             ${{ matrix.config.flags }} \
             ..
           cmake --build .
+  windows:
+    name: Windows ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { name: Visual Studio 17 2022, os: windows-2022 }
+    steps:
+      - name: Install requirements
+        run: |
+          pip install conan
+      - uses: actions/checkout@v2
+      - name: Compile and run tests
+        run: |
+          mkdir build
+          cd build
+          cmake -DRTVAMP_ENABLE_CONAN=ON -DRTVAMP_ENABLE_BENCHMARKS=ON -DRTVAMP_ENABLE_EXAMPLES=ON -DRTVAMP_ENABLE_TESTS=ON ..
+          cmake --build . --config RelWithDebInfo
