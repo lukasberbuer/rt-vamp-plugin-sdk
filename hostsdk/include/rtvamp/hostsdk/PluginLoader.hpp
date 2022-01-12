@@ -41,10 +41,7 @@ public:
     std::vector<PluginKey> listPlugins() const;
     std::vector<PluginKey> listPluginsInLibrary(const std::filesystem::path& libraryPath) const;
 
-    using PluginDeleter = std::function<void(Plugin*)>;
-    using PluginPtr     = std::unique_ptr<Plugin, PluginDeleter>;
-
-    PluginPtr loadPlugin(const PluginKey& key, float inputSampleRate) const;
+    std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate) const;
 
 private:
     std::map<PluginKey, std::filesystem::path> plugins_;

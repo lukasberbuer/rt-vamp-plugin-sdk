@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <string_view>
 #include <vector>
 
@@ -15,7 +16,11 @@ namespace rtvamp::hostsdk {
 
 class PluginHostAdapter : public Plugin {
 public:
-    PluginHostAdapter(const VampPluginDescriptor& descriptor, float inputSampleRate);
+    PluginHostAdapter(
+        const VampPluginDescriptor& descriptor,
+        float                       inputSampleRate,
+        std::function<void()>       onDelete = [] {}  // used in PluginLoader to unload library
+    );
     ~PluginHostAdapter();
 
     uint32_t             getVampApiVersion() const noexcept override;
@@ -50,6 +55,7 @@ private:
     void checkRequirements();
 
     const VampPluginDescriptor&      descriptor_;
+    const std::function<void()>      onDelete_;
     VampPluginHandle                 handle_{nullptr};
     std::vector<ParameterDescriptor> parameters_;
     std::vector<const char*>         programs_;

@@ -5,6 +5,7 @@
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <utility>  // move
 
 #include "vamp/vamp.h"
 
@@ -114,8 +115,8 @@ static void checkPluginDescriptor(const VampPluginDescriptor& d) {
 }
 
 PluginHostAdapter::PluginHostAdapter(
-    const VampPluginDescriptor& descriptor, float inputSampleRate
-) : Plugin(inputSampleRate), descriptor_{descriptor} {
+    const VampPluginDescriptor& descriptor, float inputSampleRate, std::function<void()> onDelete
+) : Plugin(inputSampleRate), descriptor_(descriptor), onDelete_(std::move(onDelete)) {
     checkPluginDescriptor(descriptor_);
 
     handle_ = descriptor_.instantiate(&descriptor_, inputSampleRate);
@@ -139,6 +140,7 @@ PluginHostAdapter::PluginHostAdapter(
 
 PluginHostAdapter::~PluginHostAdapter() {
     descriptor_.cleanup(handle_);
+    onDelete_();
 }
 
 uint32_t PluginHostAdapter::getVampApiVersion() const noexcept {

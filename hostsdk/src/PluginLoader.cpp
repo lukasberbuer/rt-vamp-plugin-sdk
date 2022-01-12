@@ -139,27 +139,31 @@ std::vector<PluginKey> PluginLoader::listPluginsInLibrary(
     return result;
 }
 
-PluginLoader::PluginPtr PluginLoader::loadPlugin(
+std::unique_ptr<Plugin> PluginLoader::loadPlugin(
     const PluginKey& key, float inputSampleRate
 ) const {
-    if (!plugins_.contains(key)) {
-        throw std::invalid_argument(helper::concat("Plugin not found: ", key.get()));
-    }
-    const auto libraryPath = plugins_.at(key);
+    const auto getLibraryPath = [&] {
+        if (!plugins_.contains(key)) {
+            throw std::invalid_argument(helper::concat("Plugin not found: ", key.get()));
+        }
+        return plugins_.at(key);
+    };
 
-    PluginLibrary library(libraryPath);
+    PluginLibrary library(getLibraryPath());
+
     const auto* descriptor = [&] {
         for (const auto* d : library.getDescriptors()) {
             if (d->identifier == key.getIdentifier()) return d;
         }
-        throw std::invalid_argument(helper::concat("Plugin identifier not found in descriptors: ", key.get()));
+        throw std::invalid_argument(
+            helper::concat("Plugin identifier not found in descriptors: ", key.get())
+        );
     }();
 
-    return std::unique_ptr<PluginHostAdapter, PluginDeleter>(
-        new PluginHostAdapter(*descriptor, inputSampleRate),
-        [dl = std::move(library)](Plugin* p) {  // capture library to be deleted after plugin
-            delete p;
-        }
+    return std::make_unique<PluginHostAdapter>(
+        *descriptor,
+        inputSampleRate,
+        [dl = std::move(library)] {}  // capture library to be deleted after plugin
     );
 }
 
