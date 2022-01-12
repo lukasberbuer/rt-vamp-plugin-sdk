@@ -33,7 +33,7 @@ public:
     int                  getPluginVersion()  const noexcept override;
     InputDomain          getInputDomain()    const noexcept override;
 
-    ParameterList        getParameterList()                const noexcept override;
+    ParameterList        getParameterDescriptors() const noexcept override;
     std::optional<float> getParameter(std::string_view id) const override;
     bool                 setParameter(std::string_view id, float value) override; 
 

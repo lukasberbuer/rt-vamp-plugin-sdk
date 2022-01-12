@@ -72,7 +72,7 @@ TEST_CASE("PluginHostAdapter static plugin data") {
     CHECK(plugin.getInputDomain()   == Plugin::InputDomain::Time);
 
     SECTION("Parameter") {
-        auto parameters = plugin.getParameterList();
+        auto parameters = plugin.getParameterDescriptors();
         REQUIRE(parameters.size() == TestPluginDescriptor::parameters.size());
 
         for (size_t i = 0; i < parameters.size(); ++i) {

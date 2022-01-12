@@ -23,7 +23,7 @@ static std::optional<T> createOptional(T value, bool hasValue) {
     return {};
 }
 
-static std::vector<Plugin::ParameterDescriptor> getParameterDescriptors(
+static std::vector<Plugin::ParameterDescriptor> convertParameterDescriptors(
     const VampPluginDescriptor& descriptor
 ) {
     std::vector<Plugin::ParameterDescriptor> result(descriptor.parameterCount);
@@ -124,7 +124,7 @@ PluginHostAdapter::PluginHostAdapter(
         throw std::runtime_error("Plugin instantiation failed");
     }
 
-    parameters_ = getParameterDescriptors(descriptor_);
+    parameters_ = convertParameterDescriptors(descriptor_);
     programs_   = std::vector<const char*>(
         descriptor_.programs,
         descriptor_.programs + descriptor_.programCount
@@ -176,7 +176,7 @@ Plugin::InputDomain PluginHostAdapter::getInputDomain() const noexcept {
         : InputDomain::Time;
 }
 
-Plugin::ParameterList PluginHostAdapter::getParameterList() const noexcept {
+Plugin::ParameterList PluginHostAdapter::getParameterDescriptors() const noexcept {
     return parameters_;
 }
 

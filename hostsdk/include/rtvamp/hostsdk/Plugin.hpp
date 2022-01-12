@@ -61,7 +61,7 @@ public:
     virtual int                  getPluginVersion()  const noexcept = 0;
     virtual InputDomain          getInputDomain()    const noexcept = 0;
 
-    virtual ParameterList        getParameterList() const noexcept = 0;
+    virtual ParameterList        getParameterDescriptors() const noexcept = 0;
     virtual std::optional<float> getParameter(std::string_view id) const = 0;
     virtual bool                 setParameter(std::string_view id, float value) = 0;
 

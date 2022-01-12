@@ -50,7 +50,7 @@ void listPlugins() {
 
                 std::cout << "- Parameters:\n";
                 size_t parameterIndex = 0;
-                for (auto&& p : plugin->getParameterList()) {
+                for (auto&& p : plugin->getParameterDescriptors()) {
                     std::cout << "  - Parameter " << ++parameterIndex << ":\n";
                     std::cout << "    - Identifier:       " << p.identifier << '\n';
                     std::cout << "    - Name:             " << p.name << '\n';
