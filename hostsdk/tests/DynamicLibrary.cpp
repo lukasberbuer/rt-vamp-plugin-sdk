@@ -64,8 +64,6 @@ TEST_CASE("DynamicLibrary") {
         DynamicLibrary dl1(validPath);
         DynamicLibrary dl2(std::move(dl1));
 
-        CHECK_FALSE(dl1.isLoaded());
-        CHECK_FALSE(dl1.path());
         CHECK(dl2.isLoaded());
         CHECK(dl2.path() == validPath);
     }
@@ -74,8 +72,6 @@ TEST_CASE("DynamicLibrary") {
         DynamicLibrary dl1(validPath);
         auto dl2 = std::move(dl1);
 
-        CHECK_FALSE(dl1.isLoaded());
-        CHECK_FALSE(dl1.path());
         CHECK(dl2.isLoaded());
         CHECK(dl2.path() == validPath);
     }

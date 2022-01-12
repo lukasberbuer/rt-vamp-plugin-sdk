@@ -54,6 +54,7 @@ else()
 endif()
 
 include(cmake/Sanitizers.cmake)
+include(cmake/StaticAnalyzers.cmake)
 
 option(RTVAMP_ENABLE_TESTS "Enable tests" OFF)
 if(RTVAMP_ENABLE_TESTS)

@@ -40,7 +40,7 @@ public:
     virtual void         onProgramChange(std::string_view newProgram) {}
 
 private:
-    static constexpr std::vector<float>    defaultParameterValues();
+    static           std::vector<float>    defaultParameterValues();
     static constexpr std::optional<size_t> findParameterIndex(std::string_view id);
     static constexpr std::optional<size_t> findProgramIndex(std::string_view name);
 
@@ -98,7 +98,7 @@ bool PluginExt<Self, NOutputs>::selectProgram(std::string_view name) {
 }
 
 template <typename Self, uint32_t NOutputs>
-constexpr std::vector<float> PluginExt<Self, NOutputs>::defaultParameterValues() {
+std::vector<float> PluginExt<Self, NOutputs>::defaultParameterValues() {
     std::vector<float> values(Self::parameters.size());
     for (size_t i = 0; i < Self::parameters.size(); ++i) {
         values[i] = Self::parameters[i].defaultValue;

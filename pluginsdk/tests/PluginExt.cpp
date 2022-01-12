@@ -71,7 +71,7 @@ public:
         onParameterChangeValue = newValue;
     }
 
-    void onProgramChange(std::string_view newProgram) {
+    void onProgramChange(std::string_view newProgram) override {
         onProgramChangeName = newProgram;
     }
 };

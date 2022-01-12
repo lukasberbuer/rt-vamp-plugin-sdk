@@ -49,8 +49,8 @@ private:
     RTVAMP_EXPORT_ENTRY_POINT                                                                      \
                                                                                                    \
     extern "C" const VampPluginDescriptor* vampGetPluginDescriptor(                                \
-        unsigned int version,                                                                      \
+        unsigned int hostApiVersion,                                                                      \
         unsigned int index                                                                         \
     ) {                                                                                            \
-        return ::rtvamp::pluginsdk::EntryPoint<__VA_ARGS__>::getDescriptor(version, index);        \
+        return ::rtvamp::pluginsdk::EntryPoint<__VA_ARGS__>::getDescriptor(hostApiVersion, index); \
     }
