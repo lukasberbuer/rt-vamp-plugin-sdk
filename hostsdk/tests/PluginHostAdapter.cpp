@@ -102,7 +102,7 @@ TEST_CASE("PluginHostAdapter static plugin data") {
     };
 
     SECTION("Programs") {
-        auto programs = plugin.getProgramList();
+        auto programs = plugin.getPrograms();
         REQUIRE(programs.size() == descriptor.programCount);
 
         for (size_t i = 0; i < descriptor.programCount; ++i) {

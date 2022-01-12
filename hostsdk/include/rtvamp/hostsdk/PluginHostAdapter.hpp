@@ -37,7 +37,7 @@ public:
     std::optional<float> getParameter(std::string_view id) const override;
     bool                 setParameter(std::string_view id, float value) override; 
 
-    ProgramList          getProgramList()    const noexcept override;
+    ProgramList          getPrograms()       const noexcept override;
     std::string_view     getCurrentProgram() const override;
     bool                 selectProgram(std::string_view name) override;
 

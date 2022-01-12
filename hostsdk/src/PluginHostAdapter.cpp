@@ -193,7 +193,7 @@ bool PluginHostAdapter::setParameter(std::string_view id, float value) {
     return true;
 }
 
-Plugin::ProgramList PluginHostAdapter::getProgramList() const noexcept {
+Plugin::ProgramList PluginHostAdapter::getPrograms() const noexcept {
     return programs_;
 }
 

@@ -46,7 +46,7 @@ void listPlugins() {
                 std::cout << "- Input domain:         " << plugin->getInputDomain() << '\n';
                 std::cout << "- Preferred step size:  " << plugin->getPreferredStepSize() << '\n';
                 std::cout << "- Preferred block size: " << plugin->getPreferredBlockSize() << '\n';
-                std::cout << "- Programs:             " << join(plugin->getProgramList()) << '\n';
+                std::cout << "- Programs:             " << join(plugin->getPrograms()) << '\n';
 
                 std::cout << "- Parameters:\n";
                 size_t parameterIndex = 0;
