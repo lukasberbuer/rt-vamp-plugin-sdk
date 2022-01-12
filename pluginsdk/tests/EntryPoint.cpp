@@ -4,7 +4,6 @@
 
 #include "TestPlugin.hpp"
 
-using Catch::Matchers::Equals;
 using rtvamp::pluginsdk::EntryPoint;
 
 TEST_CASE("EntryPoint") {

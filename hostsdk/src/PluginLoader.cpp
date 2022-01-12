@@ -1,7 +1,9 @@
 #include "rtvamp/hostsdk/PluginLoader.hpp"
 
 #include <array>
+#include <cstdlib>  // getenv
 #include <set>
+#include <stdexcept>
 #include <utility>  // pair
 
 #include "rtvamp/hostsdk/PluginHostAdapter.hpp"

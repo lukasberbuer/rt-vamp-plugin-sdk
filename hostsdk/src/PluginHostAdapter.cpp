@@ -1,6 +1,5 @@
 #include "rtvamp/hostsdk/PluginHostAdapter.hpp"
 
-#include <array>
 #include <cassert>
 #include <optional>
 #include <stdexcept>
