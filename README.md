@@ -1,5 +1,9 @@
 # Real-time Vamp plugin SDK for C++20
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/ci.yml)
+[![Coverage](https://coveralls.io/repos/github/lukasberbuer/rt-vamp-plugin-sdk/badge.svg)](https://coveralls.io/github/lukasberbuer/rt-vamp-plugin-sdk)
+
 Vamp is an C/C++ plugin API for audio analysis / feature extraction plugins: https://www.vamp-plugins.org
 
 This SDK for plugins and hosts targets performance-critical applications by:

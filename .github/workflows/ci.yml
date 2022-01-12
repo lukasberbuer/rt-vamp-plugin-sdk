@@ -18,12 +18,13 @@ jobs:
           - { name: MSan,     CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_MEMORY=ON" }
           - { name: TSan,     CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON" }
           - { name: UBSan,    CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" }
+          - { name: Coverage, CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
     steps:
       - name: Install requirements
         run: |
           sudo apt update
           sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
-          pip install conan
+          pip install conan cpp-coveralls
       - uses: actions/checkout@v2
       - name: Compile and run tests
         env:
@@ -40,6 +41,18 @@ jobs:
             ${{ matrix.config.flags }} \
             ..
           cmake --build .
+      - name: Upload coverage results to coveralls.io
+        if: ${{ github.ref == 'refs/heads/master' && matrix.config.name == 'Coverage' }}
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: |
+          coveralls \
+            -E '.*/3rdparty/.*' \
+            -E '.*/benchmarks/.*' \
+            -E '.*/build/.*' \
+            -E '.*/examples/.*' \
+            -E '.*/tests/.*' \
+            --gcov-options '\-lp';
 
   # windows:
   #   name: Windows ${{ matrix.config.name }}
