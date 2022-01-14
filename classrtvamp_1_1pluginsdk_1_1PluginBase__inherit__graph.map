@@ -1,0 +1,5 @@
+<map id="rtvamp::pluginsdk::PluginBase" name="rtvamp::pluginsdk::PluginBase">
+<area shape="rect" id="node1" title="Non&#45;templated plugin base class with type definitions." alt="" coords="19,5,167,47"/>
+<area shape="rect" id="node2" href="$classrtvamp_1_1pluginsdk_1_1Plugin.html" title="Base class to implement feature extraction plugins." alt="" coords="16,95,169,136"/>
+<area shape="rect" id="node3" href="$classrtvamp_1_1pluginsdk_1_1PluginExt.html" title="Extended plugin base class with automatic parameter / program handling." alt="" coords="5,184,180,225"/>
+</map>

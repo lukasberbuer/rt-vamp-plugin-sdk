@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$classrtvamp_1_1pluginsdk_1_1PluginBase.html" title="Non&#45;templated plugin base class with type definitions." alt="" coords="5,5,153,47"/>
+<area shape="rect" id="node2" href="$classrtvamp_1_1pluginsdk_1_1Plugin.html" title="Base class to implement feature extraction plugins." alt="" coords="201,5,355,47"/>
+<area shape="rect" id="node3" href="$classrtvamp_1_1pluginsdk_1_1PluginExt.html" title="Extended plugin base class with automatic parameter / program handling." alt="" coords="403,5,609,47"/>
+</map>
