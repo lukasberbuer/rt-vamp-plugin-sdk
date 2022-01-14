@@ -47,7 +47,7 @@ But there are some drawbacks for real-time processing:
 
 ## Performance
 
-Following benchmarks compare the performance/overhead of the plugin SDKs based on a simple [RMS plugin](benchmarks/sdks/RMS.hpp).
+Following benchmarks compare the performance/overhead of the plugin SDKs based on a simple [RMS plugin](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/RMS.hpp).
 The performance is measured as throughput (number of processed samples per second).
 
 **Results with an i7-9850H CPU (12 cores):**
@@ -57,8 +57,8 @@ The performance is measured as throughput (number of processed samples per secon
 | ![](benchmarks/sdks/results/benchmark_sdks_i7.png) | ![](benchmarks/sdks/results/benchmark_sdks_i7_multithreading.png) |
 
 **Results with an ARMv7 CPU**:
-[Throughput vs block size](benchmarks/sdks/results/benchmark_sdks_armv7.png),
-[Multithreading](benchmarks/sdks/results/benchmark_sdks_armv7_multithreading.png)
+[Throughput vs block size](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/results/benchmark_sdks_armv7.png),
+[Multithreading](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/results/benchmark_sdks_armv7_multithreading.png)
 
 ## Plugin restrictions
 
