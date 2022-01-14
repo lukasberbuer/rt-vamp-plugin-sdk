@@ -1,0 +1,51 @@
+# Project related configuration options
+PROJECT_NAME           = rt-vamp-plugin-sdk
+PROJECT_NUMBER         =
+PROJECT_BRIEF          = "Real-time Vamp plugin SDK for C++20"
+PROJECT_LOGO           =
+
+OUTPUT_DIRECTORY       = "${PROJECT_BINARY_DIR}/doc"
+OUTPUT_LANGUAGE        = English
+JAVADOC_AUTOBRIEF      = YES
+AUTOLINK_SUPPORT       = YES
+MARKDOWN_SUPPORT       = YES
+USE_MDFILE_AS_MAINPAGE = "${PROJECT_SOURCE_DIR}/README.md"
+
+# Build-related options
+LAYOUT_FILE            = "${PROJECT_SOURCE_DIR}/doc/DoxygenLayout.xml"
+GENERATE_TREEVIEW      = NO
+TREEVIEW_WIDTH         = 300
+DISABLE_INDEX          = NO
+SHOW_NAMESPACES        = NO
+
+# Input files
+INPUT                  = "${PROJECT_SOURCE_DIR}/README.md" \
+                         "${PROJECT_SOURCE_DIR}/hostsdk/include" \
+                         "${PROJECT_SOURCE_DIR}/pluginsdk/include"
+EXCLUDE_PATTERNS       = */detail/*
+FILE_PATTERNS          = *.hpp
+RECURSIVE              = YES
+EXAMPLE_PATH           = "${PROJECT_SOURCE_DIR}/examples"
+EXAMPLE_PATTERNS       = *.cpp *.hpp
+EXAMPLE_RECURSIVE      = YES
+IMAGE_PATH             = "${PROJECT_SOURCE_DIR}/benchmarks"
+
+# Output
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_HTML          = YES
+GENERATE_XML           = NO
+
+HTML_EXTRA_STYLESHEET  = "${PROJECT_SOURCE_DIR}/doc/doxygen-awesome-css/doxygen-awesome.css"
+HTML_DYNAMIC_MENUS     = YES
+HTML_DYNAMIC_SECTIONS  = NO
+
+# Dot diagrams
+HAVE_DOT               = YES
+DOT_FONTNAME           = Helvetica
+DOT_FONTSIZE           = 10
+DOT_IMAGE_FORMAT       = svg
+DOT_TRANSPARENT        = YES
+CLASS_GRAPH            = YES
+COLLABORATION_GRAPH    = NO

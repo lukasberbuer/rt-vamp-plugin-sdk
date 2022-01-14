@@ -83,3 +83,8 @@ if(RTVAMP_ENABLE_EXAMPLES)
     message(STATUS "Examples enabled")
     add_subdirectory(examples)
 endif()
+    
+option(RTVAMP_BUILD_DOCUMENTATION "Build documentation" OFF)
+if(RTVAMP_BUILD_DOCUMENTATION)
+    add_subdirectory(doc)
+endif()

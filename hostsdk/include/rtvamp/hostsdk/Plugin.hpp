@@ -15,6 +15,7 @@ public:
     explicit Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
     virtual ~Plugin() = default;
 
+    /** Input domain of the plugin. */
     enum class InputDomain { Time, Frequency };
 
     struct ParameterDescriptor {
@@ -42,14 +43,14 @@ public:
         std::optional<float>     quantizeStep;
     };
 
-    using ParameterList          = std::span<const ParameterDescriptor>;
-    using ProgramList            = std::span<const char* const>;
-    using OutputList             = std::vector<OutputDescriptor>;
-    using TimeDomainBuffer       = std::span<const float>;
-    using FrequencyDomainBuffer  = std::span<const std::complex<float>>;
-    using InputBuffer            = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
-    using Feature                = std::vector<float>;
-    using FeatureSet             = std::span<const Feature>;
+    using ParameterList          = std::span<const ParameterDescriptor>;  ///< List of parameter descriptors
+    using ProgramList            = std::span<const char* const>;  ///< List of programs
+    using OutputList             = std::vector<OutputDescriptor>;  ///< List of output descriptors
+    using TimeDomainBuffer       = std::span<const float>;  ///< Time domain buffer
+    using FrequencyDomainBuffer  = std::span<const std::complex<float>>;  ///< Frequency domain buffer (FFT)
+    using InputBuffer            = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;  ///< Input buffer variant
+    using Feature                = std::vector<float>;  ///< Feature with one or more values (defined by OutputDescriptor::binCount)
+    using FeatureSet             = std::span<const Feature>;  ///< Computed features for each output
 
     virtual uint32_t             getVampApiVersion() const noexcept = 0;
 

@@ -7,6 +7,20 @@
 
 namespace rtvamp::pluginsdk {
 
+/**
+ * Helper class to create the entry point for plugin libraries. 
+ *
+ * The plugins are defined as template parameters
+ *
+ * A Vamp plugin must export a function `vampGetPluginDescriptor`. The EntryPoint::getDescriptor()
+ * method has the same signature as the required function. You have following options:
+ * 1. Define, implement and export the `vampGetPluginDescriptor` manually
+ * 2. Define, link and export the `vampGetPluginDescriptor` to the EntryPoint::getDescriptor()
+ *    method
+ * 3. Use the `RTVAMP_ENTRY_POINT(...) macro to automatically define and export the entry point.
+ *
+ *    Example: \include plugin/plugin.cpp
+ */
 template <IsPlugin... Plugins>
 class EntryPoint {
 public:

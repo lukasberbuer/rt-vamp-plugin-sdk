@@ -25,6 +25,7 @@ class PluginBase {
 public:
     virtual ~PluginBase() = default;
 
+    /** Input domain of the plugin. */
     enum class InputDomain { Time, Frequency };
 
     struct ParameterDescriptor {
@@ -53,10 +54,10 @@ public:
         std::optional<float>      quantizeStep    = std::nullopt;
     };
 
-    using TimeDomainBuffer      = std::span<const float>;
-    using FrequencyDomainBuffer = std::span<const std::complex<float>>;
-    using InputBuffer           = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;
-    using Feature               = std::vector<float>;
+    using TimeDomainBuffer      = std::span<const float>;  ///< Time domain buffer
+    using FrequencyDomainBuffer = std::span<const std::complex<float>>;  ///< Frequency domain buffer (FFT)
+    using InputBuffer           = std::variant<TimeDomainBuffer, FrequencyDomainBuffer>;  ///< Input domain variant
+    using Feature               = std::vector<float>;  ///< Feature with one or more values (defined by OutputDescriptor::binCount)
 };
 
 /**
@@ -69,6 +70,7 @@ class Plugin : public PluginBase {
 public:
     explicit constexpr Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
 
+    /** Static plugin descriptor */
     struct Meta {
         const char*  identifier    = "";
         const char*  name          = "";
@@ -79,13 +81,13 @@ public:
         InputDomain  inputDomain   = InputDomain::Time;
     };
 
-    static constexpr Meta                               meta{};        // required static plugin descriptor
-    static constexpr std::array<ParameterDescriptor, 0> parameters{};  // optional parameters (default: none)
-    static constexpr std::array<const char*, 0>         programs{};    // optional programs (default: none)
-    static constexpr uint32_t                           outputCount = NOutputs;
+    static constexpr Meta                               meta{};        ///< Required static plugin descriptor
+    static constexpr std::array<ParameterDescriptor, 0> parameters{};  ///< Optional parameter descriptors (default: none)
+    static constexpr std::array<const char*, 0>         programs{};    ///< Optional program list (default: none)
+    static constexpr uint32_t                           outputCount = NOutputs;  ///< Number of outputs (defined by template parameter)
 
-    using OutputList = std::array<OutputDescriptor, NOutputs>;
-    using FeatureSet = std::array<Feature, NOutputs>;
+    using OutputList = std::array<OutputDescriptor, NOutputs>;  ///< List of output descriptors
+    using FeatureSet = std::array<Feature, NOutputs>;           ///< Computed features for each output
 
     virtual std::optional<float> getParameter(std::string_view id) const { return {}; }
     virtual bool                 setParameter(std::string_view id, float value) { return false; } 
