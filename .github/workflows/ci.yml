@@ -20,12 +20,17 @@ jobs:
           - { name: UBSan,    CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" }
           - { name: Coverage, CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
     steps:
+      - uses: actions/checkout@v2
       - name: Install requirements
         run: |
           sudo apt update
           sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
           pip install conan cpp-coveralls
-      - uses: actions/checkout@v2
+      - name: Cache Conan packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan/data
+          key: linux-conan-${{ matrix.config.name }}
       - name: Compile and run tests
         env:
           CC: ${{ matrix.config.CC }}
@@ -54,22 +59,27 @@ jobs:
             -E '.*/tests/.*' \
             --gcov-options '\-lp';
 
-  # windows:
-  #   name: Windows ${{ matrix.config.name }}
-  #   runs-on: ${{ matrix.config.os }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       config:
-  #         - { name: Visual Studio 17 2022, os: windows-2022 }
-  #   steps:
-  #     - name: Install requirements
-  #       run: |
-  #         pip install conan
-  #     - uses: actions/checkout@v2
-  #     - name: Compile and run tests
-  #       run: |
-  #         mkdir build
-  #         cd build
-  #         cmake -DRTVAMP_ENABLE_CONAN=ON -DRTVAMP_ENABLE_EXAMPLES=ON -DRTVAMP_ENABLE_TESTS=ON ..
-  #         cmake --build . --config RelWithDebInfo
+  windows:
+    name: Windows ${{ matrix.config.name }}
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - { name: Visual Studio 17 2022, os: windows-2022 }
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install requirements
+        run: |
+          pip install conan
+      - name: Cache Conan packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.conan/data
+          key: windows-conan-${{ matrix.config.name }}
+      - name: Compile and run tests
+        run: |
+          mkdir build
+          cd build
+          cmake -DRTVAMP_ENABLE_CONAN=ON -DRTVAMP_ENABLE_EXAMPLES=ON -DRTVAMP_ENABLE_TESTS=ON ..
+          cmake --build . --config RelWithDebInfo
