@@ -19,10 +19,10 @@ target_link_libraries(
 )
 target_include_directories(tests_hostsdk PRIVATE ../src)
 
-if(NOT RTVAMP_ENABLE_EXAMPLES)
+if(NOT RTVAMP_BUILD_EXAMPLES)
     message(
         FATAL_ERROR
-        "Examples must be enabled for hostsdk tests (activate RTVAMP_ENABLE_EXAMPLES option)"
+        "Examples must be enabled for hostsdk tests (activate RTVAMP_BUILD_EXAMPLES option)"
     )
 endif()
 add_dependencies(tests_hostsdk example-plugin invalid-plugin)

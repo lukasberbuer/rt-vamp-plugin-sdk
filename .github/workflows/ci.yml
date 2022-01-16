@@ -40,9 +40,9 @@ jobs:
           cd build
           cmake \
             -DRTVAMP_ENABLE_CONAN=ON \
-            -DRTVAMP_ENABLE_BENCHMARKS=ON \
-            -DRTVAMP_ENABLE_EXAMPLES=ON \
-            -DRTVAMP_ENABLE_TESTS=ON \
+            -DRTVAMP_BUILD_BENCHMARKS=ON \
+            -DRTVAMP_BUILD_EXAMPLES=ON \
+            -DRTVAMP_BUILD_TESTS=ON \
             ${{ matrix.config.flags }} \
             ..
           cmake --build .
@@ -81,5 +81,5 @@ jobs:
         run: |
           mkdir build
           cd build
-          cmake -DRTVAMP_ENABLE_CONAN=ON -DRTVAMP_ENABLE_EXAMPLES=ON -DRTVAMP_ENABLE_TESTS=ON ..
+          cmake -DRTVAMP_ENABLE_CONAN=ON -DRTVAMP_BUILD_EXAMPLES=ON -DRTVAMP_BUILD_TESTS=ON ..
           cmake --build . --config RelWithDebInfo

@@ -11,6 +11,6 @@ target_link_libraries(
 )
 target_include_directories(${LIBRARY_NAME} INTERFACE include)
 
-if(RTVAMP_ENABLE_TESTS)
+if(RTVAMP_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
