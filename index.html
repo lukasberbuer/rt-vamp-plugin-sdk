@@ -73,33 +73,24 @@ $(function() {
 <ul>
 <li>reducing memory allocations, <b>no memory allocation</b> during processing</li>
 <li>simplifying and restricting the plugin API</li>
-<li><code>constexpr</code> evaluation for compile-time errors instead of runtime errors</li>
+<li><code>constexpr</code> evaluation for compile time errors instead of runtime errors</li>
 </ul>
 <p>The SDK aims to be <b>well tested</b>, <b>cross-platform</b> and use <b>modern C++</b>.</p>
 <p>Compiler support: <code>GCC &gt;= 10</code>, <code>Clang &gt;= 11</code>, <code>MSVC &gt;= 19.30</code></p>
 <h1><a class="anchor" id="autotoc_md1"></a>
-Vamp ecosystem</h1>
+Links</h1>
 <ul>
+<li><a href="https://lukasberbuer.github.io/rt-vamp-plugin-sdk">API documentation</a></li>
+<li><a href="https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/examples">Examples</a></li>
+<li>Vamp ecosystem:<ul>
 <li><a href="https://www.vamp-plugins.org/download.html">Great collection of plugins</a></li>
 <li><a href="https://www.sonicvisualiser.org/">Sonic Visualiser</a>: Open-source software to visualize, analyze and annotate audio</li>
 <li><a href="https://vamp-plugins.org/sonic-annotator">Sonic Annotator</a>: Batch tool for feature extraction</li>
 <li><a href="https://wiki.audacityteam.org/wiki/Vamp_Plug-ins">Audacity supports Vamp plugins</a></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md2"></a>
-Why another SDK?</h1>
-<p>The <a href="https://github.com/c4dm/vamp-plugin-sdk">official SDK</a> offers a convenient <a href="https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html">C++ plugin interface</a>. But there are some drawbacks for real-time processing:</p>
-<ul>
-<li><p class="startli">Huge amount of memory allocations due to the use of C++ containers like vectors and lists <b>passed by value</b>.</p>
-<p class="startli">Let's have a look at the <code>process</code> method of the <code>Vamp::Plugin</code> class which does the main work:</p>
-<p class="startli"><code>FeatureSet process(const float *const *inputBuffers, RealTime timestamp)</code></p>
-<p class="startli"><code>FeatureSet</code> is returned by value and is a <code>std::map&lt;int, FeatureList&gt;</code>. <code>FeatureList</code> is a <code>std::vector&lt;Feature&gt;</code> and <code>Feature</code> is <code>struct</code> containing the actual feature values as a <code>std::vector&lt;float&gt;</code>. So in total, those are three nested containers, which are all heap allocated.</p>
-</li>
-<li><p class="startli">The C++ API is a wrapper of the C API.</p>
-<p class="startli">On the plugin side, the <code>PluginAdapter</code> class converts the C++ containers to C level (<a href="https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-sdk/PluginAdapter.cpp#L828-L921">code</a>). Therefore the C++ containers are temporary objects and will be deallocated shortly after creation.</p>
-<p class="startli">On the host side, the <code>PluginHostAdapter</code> converts again from the C to the C++ representation (<a href="https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-hostsdk/PluginHostAdapter.cpp#L413-L464">code</a>).</p>
 </li>
 </ul>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 Performance</h1>
 <p>Following benchmarks compare the performance/overhead of the plugin SDKs based on a simple <a href="https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/RMS.hpp">RMS plugin</a>. The performance is measured as throughput (number of processed samples per second).</p>
 <p><b>Results with an i7-9850H CPU (12 cores):</b></p>
@@ -116,9 +107,31 @@ Performance</h1>
       </td></tr>
 </table>
 <p><b>Results with an ARMv7 CPU</b>: <a href="https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/results/benchmark_sdks_armv7.png">Throughput vs block size</a>, <a href="https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/results/benchmark_sdks_armv7_multithreading.png">Multithreading</a></p>
-<h1><a class="anchor" id="autotoc_md4"></a>
-Plugin restrictions</h1>
-<p>Following features of the Vamp API <code>Vamp::Plugin</code> are restricted:</p>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Why another SDK?</h1>
+<p>The <a href="https://github.com/c4dm/vamp-plugin-sdk">official SDK</a> offers a convenient <a href="https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html">C++ plugin interface</a>. But there are some drawbacks for real-time processing:</p>
+<ul>
+<li><p class="startli">Huge amount of memory allocations due to the use of C++ containers like vectors and lists <b>passed by value</b>.</p>
+<p class="startli">Let's have a look at the <code>process</code> method of the <code>Vamp::Plugin</code> class which does the main work:</p>
+<p class="startli"><code>FeatureSet process(const float *const *inputBuffers, RealTime timestamp)</code></p>
+<p class="startli"><code>FeatureSet</code> is returned by value and is a <code>std::map&lt;int, FeatureList&gt;</code>. <code>FeatureList</code> is a <code>std::vector&lt;Feature&gt;</code> and <code>Feature</code> is <code>struct</code> containing the actual feature values as a <code>std::vector&lt;float&gt;</code>. So in total, those are three nested containers, which are all heap allocated.</p>
+</li>
+<li><p class="startli">The C++ API is a wrapper of the C API:</p>
+<p class="startli">On the plugin side, the <code>PluginAdapter</code> class converts the C++ containers to C level (<a href="https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-sdk/PluginAdapter.cpp#L828-L921">code</a>). Therefore the C++ containers are temporary objects and will be deallocated shortly after creation.</p>
+<p class="startli">On the host side, the <code>PluginHostAdapter</code> converts again from the C to the C++ representation (<a href="https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-hostsdk/PluginHostAdapter.cpp#L413-L464">code</a>).</p>
+</li>
+</ul>
+<h2><a class="anchor" id="autotoc_md4"></a>
+Solution approach</h2>
+<p>The <code>rt-vamp-plugin-sdk</code> aims to to keep the overhead minimal but still provide an easy and safe to use API:</p>
+<ol type="1">
+<li>Static plugin informations are provided as <code>static constexpr</code> variables to generate the C plugin descriptor at compile time.</li>
+<li>The computed features are returned by reference (as a <code>std::span</code>) to prevent heap allocations during processing.</li>
+<li>The input buffer is provided either as a <code>TimeDomainBuffer</code> (<code>std::span&lt;const float&gt;</code>) or a <code>FrequencyDomainBuffer</code> (<code>std::span&lt;const std::complex&lt;float&gt;&gt;</code>). The process method takes a <code>std::variant&lt;TimeDomainBuffer, FrequencyDomainBuffer&gt;</code>. A wrong input buffer type will result in an exception. The sized spans enable easy iteration over the input buffer data.</li>
+</ol>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Plugin restrictions</h2>
+<p>Following features of the Vamp API <code>Vamp::Plugin</code> are restricted within the <code>rt-vamp-plugin-sdk</code>:</p>
 <ul>
 <li><code>OutputDescriptor::hasFixedBinCount == true</code> for every output. The number of values is constant for each feature during processing. This has the advantage, that memory for the feature vector can be preallocated.</li>
 <li><p class="startli"><code>OutputDescriptor::SampleType == OneSamplePerStep</code> for every output. The plugin will generate one feature set for each input block.</p>
@@ -131,10 +144,10 @@ Plugin restrictions</h1>
 </li>
 <li>Only one input channel allowed: <code>getMinChannelCount() == 1</code></li>
 </ul>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Minimal example</h1>
 <p>More examples can be found here: <a href="https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/examples">https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/examples</a>.</p>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<h2><a class="anchor" id="autotoc_md7"></a>
 Plugin</h2>
 <div class="fragment"><div class="line"><span class="keyword">class </span>ZeroCrossing : <span class="keyword">public</span> <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html">rtvamp::pluginsdk::Plugin</a>&lt;1 <span class="comment">/* one output */</span>&gt; {</div>
 <div class="line"><span class="keyword">public</span>:</div>
@@ -191,7 +204,7 @@ Plugin</h2>
 <div class="line">};</div>
 <div class="line"> </div>
 <div class="line">RTVAMP_ENTRY_POINT(ZeroCrossing)</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
 Host</h2>
 <div class="fragment"><div class="line"><a class="code" href="classrtvamp_1_1hostsdk_1_1PluginLoader.html">rtvamp::hostsdk::PluginLoader</a> loader;</div>
 <div class="line"> </div>
@@ -210,7 +223,7 @@ Host</h2>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Zero crossings: &quot;</span> &lt;&lt; features[0][0] &lt;&lt; std::endl;</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
-<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html">rtvamp::pluginsdk::Plugin</a></div><div class="ttdoc">Base class to implement feature extraction plugins.</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:69</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html">rtvamp::pluginsdk::Plugin</a></div><div class="ttdoc">Base class to implement feature extraction plugins.</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:75</div></div>
 <div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginLoader_html"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginLoader.html">rtvamp::hostsdk::PluginLoader</a></div><div class="ttdef"><b>Definition:</b> PluginLoader.hpp:32</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

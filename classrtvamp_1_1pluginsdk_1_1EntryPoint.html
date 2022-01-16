@@ -95,7 +95,7 @@ class rtvamp::pluginsdk::EntryPoint&lt; Plugins &gt;</h3>
 <p>A Vamp plugin must export a function <code>vampGetPluginDescriptor</code>. The EntryPoint::getDescriptor() method has the same signature as the required function. You have following options:</p><ol type="1">
 <li>Define, implement and export the <code>vampGetPluginDescriptor</code> manually</li>
 <li>Define, link and export the <code>vampGetPluginDescriptor</code> to the EntryPoint::getDescriptor() method</li>
-<li><p class="startli">Use the `RTVAMP_ENTRY_POINT(...) macro to automatically define and export the entry point.</p>
+<li><p class="startli">Use the <code>RTVAMP_ENTRY_POINT(...)</code> macro to automatically define and export the entry point.</p>
 <p class="startli">Example: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;rtvamp/pluginsdk/EntryPoint.hpp&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &quot;RMS.hpp&quot;</span></div>
