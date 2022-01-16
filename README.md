@@ -10,40 +10,21 @@ This SDK for plugins and hosts targets performance-critical applications by:
 
 - reducing memory allocations, **no memory allocation** during processing
 - simplifying and restricting the plugin API
-- `constexpr` evaluation for compile-time errors instead of runtime errors
+- `constexpr` evaluation for compile time errors instead of runtime errors
 
 The SDK aims to be **well tested**, **cross-platform** and use **modern C++**.
 
 Compiler support: `GCC >= 10`, `Clang >= 11`, `MSVC >= 19.30`
 
-## Vamp ecosystem
+## Links
 
-- [Great collection of plugins](https://www.vamp-plugins.org/download.html)
-- [Sonic Visualiser](https://www.sonicvisualiser.org/): Open-source software to visualize, analyze and annotate audio
-- [Sonic Annotator](https://vamp-plugins.org/sonic-annotator): Batch tool for feature extraction
-- [Audacity supports Vamp plugins](https://wiki.audacityteam.org/wiki/Vamp_Plug-ins)
-
-## Why another SDK?
-
-The [official SDK](https://github.com/c4dm/vamp-plugin-sdk) offers a convenient [C++ plugin interface](https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html).
-But there are some drawbacks for real-time processing:
-
-- Huge amount of memory allocations due to the use of C++ containers like vectors and lists **passed by value**.
-
-  Let's have a look at the `process` method of the `Vamp::Plugin` class which does the main work:
-
-  `FeatureSet process(const float *const *inputBuffers, RealTime timestamp)`
-
-  `FeatureSet` is returned by value and is a `std::map<int, FeatureList>`.
-  `FeatureList` is a `std::vector<Feature>` and `Feature` is `struct` containing the actual feature values as a `std::vector<float>`.
-  So in total, those are three nested containers, which are all heap allocated.
-
-- The C++ API is a wrapper of the C API.
-
-  On the plugin side, the `PluginAdapter` class converts the C++ containers to C level ([code](https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-sdk/PluginAdapter.cpp#L828-L921)).
-  Therefore the C++ containers are temporary objects and will be deallocated shortly after creation.
-
-  On the host side, the `PluginHostAdapter` converts again from the C to the C++ representation ([code](https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-hostsdk/PluginHostAdapter.cpp#L413-L464)).
+- [API documentation](https://lukasberbuer.github.io/rt-vamp-plugin-sdk)
+- [Examples](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/examples)
+- Vamp ecosystem:
+    - [Great collection of plugins](https://www.vamp-plugins.org/download.html)
+    - [Sonic Visualiser](https://www.sonicvisualiser.org/): Open-source software to visualize, analyze and annotate audio
+    - [Sonic Annotator](https://vamp-plugins.org/sonic-annotator): Batch tool for feature extraction
+    - [Audacity supports Vamp plugins](https://wiki.audacityteam.org/wiki/Vamp_Plug-ins)
 
 ## Performance
 
@@ -60,9 +41,40 @@ The performance is measured as throughput (number of processed samples per secon
 [Throughput vs block size](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/results/benchmark_sdks_armv7.png),
 [Multithreading](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/tree/master/benchmarks/sdks/results/benchmark_sdks_armv7_multithreading.png)
 
-## Plugin restrictions
+## Why another SDK?
 
-Following features of the Vamp API `Vamp::Plugin` are restricted:
+The [official SDK](https://github.com/c4dm/vamp-plugin-sdk) offers a convenient [C++ plugin interface](https://code.soundsoftware.ac.uk/projects/vamp-plugin-sdk/embedded/classVamp_1_1Plugin.html).
+But there are some drawbacks for real-time processing:
+
+- Huge amount of memory allocations due to the use of C++ containers like vectors and lists **passed by value**.
+
+  Let's have a look at the `process` method of the `Vamp::Plugin` class which does the main work:
+
+  `FeatureSet process(const float *const *inputBuffers, RealTime timestamp)`
+
+  `FeatureSet` is returned by value and is a `std::map<int, FeatureList>`.
+  `FeatureList` is a `std::vector<Feature>` and `Feature` is `struct` containing the actual feature values as a `std::vector<float>`.
+  So in total, those are three nested containers, which are all heap allocated.
+
+- The C++ API is a wrapper of the C API:
+
+  On the plugin side, the `PluginAdapter` class converts the C++ containers to C level ([code](https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-sdk/PluginAdapter.cpp#L828-L921)).
+Therefore the C++ containers are temporary objects and will be deallocated shortly after creation.
+
+  On the host side, the `PluginHostAdapter` converts again from the C to the C++ representation ([code](https://github.com/c4dm/vamp-plugin-sdk/blob/master/src/vamp-hostsdk/PluginHostAdapter.cpp#L413-L464)).
+
+### Solution approach
+
+The `rt-vamp-plugin-sdk` aims to to keep the overhead minimal but still provide an easy and safe to use API:
+
+1. Static plugin informations are provided as `static constexpr` variables to generate the C plugin descriptor at compile time.
+2. The computed features are returned by reference (as a `std::span`) to prevent heap allocations during processing.
+3. The input buffer is provided either as a `TimeDomainBuffer` (`std::span<const float>`) or a `FrequencyDomainBuffer` (`std::span<const std::complex<float>>`).
+   The process method takes a `std::variant<TimeDomainBuffer, FrequencyDomainBuffer>`. A wrong input buffer type will result in an exception. The sized spans enable easy iteration over the input buffer data.
+
+### Plugin restrictions
+
+Following features of the Vamp API `Vamp::Plugin` are restricted within the `rt-vamp-plugin-sdk`:
 
 - `OutputDescriptor::hasFixedBinCount == true` for every output.
   The number of values is constant for each feature during processing.

@@ -17,7 +17,7 @@ namespace rtvamp::pluginsdk {
  * 1. Define, implement and export the `vampGetPluginDescriptor` manually
  * 2. Define, link and export the `vampGetPluginDescriptor` to the EntryPoint::getDescriptor()
  *    method
- * 3. Use the `RTVAMP_ENTRY_POINT(...) macro to automatically define and export the entry point.
+ * 3. Use the `RTVAMP_ENTRY_POINT(...)` macro to automatically define and export the entry point.
  *
  *    Example: \include plugin/plugin.cpp
  */

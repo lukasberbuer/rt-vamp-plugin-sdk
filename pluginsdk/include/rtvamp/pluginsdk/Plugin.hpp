@@ -62,13 +62,24 @@ public:
 
 /**
  * Base class to implement feature extraction plugins.
- * 
- * The number of outputs is provided as a template parameter.
+ *
+ * The number of outputs is provided as a template parameter. This allows fixed-sized arrays for
+ * both the process results (#FeatureSet) and output descriptors (#OutputList) and therefore enforce
+ * the requirement of matching output size at compile time.
+ *
+ * Static plugin descriptors are provided as static constexpr variables to generate the C API
+ * descriptor at compile time. Dynamic plugin descriptors and methods are defined as (pure) virtual
+ * functions.
  */
 template <uint32_t NOutputs>
 class Plugin : public PluginBase {
 public:
     explicit constexpr Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
+
+    using OutputList = std::array<OutputDescriptor, NOutputs>;  ///< List of output descriptors
+    using FeatureSet = std::array<Feature, NOutputs>;           ///< Computed features for each output
+
+    static constexpr uint32_t outputCount = NOutputs;  ///< Number of outputs (defined by template parameter)
 
     /** Static plugin descriptor */
     struct Meta {
@@ -84,10 +95,6 @@ public:
     static constexpr Meta                               meta{};        ///< Required static plugin descriptor
     static constexpr std::array<ParameterDescriptor, 0> parameters{};  ///< Optional parameter descriptors (default: none)
     static constexpr std::array<const char*, 0>         programs{};    ///< Optional program list (default: none)
-    static constexpr uint32_t                           outputCount = NOutputs;  ///< Number of outputs (defined by template parameter)
-
-    using OutputList = std::array<OutputDescriptor, NOutputs>;  ///< List of output descriptors
-    using FeatureSet = std::array<Feature, NOutputs>;           ///< Computed features for each output
 
     virtual std::optional<float> getParameter(std::string_view id) const { return {}; }
     virtual bool                 setParameter(std::string_view id, float value) { return false; } 
