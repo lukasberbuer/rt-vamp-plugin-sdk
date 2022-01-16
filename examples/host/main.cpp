@@ -7,8 +7,7 @@
 
 #include <sndfile.hh>
 
-#include "rtvamp/hostsdk/Plugin.hpp"
-#include "rtvamp/hostsdk/PluginLoader.hpp"
+#include "rtvamp/hostsdk.hpp"
 
 #include "FFT.hpp"
 #include "helper.hpp"

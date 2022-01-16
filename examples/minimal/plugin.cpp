@@ -1,5 +1,4 @@
-#include "rtvamp/pluginsdk/EntryPoint.hpp"
-#include "rtvamp/pluginsdk/Plugin.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 class ZeroCrossing : public rtvamp::pluginsdk::Plugin<1 /* one output */> {
 public:

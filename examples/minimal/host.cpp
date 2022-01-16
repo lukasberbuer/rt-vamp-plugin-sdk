@@ -3,7 +3,7 @@
 #include <random>
 #include <vector>
 
-#include "rtvamp/hostsdk/PluginLoader.hpp"
+#include "rtvamp/hostsdk.hpp"
 
 void randomize(std::vector<float>& vec) {
     std::default_random_engine       engine;
