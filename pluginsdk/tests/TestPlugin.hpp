@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rtvamp/pluginsdk/Plugin.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 class TestPlugin : public rtvamp::pluginsdk::Plugin<1> {
 public:

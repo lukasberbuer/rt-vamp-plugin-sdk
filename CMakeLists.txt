@@ -71,7 +71,9 @@ endif()
 
 add_subdirectory(hostsdk)
 add_subdirectory(pluginsdk)
-    
+
+option(RTVAMP_ENABLE_AMALGAMATION "Create amalgamated header/source files" OFF)
+
 option(RTVAMP_BUILD_BENCHMARKS "Build benchmarks" OFF)
 if(RTVAMP_BUILD_BENCHMARKS)
     message(STATUS "Benchmarks enabled")

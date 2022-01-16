@@ -6,7 +6,7 @@
 #include "vamp/vamp.h"
 #include <vamp-sdk/Plugin.h>
 
-#include "rtvamp/pluginsdk/Plugin.hpp"
+#include "rtvamp/pluginsdk.hpp"
 #include "helper.hpp"
 
 class RMS : public rtvamp::pluginsdk::Plugin<1 /* 1 output */> {

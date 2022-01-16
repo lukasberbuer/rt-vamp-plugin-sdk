@@ -1,6 +1,6 @@
 #include <benchmark/benchmark.h>
 
-#include "rtvamp/pluginsdk/PluginExt.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 class TestPluginExt : public rtvamp::pluginsdk::PluginExt<TestPluginExt, 0> {
 public:

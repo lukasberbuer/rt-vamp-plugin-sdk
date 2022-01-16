@@ -1,7 +1,7 @@
 #include <benchmark/benchmark.h>
 #include <vamp-sdk/PluginAdapter.h>
 
-#include "rtvamp/pluginsdk/detail/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 #include "helper.hpp"
 #include "RMS.hpp"

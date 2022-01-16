@@ -2,7 +2,7 @@
 
 #include <catch2/catch.hpp>
 
-#include "rtvamp/pluginsdk/detail/VampWrapper.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 #include "TestPlugin.hpp"
 

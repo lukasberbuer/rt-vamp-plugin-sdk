@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rtvamp/pluginsdk/Plugin.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 class RMS : public rtvamp::pluginsdk::Plugin<1> {
 public:

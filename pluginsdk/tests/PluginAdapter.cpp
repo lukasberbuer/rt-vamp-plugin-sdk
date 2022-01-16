@@ -5,7 +5,7 @@
 
 #include <vamp/vamp.h>
 
-#include "rtvamp/pluginsdk/detail/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 #include "TestPlugin.hpp"
 

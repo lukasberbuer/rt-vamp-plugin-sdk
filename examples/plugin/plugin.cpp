@@ -1,4 +1,4 @@
-#include "rtvamp/pluginsdk/EntryPoint.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 #include "RMS.hpp"
 #include "SpectralRolloff.hpp"

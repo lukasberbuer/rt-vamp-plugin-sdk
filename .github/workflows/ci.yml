@@ -10,22 +10,23 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { name: GCC 10,   CC: gcc-10,   CXX: g++-10,     flags: ""}
-          - { name: Clang 11, CC: clang-11, CXX: clang++-11, flags: "" }
-          - { name: Clang 12, CC: clang-12, CXX: clang++-12, flags: "" }
-          - { name: ASan,     CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_ADDRESS=ON" }
-          - { name: LSan,     CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_LEAK=ON" }
-          - { name: MSan,     CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_MEMORY=ON" }
-          - { name: TSan,     CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON" }
-          - { name: UBSan,    CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" }
-          - { name: Coverage, CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
+          - { name: GCC 10,       CC: gcc-10,   CXX: g++-10,     flags: ""}
+          - { name: Clang 11,     CC: clang-11, CXX: clang++-11, flags: "" }
+          - { name: Clang 12,     CC: clang-12, CXX: clang++-12, flags: "" }
+          - { name: ASan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_ADDRESS=ON" }
+          - { name: LSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_LEAK=ON" }
+          - { name: MSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_MEMORY=ON" }
+          - { name: TSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON" }
+          - { name: UBSan,        CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" }
+          - { name: Coverage,     CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
+          - { name: Amalgamation, CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_AMALGAMATION=ON" }
     steps:
       - uses: actions/checkout@v2
       - name: Install requirements
         run: |
           sudo apt update
           sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
-          pip install conan cpp-coveralls
+          pip install conan cpp-coveralls quom
       - name: Cache Conan packages
         uses: actions/cache@v2
         with:
@@ -58,6 +59,11 @@ jobs:
             -E '.*/examples/.*' \
             -E '.*/tests/.*' \
             --gcov-options '\-lp';
+      - uses: actions/upload-artifact@v2
+        if: ${{ matrix.config.name == 'Amalgamation' }}
+        with:
+          name: pluginsdk_amalgamated
+          path: build/amalgamation/pluginsdk/include/rtvamp/pluginsdk.hpp
 
   windows:
     name: Windows ${{ matrix.config.name }}

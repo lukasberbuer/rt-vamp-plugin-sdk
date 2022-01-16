@@ -1,6 +1,6 @@
 #include <benchmark/benchmark.h>
 
-#include "rtvamp/hostsdk/PluginLoader.hpp"
+#include "rtvamp/hostsdk.hpp"
 
 using rtvamp::hostsdk::PluginLoader;
 

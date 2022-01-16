@@ -1,7 +1,6 @@
 #include <catch2/catch.hpp>
 
-#include "rtvamp/pluginsdk/PluginExt.hpp"
-#include "rtvamp/pluginsdk/detail/PluginAdapter.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 using Catch::Matchers::Equals;
 

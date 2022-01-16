@@ -1,6 +1,6 @@
 #pragma once
 
-#include "rtvamp/pluginsdk/PluginExt.hpp"
+#include "rtvamp/pluginsdk.hpp"
 
 class SpectralRolloff : public rtvamp::pluginsdk::PluginExt<SpectralRolloff, 1> {
 public:
