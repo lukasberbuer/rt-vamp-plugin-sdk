@@ -1,22 +1,22 @@
-set(LIBRARY_NAME rtvamp-hostsdk)
-set(ALIAS_NAME "${PROJECT_NAME}::hostsdk")
+set(library_name rtvamp-hostsdk)
+set(alias_name "${PROJECT_NAME}::hostsdk")
 
 add_library(
-    ${LIBRARY_NAME}
+    ${library_name}
     src/PluginHostAdapter.cpp
     src/PluginLibrary.cpp
     $<IF:$<PLATFORM_ID:Windows>, src/DynamicLibrary_Windows.cpp, src/DynamicLibrary_Unix.cpp>
     src/PluginLoader.cpp
 )
-add_library(${ALIAS_NAME} ALIAS ${LIBRARY_NAME})
+add_library(${alias_name} ALIAS ${library_name})
 
 target_link_libraries(
-    ${LIBRARY_NAME}
+    ${library_name}
     PRIVATE
-        ${PROJECT_OPTIONS}
+        ${project_options}
         ${CMAKE_DL_LIBS}
 )
-target_include_directories(${LIBRARY_NAME} PUBLIC include)
+target_include_directories(${library_name} PUBLIC include)
 
 if(RTVAMP_BUILD_TESTS)
     add_subdirectory(tests)

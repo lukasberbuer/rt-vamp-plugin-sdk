@@ -13,7 +13,7 @@ if(SndFile_FOUND)
     target_link_libraries(
         example-host
         PRIVATE
-            ${PROJECT_OPTIONS}
+            ${project_options}
             rtvamp-hostsdk
             SndFile::sndfile
             $<$<BOOL:${kissfft_FOUND}>:kissfft::kissfft>

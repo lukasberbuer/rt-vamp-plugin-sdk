@@ -13,8 +13,8 @@ add_executable(
 target_link_libraries(
     tests_hostsdk
     PRIVATE
-        ${PROJECT_OPTIONS}
-        ${LIBRARY_NAME}
+        ${project_options}
+        ${library_name}
         Catch2::Catch2WithMain
 )
 target_include_directories(tests_hostsdk PRIVATE ../src)

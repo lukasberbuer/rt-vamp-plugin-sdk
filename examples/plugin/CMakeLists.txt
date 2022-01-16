@@ -7,7 +7,7 @@ add_library(
 target_link_libraries(
     example-plugin
     PRIVATE
-        ${PROJECT_OPTIONS}
+        ${project_options}
         rtvamp-pluginsdk
 )
 set_target_properties(example-plugin PROPERTIES PREFIX "")

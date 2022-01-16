@@ -12,8 +12,8 @@ add_executable(
 target_link_libraries(
     tests_pluginsdk
     PRIVATE
-        ${PROJECT_OPTIONS}
-        ${LIBRARY_NAME}
+        ${project_options}
+        ${library_name}
         Catch2::Catch2WithMain
         Threads::Threads
 )

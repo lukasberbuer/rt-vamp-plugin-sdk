@@ -17,15 +17,15 @@ foreach(config ${CMAKE_CONFIGURATION_TYPES})
     set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${config} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 endforeach()
 
-set(PROJECT_OPTIONS "${PROJECT_NAME}_project_options")
-add_library(${PROJECT_OPTIONS} INTERFACE)
+set(project_options "${PROJECT_NAME}_project_options")
+add_library(${project_options} INTERFACE)
 
-target_compile_features(${PROJECT_OPTIONS} INTERFACE cxx_std_20)
-target_include_directories(${PROJECT_OPTIONS} INTERFACE 3rdparty)
+target_compile_features(${project_options} INTERFACE cxx_std_20)
+target_include_directories(${project_options} INTERFACE 3rdparty)
 
 if(MSVC)
     target_compile_options(
-        ${PROJECT_OPTIONS}
+        ${project_options}
         INTERFACE
             /W4
             /permissive-
@@ -35,7 +35,7 @@ if(MSVC)
     )
 else()
     target_compile_options(
-        ${PROJECT_OPTIONS}
+        ${project_options}
         INTERFACE
             -Wall
             -Wextra
@@ -50,8 +50,8 @@ endif()
 option(RTVAMP_ENABLE_COVERAGE ON)
 if(RTVAMP_ENABLE_COVERAGE)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-        target_compile_options(${PROJECT_OPTIONS} INTERFACE --coverage -O0 -g)
-        target_link_libraries(${PROJECT_OPTIONS} INTERFACE --coverage)
+        target_compile_options(${project_options} INTERFACE --coverage -O0 -g)
+        target_link_libraries(${project_options} INTERFACE --coverage)
     endif()
 endif()
 

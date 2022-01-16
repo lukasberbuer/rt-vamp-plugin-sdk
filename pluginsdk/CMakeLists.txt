@@ -1,15 +1,15 @@
-set(LIBRARY_NAME rtvamp-pluginsdk)
-set(ALIAS_NAME "${PROJECT_NAME}::pluginsdk")
+set(library_name rtvamp-pluginsdk)
+set(alias_name "${PROJECT_NAME}::pluginsdk")
 
-add_library(${LIBRARY_NAME} INTERFACE)  # header-only
-add_library(${ALIAS_NAME} ALIAS ${LIBRARY_NAME})
+add_library(${library_name} INTERFACE)  # header-only
+add_library(${alias_name} ALIAS ${library_name})
 
 target_link_libraries(
-    ${LIBRARY_NAME}
+    ${library_name}
     INTERFACE
-        ${PROJECT_OPTIONS}
+        ${project_options}
 )
-target_include_directories(${LIBRARY_NAME} INTERFACE include)
+target_include_directories(${library_name} INTERFACE include)
 
 if(RTVAMP_BUILD_TESTS)
     add_subdirectory(tests)

@@ -6,7 +6,7 @@ foreach(source ${sources})
     target_link_libraries(
         ${name}
         PRIVATE
-            ${PROJECT_OPTIONS}
+            ${project_options}
             benchmark::benchmark
             rtvamp-pluginsdk
             rtvamp-hostsdk

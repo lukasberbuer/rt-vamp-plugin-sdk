@@ -39,8 +39,8 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clan
     
     if(list_of_sanitizers)
         if(NOT "${list_of_sanitizers}" STREQUAL "")
-            target_compile_options(${PROJECT_OPTIONS} INTERFACE -fsanitize=${list_of_sanitizers})
-            target_link_options(${PROJECT_OPTIONS} INTERFACE -fsanitize=${list_of_sanitizers})
+            target_compile_options(${project_options} INTERFACE -fsanitize=${list_of_sanitizers})
+            target_link_options(${project_options} INTERFACE -fsanitize=${list_of_sanitizers})
         endif()
     endif()
 endif()
