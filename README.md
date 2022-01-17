@@ -13,6 +13,7 @@ This SDK for plugins and hosts targets performance-critical applications by:
 - `constexpr` evaluation for compile time errors instead of runtime errors
 
 The SDK aims to be **well tested**, **cross-platform** and use **modern C++**.
+The plugin SDK is available as a [single-header library](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/releases/latest/download/pluginsdk.hpp) (download as asset from [latest release](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/releases/latest) page).
 
 Compiler support: `GCC >= 10`, `Clang >= 11`, `MSVC >= 19.30`
 
