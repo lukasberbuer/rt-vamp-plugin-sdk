@@ -23,7 +23,7 @@ Compiler support: `GCC >= 10`, `Clang >= 11`, `MSVC >= 19.30`
 - Vamp ecosystem:
     - [Great collection of plugins](https://www.vamp-plugins.org/download.html)
     - [Sonic Visualiser](https://www.sonicvisualiser.org/): Open-source software to visualize, analyze and annotate audio
-    - [Sonic Annotator](https://vamp-plugins.org/sonic-annotator): Batch tool for feature extraction
+    - [Sonic Annotator](https://vamp-plugins.org/sonic-annotator/): Batch tool for feature extraction
     - [Audacity supports Vamp plugins](https://wiki.audacityteam.org/wiki/Vamp_Plug-ins)
 
 ## Performance
