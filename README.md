@@ -128,7 +128,7 @@ public:
     bool initialise(uint32_t stepSize, uint32_t blockSize) override {
         initialiseFeatureSet();  // automatically resizes feature set to number of outputs and bins
         return true;
-    };
+    }
 
     void reset() override {
         previousSample_ = 0.0f;
@@ -151,7 +151,7 @@ public:
         auto& result = getFeatureSet();
         result[0][0] = crossings;  // first and only output, first and only bin
         return result;             // return span/view of the results
-    };
+    }
 
 private:
     float previousSample_ = 0.0f;
