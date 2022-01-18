@@ -59,7 +59,7 @@ TEST_CASE("VampOutputDescriptorWrapper") {
         CHECK_THAT(d.description, Equals(""));
         CHECK_THAT(d.unit,        Equals(""));
         CHECK(d.hasFixedBinCount == 1);
-        CHECK(d.binCount == 0);
+        CHECK(d.binCount == 1);
         CHECK(d.binNames == nullptr);
         CHECK(d.hasKnownExtents == 0);
         CHECK(d.minValue == 0.0f);

@@ -46,7 +46,7 @@ public:
         std::string               name;
         std::string               description;
         std::string               unit;
-        uint32_t                  binCount = 0;
+        uint32_t                  binCount = 1;
         std::vector<std::string>  binNames{};
         bool                      hasKnownExtents = false;
         float                     minValue        = 0.0f;
