@@ -185,14 +185,18 @@ Plugin</h2>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">const</span> FeatureSet&amp; process(InputBuffer buffer, uint64_t nsec)<span class="keyword"> override </span>{</div>
+<div class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> signal = std::get&lt;TimeDomainBuffer&gt;(buffer);</div>
+<div class="line"> </div>
 <div class="line">        <span class="keywordtype">size_t</span> crossings   = 0;</div>
 <div class="line">        <span class="keywordtype">bool</span>   wasPositive = (previousSample_ &gt;= 0.0f);</div>
 <div class="line"> </div>
-<div class="line">        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sample : std::get&lt;TimeDomainBuffer&gt;(buffer)) {</div>
+<div class="line">        <span class="keywordflow">for</span> (<span class="keyword">const</span> <span class="keyword">auto</span>&amp; sample : signal) {</div>
 <div class="line">            <span class="keyword">const</span> <span class="keywordtype">bool</span> isPositive = (sample &gt;= 0.0f);</div>
 <div class="line">            crossings += int(isPositive != wasPositive);</div>
 <div class="line">            wasPositive = isPositive;</div>
 <div class="line">        }</div>
+<div class="line"> </div>
+<div class="line">        previousSample_ = signal.back();</div>
 <div class="line"> </div>
 <div class="line">        <span class="keyword">auto</span>&amp; result = getFeatureSet();</div>
 <div class="line">        result[0][0] = crossings;  <span class="comment">// first and only output, first and only bin</span></div>
