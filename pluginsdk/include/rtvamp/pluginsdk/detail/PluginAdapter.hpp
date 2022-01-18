@@ -306,6 +306,7 @@ private:
 
                 // (re)generate vamp output descriptors
                 outputDescriptorWrappers_.clear();
+                outputDescriptorWrappers_.reserve(descriptors.size());
                 for (const auto& d : descriptors) {
                     outputDescriptorWrappers_.emplace_back(d);
                 }
