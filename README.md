@@ -135,14 +135,18 @@ public:
     }
 
     const FeatureSet& process(InputBuffer buffer, uint64_t nsec) override {
+        const auto signal = std::get<TimeDomainBuffer>(buffer);
+
         size_t crossings   = 0;
         bool   wasPositive = (previousSample_ >= 0.0f);
 
-        for (const auto& sample : std::get<TimeDomainBuffer>(buffer)) {
+        for (const auto& sample : signal) {
             const bool isPositive = (sample >= 0.0f);
             crossings += int(isPositive != wasPositive);
             wasPositive = isPositive;
         }
+
+        previousSample_ = signal.back();
 
         auto& result = getFeatureSet();
         result[0][0] = crossings;  // first and only output, first and only bin
