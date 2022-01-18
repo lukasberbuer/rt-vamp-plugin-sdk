@@ -178,7 +178,7 @@ Plugin</h2>
 <div class="line">    <span class="keywordtype">bool</span> initialise(uint32_t stepSize, uint32_t blockSize)<span class="keyword"> override </span>{</div>
 <div class="line">        initialiseFeatureSet();  <span class="comment">// automatically resizes feature set to number of outputs and bins</span></div>
 <div class="line">        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line">    };</div>
+<div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    <span class="keywordtype">void</span> reset()<span class="keyword"> override </span>{</div>
 <div class="line">        previousSample_ = 0.0f;</div>
@@ -201,7 +201,7 @@ Plugin</h2>
 <div class="line">        <span class="keyword">auto</span>&amp; result = getFeatureSet();</div>
 <div class="line">        result[0][0] = crossings;  <span class="comment">// first and only output, first and only bin</span></div>
 <div class="line">        <span class="keywordflow">return</span> result;             <span class="comment">// return span/view of the results</span></div>
-<div class="line">    };</div>
+<div class="line">    }</div>
 <div class="line"> </div>
 <div class="line"><span class="keyword">private</span>:</div>
 <div class="line">    <span class="keywordtype">float</span> previousSample_ = 0.0f;</div>
