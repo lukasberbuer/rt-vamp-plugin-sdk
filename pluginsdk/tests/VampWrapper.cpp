@@ -52,22 +52,22 @@ TEST_CASE("VampOutputDescriptorWrapper") {
     SECTION("Default values") {
         PluginBase::OutputDescriptor descriptor{};
         VampOutputDescriptorWrapper  wrapper(descriptor);
-        VampOutputDescriptor&        d = wrapper.get();
+        VampOutputDescriptor*        d = wrapper.get();
 
-        CHECK_THAT(d.identifier,  Equals(""));
-        CHECK_THAT(d.name,        Equals(""));
-        CHECK_THAT(d.description, Equals(""));
-        CHECK_THAT(d.unit,        Equals(""));
-        CHECK(d.hasFixedBinCount == 1);
-        CHECK(d.binCount == 1);
-        CHECK(d.binNames == nullptr);
-        CHECK(d.hasKnownExtents == 0);
-        CHECK(d.minValue == 0.0f);
-        CHECK(d.maxValue == 0.0f);
-        CHECK(d.isQuantized == 0);
-        CHECK(d.quantizeStep == 0.0f);
-        CHECK(d.sampleType == vampOneSamplePerStep);
-        CHECK(d.sampleRate == 0.0f);
+        CHECK_THAT(d->identifier,  Equals(""));
+        CHECK_THAT(d->name,        Equals(""));
+        CHECK_THAT(d->description, Equals(""));
+        CHECK_THAT(d->unit,        Equals(""));
+        CHECK(d->hasFixedBinCount == 1);
+        CHECK(d->binCount == 1);
+        CHECK(d->binNames == nullptr);
+        CHECK(d->hasKnownExtents == 0);
+        CHECK(d->minValue == 0.0f);
+        CHECK(d->maxValue == 0.0f);
+        CHECK(d->isQuantized == 0);
+        CHECK(d->quantizeStep == 0.0f);
+        CHECK(d->sampleType == vampOneSamplePerStep);
+        CHECK(d->sampleRate == 0.0f);
     }
 
     SECTION("Non-matching binCount and binNames size") {
@@ -76,11 +76,22 @@ TEST_CASE("VampOutputDescriptorWrapper") {
         descriptor.binNames = {"a", "b"};
 
         VampOutputDescriptorWrapper wrapper(descriptor);
-        VampOutputDescriptor&       d = wrapper.get();
+        VampOutputDescriptor*       d = wrapper.get();
 
-        CHECK_THAT(d.binNames[0], Equals("a"));
-        CHECK_THAT(d.binNames[1], Equals("b"));
-        CHECK_THAT(d.binNames[2], Equals(""));
+        CHECK_THAT(d->binNames[0], Equals("a"));
+        CHECK_THAT(d->binNames[1], Equals("b"));
+        CHECK_THAT(d->binNames[2], Equals(""));
+    }
+
+    SECTION("Copy") {
+        PluginBase::OutputDescriptor descriptor;
+        descriptor.identifier = "test";
+
+        std::vector<VampOutputDescriptorWrapper> vec;
+        vec.emplace_back(descriptor);
+        vec.emplace_back(descriptor);  // will resize vector and force copy
+
+        REQUIRE_THAT(vec.at(0).get()->identifier, Equals("test"));
     }
 }
 

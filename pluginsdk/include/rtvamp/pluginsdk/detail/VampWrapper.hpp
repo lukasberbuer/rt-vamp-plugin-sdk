@@ -88,12 +88,7 @@ private:
     }();
 };
 
-/**
- * RAII wrapper for VampOutputDescriptor.
- * 
- * Strings (identifier, name, description, unit) are assumed to be compile-time constants and
- * therefore not copied.
- */
+
 struct VampOutputDescriptorWrapper{
     explicit VampOutputDescriptorWrapper(const PluginBase::OutputDescriptor& d)
         : identifier_(d.identifier),
@@ -105,21 +100,15 @@ struct VampOutputDescriptorWrapper{
         if (!binNames_.empty()) {
             binNames_.resize(d.binCount);  // crop or fill missing names with empty strings
             binNamesConstChar_.resize(d.binCount);
-            std::transform(
-                binNames_.begin(),
-                binNames_.end(),
-                binNamesConstChar_.begin(),
-                [] (const std::string& s) { return s.c_str(); }
-            );
         }
 
-        descriptor_.identifier       = identifier_.c_str();
-        descriptor_.name             = name_.c_str();
-        descriptor_.description      = description_.c_str();
-        descriptor_.unit             = unit_.c_str();
+        // descriptor_.identifier       = identifier_.c_str();
+        // descriptor_.name             = name_.c_str();
+        // descriptor_.description      = description_.c_str();
+        // descriptor_.unit             = unit_.c_str();
         descriptor_.hasFixedBinCount = 1;
         descriptor_.binCount         = d.binCount;
-        descriptor_.binNames         = binNames_.empty() ? nullptr : binNamesConstChar_.data();
+        // descriptor_.binNames         = binNames_.empty() ? nullptr : binNamesConstChar_.data();
         descriptor_.hasKnownExtents  = static_cast<int>(d.hasKnownExtents);
         descriptor_.minValue         = d.minValue;
         descriptor_.maxValue         = d.maxValue;
@@ -130,10 +119,27 @@ struct VampOutputDescriptorWrapper{
         descriptor_.hasDuration      = 0;
     }
 
-    const VampOutputDescriptor& get() const noexcept { return descriptor_; }
-    VampOutputDescriptor&       get()       noexcept { return descriptor_; }
+    VampOutputDescriptor* get() {
+        initPointer();  // reinit pointer, might have been copied or moved
+        return &descriptor_;
+    }
 
 private:
+    void initPointer() {
+        std::transform(
+            binNames_.begin(),
+            binNames_.end(),
+            binNamesConstChar_.begin(),
+            [] (const std::string& s) { return s.c_str(); }
+        );
+
+        descriptor_.identifier  = identifier_.c_str();
+        descriptor_.name        = name_.c_str();
+        descriptor_.description = description_.c_str();
+        descriptor_.unit        = unit_.c_str();
+        descriptor_.binNames    = binNames_.empty() ? nullptr : binNamesConstChar_.data();
+    }
+
     VampOutputDescriptor     descriptor_;
     const std::string        identifier_;
     const std::string        name_;
@@ -161,6 +167,12 @@ public:
         v2.durationNsec = 0;
     }
 
+    // prevent copy/move (invalides pointer v1.values)
+    VampFeatureUnionWrapper(const VampFeatureUnionWrapper&) = delete;
+    VampFeatureUnionWrapper(VampFeatureUnionWrapper&&) = delete;
+    VampFeatureUnionWrapper& operator=(const VampFeatureUnionWrapper&) = delete;
+    VampFeatureUnionWrapper& operator=(VampFeatureUnionWrapper&&) = delete;
+
     size_t getValueCount() const noexcept { return values_.size(); }
 
     void setValueCount(size_t n) {
@@ -178,8 +190,7 @@ public:
         std::copy(values.begin(), values.end(), values_.begin());
     }
 
-    const VampFeatureUnion* get() const noexcept { return featureUnion_.data(); }
-    VampFeatureUnion*       get()       noexcept { return featureUnion_.data(); }
+    VampFeatureUnion* get() noexcept { return featureUnion_.data(); }
 
 private:
     VampFeature&   getV1() noexcept { return featureUnion_[0].v1; }
@@ -201,6 +212,12 @@ public:
             };
         }
     }
+
+    // prevent copy/move (invalides pointer .features)
+    VampFeatureListsWrapper(const VampFeatureListsWrapper&) = delete;
+    VampFeatureListsWrapper(VampFeatureListsWrapper&&) = delete;
+    VampFeatureListsWrapper& operator=(const VampFeatureListsWrapper&) = delete;
+    VampFeatureListsWrapper& operator=(VampFeatureListsWrapper&&) = delete;
 
     void assignValues(size_t outputNumber, const PluginBase::Feature& values) {
         assert(outputNumber < NOutputs);

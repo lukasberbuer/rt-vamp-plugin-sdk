@@ -262,7 +262,7 @@ public:
         updateOutputDescriptors();
         std::shared_lock readerLock(mutex_);
         // bounds checking in descriptor lambda
-        return &outputDescriptorWrappers_[index].get();
+        return outputDescriptorWrappers_[index].get();
     }
 
     VampFeatureList* process(const float* const* inputBuffers, int sec, int nsec) {
