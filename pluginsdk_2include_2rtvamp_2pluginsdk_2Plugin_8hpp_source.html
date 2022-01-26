@@ -95,14 +95,14 @@ $(function() {
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160; </div>
 <div class="line"><a name="l00031"></a><span class="lineno"><a class="line" href="structrtvamp_1_1pluginsdk_1_1PluginBase_1_1ParameterDescriptor.html">   31</a></span>&#160;    <span class="keyword">struct </span><a class="code" href="structrtvamp_1_1pluginsdk_1_1PluginBase_1_1ParameterDescriptor.html">ParameterDescriptor</a> {</div>
 <div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;        <span class="comment">// use const char* for compile-time evaluation and mapping to C API</span></div>
-<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*               identifier   = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*               name         = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*               description  = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*               unit         = <span class="stringliteral">&quot;&quot;</span>;</div>
-<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">float</span>                     defaultValue = 0.0f;</div>
-<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        std::optional&lt;float&gt;      minValue     = std::nullopt;</div>
-<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        std::optional&lt;float&gt;      maxValue     = std::nullopt;</div>
-<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        std::optional&lt;float&gt;      quantizeStep = std::nullopt;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*          identifier   = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*          name         = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*          description  = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160;        <span class="keyword">const</span> <span class="keywordtype">char</span>*          unit         = <span class="stringliteral">&quot;&quot;</span>;</div>
+<div class="line"><a name="l00037"></a><span class="lineno">   37</span>&#160;        <span class="keywordtype">float</span>                defaultValue = 0.0f;</div>
+<div class="line"><a name="l00038"></a><span class="lineno">   38</span>&#160;        <span class="keywordtype">float</span>                minValue     = 0.0f;</div>
+<div class="line"><a name="l00039"></a><span class="lineno">   39</span>&#160;        <span class="keywordtype">float</span>                maxValue     = 0.0f;</div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;        std::optional&lt;float&gt; quantizeStep = std::nullopt;</div>
 <div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160;        <span class="comment">// std::vector&lt;const char*&gt; valueNames{};  // currently not possible -&gt; wait for constexpr vectors</span></div>
 <div class="line"><a name="l00042"></a><span class="lineno">   42</span>&#160;    };</div>
 <div class="line"><a name="l00043"></a><span class="lineno">   43</span>&#160; </div>

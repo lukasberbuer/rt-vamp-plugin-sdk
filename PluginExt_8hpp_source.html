@@ -73,7 +73,7 @@ $(function() {
 <div class="contents">
 <div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span>  <span class="comment">// min, max</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;algorithm&gt;</span>  <span class="comment">// clamp</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;array&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;cassert&gt;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;cmath&gt;</span>  <span class="comment">// round</span></div>
@@ -129,62 +129,57 @@ $(function() {
 <div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;            <span class="keyword">const</span> <span class="keyword">auto</span> quantizeStep = descriptor.quantizeStep.value();</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;            value = std::round(value / quantizeStep) * quantizeStep;</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        }</div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        <span class="keywordflow">if</span> (descriptor.minValue) {</div>
-<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;            value = std::max(value, descriptor.minValue.value());</div>
-<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        }</div>
-<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keywordflow">if</span> (descriptor.maxValue) {</div>
-<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;            value = std::min(value, descriptor.maxValue.value());</div>
-<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;        }</div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160; </div>
-<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;        parameterValues_[index.value()] = value;</div>
-<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        onParameterChange(<span class="keywordtype">id</span>, value);</div>
-<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    }</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;}</div>
-<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
-<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;std::string_view PluginExt&lt;Self, NOutputs&gt;::getCurrentProgram()<span class="keyword"> const </span>{</div>
-<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;    assert(programIndex_ &lt; Self::programs.size());</div>
-<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">return</span> Self::programs[programIndex_];</div>
-<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;}</div>
-<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160; </div>
-<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
-<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="keywordtype">bool</span> PluginExt&lt;Self, NOutputs&gt;::selectProgram(std::string_view name) {</div>
-<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> index = findProgramIndex(name)) {</div>
-<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;        programIndex_ = index.value();</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        onProgramChange(name);</div>
-<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
-<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;    }</div>
-<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
-<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;}</div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160; </div>
-<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
-<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;std::vector&lt;float&gt; PluginExt&lt;Self, NOutputs&gt;::defaultParameterValues() {</div>
-<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;    std::vector&lt;float&gt; values(Self::parameters.size());</div>
-<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; Self::parameters.size(); ++i) {</div>
-<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;        values[i] = Self::parameters[i].defaultValue;</div>
-<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;    }</div>
-<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">return</span> values;</div>
-<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;}</div>
-<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160; </div>
-<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
-<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;constexpr std::optional&lt;size_t&gt; PluginExt&lt;Self, NOutputs&gt;::findParameterIndex(std::string_view <span class="keywordtype">id</span>) {</div>
-<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; Self::parameters.size(); ++i) {</div>
-<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;        <span class="keywordflow">if</span> (Self::parameters[i].identifier == <span class="keywordtype">id</span>) <span class="keywordflow">return</span> i;</div>
-<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;    }</div>
-<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">return</span> {};</div>
-<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;}</div>
-<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160; </div>
-<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;constexpr std::optional&lt;size_t&gt; PluginExt&lt;Self, NOutputs&gt;::findProgramIndex(std::string_view name) {</div>
-<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; Self::programs.size(); ++i) {</div>
-<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;        <span class="keywordflow">if</span> (Self::programs[i] == name) <span class="keywordflow">return</span> i;</div>
-<div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    }</div>
-<div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    <span class="keywordflow">return</span> {};</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;}</div>
-<div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160; </div>
-<div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;}  <span class="comment">// namespace rtvamp::pluginsdk</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;        value = std::clamp(value, descriptor.minValue, descriptor.maxValue);</div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160; </div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;        parameterValues_[index.value()] = value;</div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        onParameterChange(<span class="keywordtype">id</span>, value);</div>
+<div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    }</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;}</div>
+<div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
+<div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;std::string_view PluginExt&lt;Self, NOutputs&gt;::getCurrentProgram()<span class="keyword"> const </span>{</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    assert(programIndex_ &lt; Self::programs.size());</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">return</span> Self::programs[programIndex_];</div>
+<div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;}</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160; </div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="keywordtype">bool</span> PluginExt&lt;Self, NOutputs&gt;::selectProgram(std::string_view name) {</div>
+<div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="keywordflow">if</span> (<span class="keyword">const</span> <span class="keyword">auto</span> index = findProgramIndex(name)) {</div>
+<div class="line"><a name="l00088"></a><span class="lineno">   88</span>&#160;        programIndex_ = index.value();</div>
+<div class="line"><a name="l00089"></a><span class="lineno">   89</span>&#160;        onProgramChange(name);</div>
+<div class="line"><a name="l00090"></a><span class="lineno">   90</span>&#160;        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
+<div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;    }</div>
+<div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keywordflow">return</span> <span class="keyword">false</span>;</div>
+<div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;}</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
+<div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
+<div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;std::vector&lt;float&gt; PluginExt&lt;Self, NOutputs&gt;::defaultParameterValues() {</div>
+<div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    std::vector&lt;float&gt; values(Self::parameters.size());</div>
+<div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; Self::parameters.size(); ++i) {</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;        values[i] = Self::parameters[i].defaultValue;</div>
+<div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    }</div>
+<div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;    <span class="keywordflow">return</span> values;</div>
+<div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;}</div>
+<div class="line"><a name="l00103"></a><span class="lineno">  103</span>&#160; </div>
+<div class="line"><a name="l00104"></a><span class="lineno">  104</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
+<div class="line"><a name="l00105"></a><span class="lineno">  105</span>&#160;constexpr std::optional&lt;size_t&gt; PluginExt&lt;Self, NOutputs&gt;::findParameterIndex(std::string_view <span class="keywordtype">id</span>) {</div>
+<div class="line"><a name="l00106"></a><span class="lineno">  106</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; Self::parameters.size(); ++i) {</div>
+<div class="line"><a name="l00107"></a><span class="lineno">  107</span>&#160;        <span class="keywordflow">if</span> (Self::parameters[i].identifier == <span class="keywordtype">id</span>) <span class="keywordflow">return</span> i;</div>
+<div class="line"><a name="l00108"></a><span class="lineno">  108</span>&#160;    }</div>
+<div class="line"><a name="l00109"></a><span class="lineno">  109</span>&#160;    <span class="keywordflow">return</span> {};</div>
+<div class="line"><a name="l00110"></a><span class="lineno">  110</span>&#160;}</div>
+<div class="line"><a name="l00111"></a><span class="lineno">  111</span>&#160; </div>
+<div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Self, u<span class="keywordtype">int</span>32_t NOutputs&gt;</div>
+<div class="line"><a name="l00113"></a><span class="lineno">  113</span>&#160;constexpr std::optional&lt;size_t&gt; PluginExt&lt;Self, NOutputs&gt;::findProgramIndex(std::string_view name) {</div>
+<div class="line"><a name="l00114"></a><span class="lineno">  114</span>&#160;    <span class="keywordflow">for</span> (<span class="keywordtype">size_t</span> i = 0; i &lt; Self::programs.size(); ++i) {</div>
+<div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;        <span class="keywordflow">if</span> (Self::programs[i] == name) <span class="keywordflow">return</span> i;</div>
+<div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    }</div>
+<div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    <span class="keywordflow">return</span> {};</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;}</div>
+<div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160; </div>
+<div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160;}  <span class="comment">// namespace rtvamp::pluginsdk</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html">rtvamp::pluginsdk::Plugin</a></div><div class="ttdoc">Base class to implement feature extraction plugins.</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:75</div></div>
 <div class="ttc" id="anamespacertvamp_1_1pluginsdk_html"><div class="ttname"><a href="namespacertvamp_1_1pluginsdk.html">rtvamp::pluginsdk</a></div><div class="ttdoc">Vamp C API uses unsigned int as size type (blockSize, stepSize, channelCount, outputCount,...</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:8</div></div>
