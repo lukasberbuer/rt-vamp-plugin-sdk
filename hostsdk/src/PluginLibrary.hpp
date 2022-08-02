@@ -6,6 +6,8 @@
 
 #include "vamp/vamp.h"
 
+#include "rtvamp/hostsdk/PluginKey.hpp"
+
 #include "DynamicLibrary.hpp"
 
 namespace rtvamp::hostsdk {
@@ -14,7 +16,10 @@ class PluginLibrary {
 public:
     PluginLibrary(const std::filesystem::path& libraryPath);
 
-    std::string getLibraryName() const;
+    std::filesystem::path getLibraryPath() const noexcept;
+    std::string           getLibraryName() const;
+
+    std::vector<PluginKey> listPlugins() const;
 
     std::vector<const VampPluginDescriptor*> getDescriptors() const;
 

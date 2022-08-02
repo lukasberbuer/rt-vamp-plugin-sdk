@@ -6,6 +6,7 @@
 #include "helper.hpp"
 
 using Catch::Matchers::Equals;
+using rtvamp::hostsdk::PluginKey;
 using rtvamp::hostsdk::PluginLibrary;
 
 TEST_CASE("PluginLibrary") {
@@ -28,12 +29,18 @@ TEST_CASE("PluginLibrary") {
         const auto path = getPluginPath("example-plugin");
         PluginLibrary library(path);
 
+        REQUIRE_THAT(library.getLibraryPath(), Equals(path));
         REQUIRE_THAT(library.getLibraryName(), Equals("example-plugin"));
 
         const auto descriptors = library.getDescriptors();
         REQUIRE(descriptors.size() >= 2);
         REQUIRE_THAT(descriptors[0]->identifier, Equals("rms"));
         REQUIRE_THAT(descriptors[1]->identifier, Equals("spectralrolloff"));
+
+        const auto keys = library.listPlugins();
+        REQUIRE(keys.size() >= 2);
+        REQUIRE(keys[0] == PluginKey("example-plugin", "rms"));
+        REQUIRE(keys[1] == PluginKey("example-plugin", "spectralrolloff"));
 
         SECTION("Same handle for multiple library loads -> same plugin descriptors") {
             PluginLibrary library2(path);

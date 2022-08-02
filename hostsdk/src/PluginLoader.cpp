@@ -30,12 +30,9 @@ PluginLoader::PluginLoader() {
         try {
             PluginLibrary library(libraryPath);
 
-            for (auto&& descriptor : library.getDescriptors()) {
+            for (auto&& key : library.listPlugins()) {
                 // don't overwrite existing entry with same plugin key
-                plugins_.try_emplace(
-                    PluginKey(library.getLibraryName(), descriptor->identifier),
-                    libraryPath
-                );
+                plugins_.try_emplace(key, libraryPath);
             }
         } catch(...) {}
     };

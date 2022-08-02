@@ -29,8 +29,23 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath) {
     }
 }
 
+std::filesystem::path PluginLibrary::getLibraryPath() const noexcept {
+    return dl_.path().value();
+}
+
 std::string PluginLibrary::getLibraryName() const {
-    return dl_.path().value().stem().string();
+    return getLibraryPath().stem().string();
+}
+
+std::vector<PluginKey> PluginLibrary::listPlugins() const {
+    std::vector<PluginKey> result;
+    result.reserve(descriptors_.size());
+
+    for (auto&& descriptor : descriptors_) {
+        result.emplace_back(getLibraryName(), descriptor->identifier);
+    }
+
+    return result;
 }
 
 std::vector<const VampPluginDescriptor*> PluginLibrary::getDescriptors() const {
