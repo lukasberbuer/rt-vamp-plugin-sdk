@@ -1,17 +1,16 @@
 #include <algorithm>  // transform
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_all.hpp>
 
 #include "rtvamp/hostsdk/Plugin.hpp"
 #include "rtvamp/hostsdk/PluginLoader.hpp"
 
 using Catch::Matchers::Equals;
 using Catch::Matchers::StartsWith;
-using Catch::Matchers::VectorContains;
+using Catch::Matchers::Contains;
 using rtvamp::hostsdk::PluginKey;
 using rtvamp::hostsdk::PluginLoader;
-
-using namespace std::string_literals;
 
 TEST_CASE("PluginKey") {
     SECTION("Valid") {
@@ -56,13 +55,13 @@ TEST_CASE("PluginLoader getPluginPaths") {
     namespace fs = std::filesystem;
 
 #ifdef _WIN32
-    CHECK_THAT(paths, VectorContains(fs::path("C:/Program Files/Vamp Plugins")));
+    CHECK_THAT(paths, Contains(fs::path("C:/Program Files/Vamp Plugins")));
 #elif __APPLE__
-    CHECK_THAT(paths, VectorContains(fs::path("/Library/Audio/Plug-Ins/Vamp")));
+    CHECK_THAT(paths, Contains(fs::path("/Library/Audio/Plug-Ins/Vamp")));
 #elif __linux__
-    CHECK_THAT(paths, VectorContains(fs::path("/usr/lib/vamp")));
-    CHECK_THAT(paths, VectorContains(fs::path("/usr/lib/x86_64-linux-gnu/vamp")));
-    CHECK_THAT(paths, VectorContains(fs::path("/usr/local/lib/vamp")));
+    CHECK_THAT(paths, Contains(fs::path("/usr/lib/vamp")));
+    CHECK_THAT(paths, Contains(fs::path("/usr/lib/x86_64-linux-gnu/vamp")));
+    CHECK_THAT(paths, Contains(fs::path("/usr/local/lib/vamp")));
 #endif
 
     for (const auto& path : paths) {
@@ -85,15 +84,15 @@ TEST_CASE("PluginLoader listLibraries") {
         [] (const std::filesystem::path& path) { return path.stem().string(); }
     );
 
-    REQUIRE_THAT(librariesStem, VectorContains("example-plugin"s));
-    REQUIRE_THAT(librariesStem, !VectorContains("invalid-plugin"s));
+    REQUIRE_THAT(librariesStem, Contains("example-plugin"));
+    REQUIRE_THAT(librariesStem, !Contains("invalid-plugin"));
 }
 
 TEST_CASE("PluginLoader listPlugins") {
     PluginLoader loader;
     const auto plugins = loader.listPlugins();
     REQUIRE(plugins.size() >= 1);
-    REQUIRE_THAT(plugins, VectorContains(PluginKey("example-plugin:rms")));
+    REQUIRE_THAT(plugins, Contains(PluginKey("example-plugin:rms")));
 }
 
 TEST_CASE("PluginLoader listPluginsInLibrary") {

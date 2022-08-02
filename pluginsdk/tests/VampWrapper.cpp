@@ -1,12 +1,13 @@
 #include <string_view>
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 #include "rtvamp/pluginsdk.hpp"
 
 #include "TestPlugin.hpp"
 
-using namespace Catch::Matchers;
+using Catch::Matchers::Equals;
 
 template <typename U, typename V>
 static consteval bool strEqual(U&& u, V&& v) {

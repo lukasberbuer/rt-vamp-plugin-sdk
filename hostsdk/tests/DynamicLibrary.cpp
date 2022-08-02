@@ -1,12 +1,11 @@
 #include <utility>  // move
 
-#include <catch2/catch.hpp>
+#include <catch2/catch_test_macros.hpp>
 
 #include "DynamicLibrary.hpp"
 
 #include "helper.hpp"
 
-using Catch::Matchers::Equals;
 using rtvamp::hostsdk::DynamicLibrary;
 
 TEST_CASE("DynamicLibrary") {
