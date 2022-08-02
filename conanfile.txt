@@ -1,5 +1,5 @@
 [requires]
-benchmark/[>=1.6.0]
+benchmark/1.6.1
 catch2/[~3.1]
 # only for example-host:
 # libsndfile/1.0.31
