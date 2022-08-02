@@ -27,10 +27,10 @@ static void BM_plugin(benchmark::State& state, const VampPluginDescriptor* descr
     addRateCounter(state, blockSize);
 }
 
-const auto BM_rtvamp = [](benchmark::State& state) {
+static void BM_rtvamp(benchmark::State& state) {
     constexpr auto* descriptor = rtvamp::pluginsdk::detail::PluginAdapter<RMS>::getDescriptor();
     BM_plugin(state, descriptor);
-};
+}
 BENCHMARK(BM_rtvamp)->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(1)->UseRealTime();
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(2)->UseRealTime();
@@ -39,10 +39,10 @@ BENCHMARK(BM_rtvamp)->Args({4096})->Threads(8)->UseRealTime();
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(12)->UseRealTime();
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(16)->UseRealTime();
 
-const auto BM_vamp = [](benchmark::State& state) {
+static void BM_vamp(benchmark::State& state) {
     static Vamp::PluginAdapter<RMSvamp> adapter;
     BM_plugin(state, adapter.getDescriptor());
-};
+}
 BENCHMARK(BM_vamp)->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 BENCHMARK(BM_vamp)->Args({4096})->Threads(1)->UseRealTime();
 BENCHMARK(BM_vamp)->Args({4096})->Threads(2)->UseRealTime();
