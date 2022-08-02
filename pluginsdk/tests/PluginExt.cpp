@@ -13,16 +13,6 @@ public:
 
     static constexpr std::array parameters{
         ParameterDescriptor{
-            .identifier   = "free",
-            .name         = "Parameter without limits and quantization",
-            .description  = "",
-            .unit         = "",
-            .defaultValue = 0.0f,
-            .minValue     = std::nullopt,
-            .maxValue     = std::nullopt,
-            .quantizeStep = std::nullopt,
-        },
-        ParameterDescriptor{
             .identifier   = "limited",
             .name         = "Parameter with limits",
             .description  = "",
@@ -80,16 +70,12 @@ TEST_CASE("PluginExt get/set parameter") {
     TestPluginExt plugin(48000);
 
     SECTION("Default values") {
-        REQUIRE(plugin.getParameter("free").value() == 0.0f);
         REQUIRE(plugin.getParameter("limited").value() == 10.0f);
         REQUIRE(plugin.getParameter("quantized").value() == 1.0f);
         REQUIRE_FALSE(plugin.getParameter("invalid").has_value());
     }
 
     SECTION("Set/get") {
-        REQUIRE(plugin.setParameter("free", 1e9f));
-        REQUIRE(plugin.getParameter("free").value() == 1e9f);
-
         REQUIRE(plugin.setParameter("limited", 1.1f));
         REQUIRE(plugin.getParameter("limited").value() == 1.1f);
 
@@ -152,9 +138,9 @@ TEST_CASE("PluginExt onParameterChange callback") {
     }
 
     SECTION("Valid parameter input") {
-        plugin.setParameter("free", 11.11f);
-        CHECK(plugin.onParameterChangeId == "free");
-        CHECK(plugin.onParameterChangeValue == 11.11f);
+        plugin.setParameter("limited", 1.1f);
+        CHECK(plugin.onParameterChangeId == "limited");
+        CHECK(plugin.onParameterChangeValue == 1.1f);
     }
 }
 

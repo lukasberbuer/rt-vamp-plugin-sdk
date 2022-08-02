@@ -30,14 +30,14 @@ public:
 
     struct ParameterDescriptor {
         // use const char* for compile-time evaluation and mapping to C API
-        const char*               identifier   = "";
-        const char*               name         = "";
-        const char*               description  = "";
-        const char*               unit         = "";
-        float                     defaultValue = 0.0f;
-        std::optional<float>      minValue     = std::nullopt;
-        std::optional<float>      maxValue     = std::nullopt;
-        std::optional<float>      quantizeStep = std::nullopt;
+        const char*          identifier   = "";
+        const char*          name         = "";
+        const char*          description  = "";
+        const char*          unit         = "";
+        float                defaultValue = 0.0f;
+        float                minValue     = 0.0f;
+        float                maxValue     = 0.0f;
+        std::optional<float> quantizeStep = std::nullopt;
         // std::vector<const char*> valueNames{};  // currently not possible -> wait for constexpr vectors
     };
 

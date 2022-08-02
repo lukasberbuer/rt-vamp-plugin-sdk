@@ -1,6 +1,6 @@
 #pragma once
 
-#include <algorithm>  // min, max
+#include <algorithm>  // clamp
 #include <array>
 #include <cassert>
 #include <cmath>  // round
@@ -67,12 +67,7 @@ bool PluginExt<Self, NOutputs>::setParameter(std::string_view id, float value) {
             const auto quantizeStep = descriptor.quantizeStep.value();
             value = std::round(value / quantizeStep) * quantizeStep;
         }
-        if (descriptor.minValue) {
-            value = std::max(value, descriptor.minValue.value());
-        }
-        if (descriptor.maxValue) {
-            value = std::min(value, descriptor.maxValue.value());
-        }
+        value = std::clamp(value, descriptor.minValue, descriptor.maxValue);
 
         parameterValues_[index.value()] = value;
         onParameterChange(id, value);

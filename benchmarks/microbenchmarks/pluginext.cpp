@@ -9,16 +9,6 @@ public:
     static constexpr Meta       meta{};
     static constexpr std::array parameters{
         ParameterDescriptor{
-            .identifier   = "free",
-            .name         = "Parameter without limits and quantization",
-            .description  = "",
-            .unit         = "",
-            .defaultValue = 0.0f,
-            .minValue     = 0.0f,
-            .maxValue     = 0.0f,
-            .quantizeStep = std::nullopt,
-        },
-        ParameterDescriptor{
             .identifier   = "limited",
             .name         = "Parameter with limits",
             .description  = "",
@@ -58,7 +48,7 @@ public:
 static void BM_getParameter(benchmark::State& state) {
     TestPluginExt plugin(48000);
     for (auto _ : state) {
-        const auto value = plugin.getParameter("free");
+        const auto value = plugin.getParameter("limited");
         benchmark::DoNotOptimize(value);
     }
 }
@@ -70,7 +60,6 @@ static void BM_setParameter(benchmark::State& state, std::string_view id) {
         plugin.setParameter(id, 11.11f);
     }
 }
-BENCHMARK_CAPTURE(BM_setParameter, free, "free");
 BENCHMARK_CAPTURE(BM_setParameter, limited, "limited");
 BENCHMARK_CAPTURE(BM_setParameter, quantized, "quantized");
 
