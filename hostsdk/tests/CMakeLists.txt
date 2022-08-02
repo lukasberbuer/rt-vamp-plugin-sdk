@@ -6,6 +6,7 @@ add_executable(
     Common.cpp
     DynamicLibrary.cpp
     PluginHostAdapter.cpp
+    PluginKey.cpp
     PluginLibrary.cpp
     PluginLoader.cpp
 )

@@ -4,6 +4,7 @@ set(alias_name "${PROJECT_NAME}::hostsdk")
 add_library(
     ${library_name}
     src/PluginHostAdapter.cpp
+    src/PluginKey.cpp
     src/PluginLibrary.cpp
     $<IF:$<PLATFORM_ID:Windows>, src/DynamicLibrary_Windows.cpp, src/DynamicLibrary_Unix.cpp>
     src/PluginLoader.cpp
