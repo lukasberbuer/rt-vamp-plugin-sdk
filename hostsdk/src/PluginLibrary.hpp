@@ -8,17 +8,17 @@
 #include "rtvamp/hostsdk/Plugin.hpp"
 #include "rtvamp/hostsdk/PluginKey.hpp"
 
-#include "DynamicLibrary.hpp"
-
 // forward declarations
 struct _VampPluginDescriptor;
 typedef _VampPluginDescriptor VampPluginDescriptor;
 
 namespace rtvamp::hostsdk {
 
+class DynamicLibrary;
+
 class PluginLibrary {
 public:
-    PluginLibrary(const std::filesystem::path& libraryPath);
+    explicit PluginLibrary(const std::filesystem::path& libraryPath);
 
     std::filesystem::path   getLibraryPath() const noexcept;
     std::string             getLibraryName() const;
@@ -31,7 +31,7 @@ public:
     std::unique_ptr<Plugin> loadPlugin(size_t index, float inputSampleRate) const;
 
 private:
-    DynamicLibrary                           dl_;
+    std::shared_ptr<DynamicLibrary>          dl_;
     std::vector<const VampPluginDescriptor*> descriptors_;
 };
 

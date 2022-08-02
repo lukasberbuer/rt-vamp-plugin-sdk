@@ -6,6 +6,7 @@
 
 #include "rtvamp/hostsdk/PluginHostAdapter.hpp"
 
+#include "DynamicLibrary.hpp"
 #include "helper.hpp"
 
 namespace rtvamp::hostsdk {
@@ -15,12 +16,14 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath) {
         throw std::runtime_error(helper::concat("Dynamic library does not exist: ", libraryPath));
     }
 
-    if (!dl_.load(libraryPath)) {
+    dl_ = std::make_shared<DynamicLibrary>();
+
+    if (!dl_->load(libraryPath)) {
         throw std::runtime_error(helper::concat("Error loading dynamic library: ", libraryPath));
     }
 
     constexpr const char* symbol = "vampGetPluginDescriptor";
-    const auto func = dl_.getFunction<VampGetPluginDescriptorFunction>(symbol);
+    const auto func = dl_->getFunction<VampGetPluginDescriptorFunction>(symbol);
     if (!func) {
         throw std::runtime_error(
             helper::concat("Undefined symbol in dynamic library: ", symbol)
@@ -34,7 +37,7 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath) {
 }
 
 std::filesystem::path PluginLibrary::getLibraryPath() const noexcept {
-    return dl_.path().value();
+    return dl_->path().value();
 }
 
 std::string PluginLibrary::getLibraryName() const {
