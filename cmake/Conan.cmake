@@ -1,4 +1,4 @@
-option(RTVAMP_ENABLE_CONAN OFF)
+option(RTVAMP_ENABLE_CONAN "Use Conan for dependency management" OFF)
 if(RTVAMP_ENABLE_CONAN)
     if(NOT EXISTS "${CMAKE_BINARY_DIR}/conan.cmake")
         message(STATUS "Downloading conan.cmake from https://github.com/conan-io/cmake-conan")

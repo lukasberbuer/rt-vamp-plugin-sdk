@@ -47,7 +47,7 @@ else()
     )
 endif()
 
-option(RTVAMP_ENABLE_COVERAGE ON)
+option(RTVAMP_ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" OFF)
 if(RTVAMP_ENABLE_COVERAGE)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
         target_compile_options(${project_options} INTERFACE --coverage -O0 -g)
