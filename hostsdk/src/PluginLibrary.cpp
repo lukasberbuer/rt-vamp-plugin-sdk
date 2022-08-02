@@ -41,6 +41,10 @@ std::string PluginLibrary::getLibraryName() const {
     return getLibraryPath().stem().string();
 }
 
+size_t PluginLibrary::getPluginCount() const noexcept {
+    return descriptors_.size();
+}
+
 std::vector<PluginKey> PluginLibrary::listPlugins() const {
     std::vector<PluginKey> result;
     result.reserve(descriptors_.size());

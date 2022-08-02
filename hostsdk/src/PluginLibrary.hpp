@@ -1,6 +1,7 @@
 #pragma once
 
 #include <filesystem>
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -19,15 +20,17 @@ class PluginLibrary {
 public:
     PluginLibrary(const std::filesystem::path& libraryPath);
 
-    std::filesystem::path getLibraryPath() const noexcept;
-    std::string           getLibraryName() const;
+    std::filesystem::path   getLibraryPath() const noexcept;
+    std::string             getLibraryName() const;
 
-    std::vector<PluginKey> listPlugins() const;
+    size_t                  getPluginCount() const noexcept;
+
+    std::vector<PluginKey>  listPlugins() const;
 
     std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate) const;
 
 private:
-    DynamicLibrary dl_;
+    DynamicLibrary                           dl_;
     std::vector<const VampPluginDescriptor*> descriptors_;
 };
 

@@ -18,7 +18,7 @@ TEST_CASE("PluginLibrary") {
         );
     }
 
-    SECTION("Invalid plugin") {
+    SECTION("Invalid library") {
         const auto path = getPluginPath("invalid-plugin");
         REQUIRE_THROWS_WITH(
             PluginLibrary(path),
@@ -26,7 +26,7 @@ TEST_CASE("PluginLibrary") {
         );
     }
 
-    SECTION("example-plugin") {
+    SECTION("Valid library (example-plugin)") {
         const auto path = getPluginPath("example-plugin");
         PluginLibrary library(path);
 
@@ -34,8 +34,11 @@ TEST_CASE("PluginLibrary") {
 
         REQUIRE_THAT(library.getLibraryName(), Equals("example-plugin"));
 
+        const auto count = library.getPluginCount();
+        REQUIRE(count >= 2);
+
         const auto keys = library.listPlugins();
-        REQUIRE(keys.size() >= 2);
+        REQUIRE(keys.size() == count);
         REQUIRE(keys[0] == PluginKey("example-plugin", "rms"));
         REQUIRE(keys[1] == PluginKey("example-plugin", "spectralrolloff"));
     }
