@@ -9,7 +9,7 @@
 using rtvamp::hostsdk::DynamicLibrary;
 
 TEST_CASE("DynamicLibrary") {
-    const auto  validPath   = getPluginPath("example-plugin");
+    const auto  validPath   = getLibraryPath("example-plugin");
     const char* validSymbol = "vampGetPluginDescriptor";
 
     SECTION("Fail loading non-existing path") {

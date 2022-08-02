@@ -28,6 +28,7 @@ public:
     std::vector<PluginKey>  listPlugins() const;
 
     std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate) const;
+    std::unique_ptr<Plugin> loadPlugin(size_t index, float inputSampleRate) const;
 
 private:
     DynamicLibrary                           dl_;

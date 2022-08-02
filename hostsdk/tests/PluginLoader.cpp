@@ -74,13 +74,6 @@ TEST_CASE("PluginLoader loadPlugin") {
         REQUIRE_THAT(std::string(plugin->getIdentifier()), Equals("rms"));
     }
 
-    SECTION("Load same plugin twice") {
-        auto plugin1 = loader.loadPlugin("example-plugin:rms", 48000);
-        auto plugin2 = loader.loadPlugin("example-plugin:rms", 48000);
-
-        REQUIRE(plugin1.get() != plugin2.get());
-    }
-
     SECTION("Invalid plugin key") {
         REQUIRE_THROWS_WITH(
             loader.loadPlugin("invalidkey", 48000),

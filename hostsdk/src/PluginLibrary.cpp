@@ -73,4 +73,19 @@ std::unique_ptr<Plugin> PluginLibrary::loadPlugin(const PluginKey& key, float in
     );
 }
 
+std::unique_ptr<Plugin> PluginLibrary::loadPlugin(size_t index, float inputSampleRate) const {
+    const auto count = getPluginCount();
+    if (index >= count) {
+        throw std::invalid_argument(
+            helper::concat("Invalid plugin index: ", index, " >= ", count, " (available plugins)")
+        );
+    }
+
+    return std::make_unique<PluginHostAdapter>(
+        *descriptors_[index],
+        inputSampleRate,
+        [dl = dl_] {}  // capture copy of library handle (reference counted) to be released after plugin
+    );
+}
+
 }  // namespace rtvamp::hostsdk
