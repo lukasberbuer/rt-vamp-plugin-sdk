@@ -4,11 +4,14 @@
 #include <string>
 #include <vector>
 
-#include "vamp/vamp.h"
-
+#include "rtvamp/hostsdk/Plugin.hpp"
 #include "rtvamp/hostsdk/PluginKey.hpp"
 
 #include "DynamicLibrary.hpp"
+
+// forward declarations
+struct _VampPluginDescriptor;
+typedef _VampPluginDescriptor VampPluginDescriptor;
 
 namespace rtvamp::hostsdk {
 
@@ -21,7 +24,7 @@ public:
 
     std::vector<PluginKey> listPlugins() const;
 
-    std::vector<const VampPluginDescriptor*> getDescriptors() const;
+    std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate) const;
 
 private:
     DynamicLibrary dl_;

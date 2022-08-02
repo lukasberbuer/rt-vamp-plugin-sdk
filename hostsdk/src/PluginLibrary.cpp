@@ -2,6 +2,10 @@
 
 #include <stdexcept>
 
+#include "vamp/vamp.h"
+
+#include "rtvamp/hostsdk/PluginHostAdapter.hpp"
+
 #include "helper.hpp"
 
 namespace rtvamp::hostsdk {
@@ -48,8 +52,21 @@ std::vector<PluginKey> PluginLibrary::listPlugins() const {
     return result;
 }
 
-std::vector<const VampPluginDescriptor*> PluginLibrary::getDescriptors() const {
-    return descriptors_;
+std::unique_ptr<Plugin> PluginLibrary::loadPlugin(const PluginKey& key, float inputSampleRate) const {
+    const auto* descriptor = [&] {
+        for (const auto* d : descriptors_) {
+            if (d->identifier == key.getIdentifier()) return d;
+        }
+        throw std::invalid_argument(
+            helper::concat("Plugin identifier not found in descriptors: ", key.get())
+        );
+    }();
+
+    return std::make_unique<PluginHostAdapter>(
+        *descriptor,
+        inputSampleRate,
+        [dl = dl_] {}  // capture copy of library handle (reference counted) to be released after plugin
+    );
 }
 
 }  // namespace rtvamp::hostsdk

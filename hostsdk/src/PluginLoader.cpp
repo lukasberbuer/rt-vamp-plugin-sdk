@@ -5,8 +5,6 @@
 #include <set>
 #include <stdexcept>
 
-#include "rtvamp/hostsdk/PluginHostAdapter.hpp"
-
 #include "PluginLibrary.hpp"
 #include "helper.hpp"
 
@@ -116,21 +114,7 @@ std::unique_ptr<Plugin> PluginLoader::loadPlugin(
     };
 
     PluginLibrary library(getLibraryPath());
-
-    const auto* descriptor = [&] {
-        for (const auto* d : library.getDescriptors()) {
-            if (d->identifier == key.getIdentifier()) return d;
-        }
-        throw std::invalid_argument(
-            helper::concat("Plugin identifier not found in descriptors: ", key.get())
-        );
-    }();
-
-    return std::make_unique<PluginHostAdapter>(
-        *descriptor,
-        inputSampleRate,
-        [dl = std::move(library)] {}  // capture library to be deleted after plugin
-    );
+    return library.loadPlugin(key, inputSampleRate);
 }
 
 }  // namespace rtvamp::hostsdk
