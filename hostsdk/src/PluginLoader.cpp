@@ -48,30 +48,29 @@ PluginLoader::PluginLoader() {
 
 std::vector<std::filesystem::path> PluginLoader::getPluginPaths() {
     using std::filesystem::path;
-
-    const std::array staticPaths{
-#ifdef _WIN32
-        path("C:\\Program Files\\Vamp Plugins"),
-#elif __APPLE__
-        path(std::getenv("HOME")).append("Library/Audio/Plug-Ins/Vamp"),
-        path("/Library/Audio/Plug-Ins/Vamp"),
-#elif __linux__
-        path(std::getenv("HOME")).append("vamp"),
-        path(std::getenv("HOME")).append(".vamp"),
-        path("/usr/lib/vamp"),
-        path("/usr/lib/x86_64-linux-gnu/vamp"),
-        path("/usr/local/lib/vamp"),
-#endif
-    };
-
     std::vector<path> result;
-    result.reserve(staticPaths.size() + 1);
 
-    if (const char* vampPath = std::getenv("VAMP_PATH")) {
-        result.emplace_back(vampPath);
+    if (const char* customPath = std::getenv("VAMP_PATH")) {
+        result.emplace_back(customPath);
     }
 
-    result.insert(result.end(), staticPaths.begin(), staticPaths.end());
+#ifdef _WIN32
+    result.emplace_back("C:\\Program Files\\Vamp Plugins");
+#elif __APPLE__
+    if (const char* home = std::getenv("HOME")) {
+        result.emplace_back(path(home).append("Library/Audio/Plug-Ins/Vamp"));
+    }
+    result.emplace_back("/Library/Audio/Plug-Ins/Vamp");
+#elif __linux__
+    if (const char* home = std::getenv("HOME")) {
+        result.emplace_back(path(home).append("vamp"));
+        result.emplace_back(path(home).append(".vamp"));
+    }
+    result.emplace_back("/usr/lib/vamp");
+    result.emplace_back("/usr/lib/x86_64-linux-gnu/vamp");
+    result.emplace_back("/usr/local/lib/vamp");
+#endif
+
     return result;
 }
 
