@@ -9,6 +9,8 @@ OUTPUT_LANGUAGE        = English
 JAVADOC_AUTOBRIEF      = YES
 AUTOLINK_SUPPORT       = YES
 MARKDOWN_SUPPORT       = YES
+STRIP_FROM_INC_PATH    = "${PROJECT_SOURCE_DIR}/hostsdk/include" \
+                         "${PROJECT_SOURCE_DIR}/pluginsdk/include"
 USE_MDFILE_AS_MAINPAGE = "${PROJECT_SOURCE_DIR}/README.md"
 
 # Build-related options
