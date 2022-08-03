@@ -5,7 +5,8 @@
 #include <set>
 #include <stdexcept>
 
-#include "PluginLibrary.hpp"
+#include "rtvamp/hostsdk/PluginLibrary.hpp"
+
 #include "helper.hpp"
 
 namespace rtvamp::hostsdk {

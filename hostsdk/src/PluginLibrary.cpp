@@ -1,4 +1,4 @@
-#include "PluginLibrary.hpp"
+#include "rtvamp/hostsdk/PluginLibrary.hpp"
 
 #include <stdexcept>
 
