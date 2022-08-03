@@ -15,7 +15,8 @@ jobs:
           - { name: Clang 12,     CC: clang-12, CXX: clang++-12, flags: "" }
           - { name: ASan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_ADDRESS=ON" }
           - { name: LSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_LEAK=ON" }
-          - { name: MSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_MEMORY=ON" }
+          # Memory sanitizer requires all the code (including libc++) to be MSan-instrumented otherwise it reports false positives
+          # - { name: MSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_MEMORY=ON" }
           - { name: TSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON" }
           - { name: UBSan,        CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" }
           - { name: Coverage,     CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
