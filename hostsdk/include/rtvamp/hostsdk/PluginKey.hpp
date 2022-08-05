@@ -5,6 +5,15 @@
 
 namespace rtvamp::hostsdk {
 
+/**
+ * Identifier for a plugin uniquely within the scope of the current system.
+ * 
+ * Is is composed of the library name and the plugin identifier: `<library name>:<identifier>`.
+ * 
+ * Example `example-plugin:rms`:
+ * - library path: `C:\Program Files\Vamp Plugins\example-plugin.dll`
+ * - plugin identifier: `rms`
+ */
 class PluginKey {
 public:
     PluginKey(const char* key);

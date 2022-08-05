@@ -163,14 +163,12 @@ RTVAMP_ENTRY_POINT(ZeroCrossing)
 ### Host
 
 ```cpp
-rtvamp::hostsdk::PluginLoader loader;
-
 // list all plugins keys (library:plugin)
-for (auto&& keys : loader.listPlugins()) {
-    std::cout << keys.get() << std::endl;
+for (auto&& key : rtvamp::hostsdk::listPlugins()) {
+    std::cout << key.get() << std::endl;
 }
 
-auto plugin = loader.loadPlugin("minimal-plugin:zerocrossing", 48000 /* samplerate */);
+auto plugin = rtvamp::hostsdk::loadPlugin("minimal-plugin:zerocrossing", 48000 /* samplerate */);
 plugin->initialise(4096 /* step size */, 4096 /* block size */);
 
 std::vector<float> buffer(4096);

@@ -5,10 +5,10 @@ add_executable(
     tests_hostsdk
     Common.cpp
     DynamicLibrary.cpp
+    hostsdk.cpp
     PluginHostAdapter.cpp
     PluginKey.cpp
     PluginLibrary.cpp
-    PluginLoader.cpp
 )
 
 target_link_libraries(

@@ -3,11 +3,11 @@ set(alias_name "${PROJECT_NAME}::hostsdk")
 
 add_library(
     ${library_name}
+    $<IF:$<PLATFORM_ID:Windows>, src/DynamicLibrary_Windows.cpp, src/DynamicLibrary_Unix.cpp>
+    src/hostsdk.cpp
     src/PluginHostAdapter.cpp
     src/PluginKey.cpp
     src/PluginLibrary.cpp
-    $<IF:$<PLATFORM_ID:Windows>, src/DynamicLibrary_Windows.cpp, src/DynamicLibrary_Unix.cpp>
-    src/PluginLoader.cpp
 )
 add_library(${alias_name} ALIAS ${library_name})
 

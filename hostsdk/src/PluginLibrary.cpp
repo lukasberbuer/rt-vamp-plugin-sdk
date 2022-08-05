@@ -65,7 +65,7 @@ std::unique_ptr<Plugin> PluginLibrary::loadPlugin(const PluginKey& key, float in
             if (d->identifier == key.getIdentifier()) return d;
         }
         throw std::invalid_argument(
-            helper::concat("Plugin identifier not found in descriptors: ", key.get())
+            helper::concat("Plugin not found: ", key.get())
         );
     }();
 

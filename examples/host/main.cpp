@@ -13,7 +13,6 @@
 #include "helper.hpp"
 
 using rtvamp::hostsdk::Plugin;
-using rtvamp::hostsdk::PluginLoader;
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::optional<T>& opt) {
@@ -26,16 +25,14 @@ std::ostream& operator<<(std::ostream& os, const Plugin::InputDomain& d) {
 }
 
 void listPlugins() {
-    PluginLoader loader;
-
-    for (auto&& lib : loader.listLibraries()) {
-        for (auto&& key : loader.listPluginsInLibrary(lib)) {
+    for (auto&& lib : rtvamp::hostsdk::listLibraries()) {
+        for (auto&& key : rtvamp::hostsdk::listPlugins(lib)) {
             std::cout << std::boolalpha;
             std::cout << Escape::Blue << "Plugin " << Escape::Bold << key.get() << Escape::Reset 
                 << " (" << lib.string() << ")\n";
 
             try {
-                const auto plugin = loader.loadPlugin(key, 48000);
+                const auto plugin = rtvamp::hostsdk::loadPlugin(key, 48000);
                 std::cout << "- Identifier:           " << plugin->getIdentifier() << '\n';
                 std::cout << "- Name:                 " << plugin->getName() << '\n';
                 std::cout << "- Description:          " << plugin->getDescription() << '\n';
@@ -86,23 +83,21 @@ void listPlugins() {
 }
 
 void listPaths() {
-    for (auto&& path : PluginLoader::getPluginPaths()) {
+    for (auto&& path : rtvamp::hostsdk::getVampPaths()) {
         std::cout << path.string() << std::endl;
     }
 }
 
 void listPluginIds() {
-    PluginLoader loader;
-    for (auto&& key : loader.listPlugins()) {
+    for (auto&& key : rtvamp::hostsdk::listPlugins()) {
         std::cout << key.get() << std::endl;
     }
 }
 
 void listPluginOutputs() {
-    PluginLoader loader;
-    for (auto&& key : loader.listPlugins()) {
+    for (auto&& key : rtvamp::hostsdk::listPlugins()) {
         try {
-            auto plugin = loader.loadPlugin(key, 48000);
+            auto plugin = rtvamp::hostsdk::loadPlugin(key, 48000);
             for (auto&& output : plugin->getOutputDescriptors()) {
                 std::cout << key.get() << ':' << output.identifier << std::endl;
             }
@@ -128,8 +123,7 @@ void process(
     const auto channels   = file.channels();
 
     // load plugin
-    PluginLoader loader;
-    auto plugin = loader.loadPlugin(pluginKey, sampleRate);
+    auto plugin = rtvamp::hostsdk::loadPlugin(pluginKey, sampleRate);
 
     const auto getBlockSize = [&]() -> uint32_t {
         if (optionalBlockSize) {

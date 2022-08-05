@@ -12,18 +12,16 @@ void randomize(std::vector<float>& vec) {
 }
 
 int main() {
-    rtvamp::hostsdk::PluginLoader loader;
-
     // list all plugins keys (library:plugin)
-    for (auto&& keys : loader.listPlugins()) {
-        std::cout << keys.get() << std::endl;
+    for (auto&& key : rtvamp::hostsdk::listPlugins()) {
+        std::cout << key.get() << std::endl;
     }
 
     const float  sampleRate = 48000.0f;
     const size_t blockSize  = 4096;
     const size_t stepSize   = 4096;
 
-    auto plugin = loader.loadPlugin("minimal-plugin:zerocrossing", sampleRate);
+    auto plugin = rtvamp::hostsdk::loadPlugin("minimal-plugin:zerocrossing", sampleRate);
 
     plugin->initialise(stepSize, blockSize);
 
