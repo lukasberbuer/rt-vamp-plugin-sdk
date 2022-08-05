@@ -63,13 +63,14 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>rtvamp</b></li><li class="navelem"><a class="el" href="namespacertvamp_1_1pluginsdk.html">pluginsdk</a></li><li class="navelem"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html">PluginBase</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacertvamp.html">rtvamp</a></li><li class="navelem"><a class="el" href="namespacertvamp_1_1pluginsdk.html">pluginsdk</a></li><li class="navelem"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html">PluginBase</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-types">Public Types</a> &#124;
+<a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="classrtvamp_1_1pluginsdk_1_1PluginBase-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">rtvamp::pluginsdk::PluginBase Class Reference</div>  </div>
@@ -79,7 +80,7 @@ $(function() {
 <p>Non-templated plugin base class with type definitions.  
  <a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="pluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp_source.html">Plugin.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="pluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp_source.html">rtvamp/pluginsdk/Plugin.hpp</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for rtvamp::pluginsdk::PluginBase:</div>
 <div class="dyncontent">
@@ -96,31 +97,152 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a4a5b84e95073b1322521a6d95e8f402b"><td class="memItemLeft" align="right" valign="top"><a id="a4a5b84e95073b1322521a6d95e8f402b"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402b">InputDomain</a> { <b>Time</b>, 
-<b>Frequency</b>
+<tr class="memitem:a4a5b84e95073b1322521a6d95e8f402b"><td class="memItemLeft" align="right" valign="top">enum &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402b">InputDomain</a> { <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402baa76d4ef5f3f6a672bbfab2865563e530">InputDomain::Time</a>, 
+<a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402ba7cf395303ce3665a9834721d4b748e4b">InputDomain::Frequency</a>
  }</td></tr>
-<tr class="memdesc:a4a5b84e95073b1322521a6d95e8f402b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Input domain of the plugin. <br /></td></tr>
+<tr class="memdesc:a4a5b84e95073b1322521a6d95e8f402b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Input domain of the plugin.  <a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402b">More...</a><br /></td></tr>
 <tr class="separator:a4a5b84e95073b1322521a6d95e8f402b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30c79354d421924ce80413e69c5de446"><td class="memItemLeft" align="right" valign="top"><a id="a30c79354d421924ce80413e69c5de446"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446">TimeDomainBuffer</a> = std::span&lt; const float &gt;</td></tr>
-<tr class="memdesc:a30c79354d421924ce80413e69c5de446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time domain buffer. <br /></td></tr>
+<tr class="memitem:a30c79354d421924ce80413e69c5de446"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446">TimeDomainBuffer</a> = std::span&lt; const float &gt;</td></tr>
+<tr class="memdesc:a30c79354d421924ce80413e69c5de446"><td class="mdescLeft">&#160;</td><td class="mdescRight">Time domain buffer.  <a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446">More...</a><br /></td></tr>
 <tr class="separator:a30c79354d421924ce80413e69c5de446"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1fe1c5b99f71f7042fb15a680bdaaa6a"><td class="memItemLeft" align="right" valign="top"><a id="a1fe1c5b99f71f7042fb15a680bdaaa6a"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a">FrequencyDomainBuffer</a> = std::span&lt; const std::complex&lt; float &gt; &gt;</td></tr>
-<tr class="memdesc:a1fe1c5b99f71f7042fb15a680bdaaa6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frequency domain buffer (FFT) <br /></td></tr>
+<tr class="memitem:a1fe1c5b99f71f7042fb15a680bdaaa6a"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a">FrequencyDomainBuffer</a> = std::span&lt; const std::complex&lt; float &gt; &gt;</td></tr>
+<tr class="memdesc:a1fe1c5b99f71f7042fb15a680bdaaa6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Frequency domain buffer (FFT)  <a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a">More...</a><br /></td></tr>
 <tr class="separator:a1fe1c5b99f71f7042fb15a680bdaaa6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a685c0af79f3e0b958fef63917800767c"><td class="memItemLeft" align="right" valign="top"><a id="a685c0af79f3e0b958fef63917800767c"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a685c0af79f3e0b958fef63917800767c">InputBuffer</a> = std::variant&lt; <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446">TimeDomainBuffer</a>, <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a">FrequencyDomainBuffer</a> &gt;</td></tr>
-<tr class="memdesc:a685c0af79f3e0b958fef63917800767c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Input domain variant. <br /></td></tr>
+<tr class="memitem:a685c0af79f3e0b958fef63917800767c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a685c0af79f3e0b958fef63917800767c">InputBuffer</a> = std::variant&lt; <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446">TimeDomainBuffer</a>, <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a">FrequencyDomainBuffer</a> &gt;</td></tr>
+<tr class="memdesc:a685c0af79f3e0b958fef63917800767c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Input domain variant.  <a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a685c0af79f3e0b958fef63917800767c">More...</a><br /></td></tr>
 <tr class="separator:a685c0af79f3e0b958fef63917800767c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a774c2420ced00981afe23c9af08c366b"><td class="memItemLeft" align="right" valign="top"><a id="a774c2420ced00981afe23c9af08c366b"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a774c2420ced00981afe23c9af08c366b">Feature</a> = std::vector&lt; float &gt;</td></tr>
-<tr class="memdesc:a774c2420ced00981afe23c9af08c366b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Feature with one or more values (defined by OutputDescriptor::binCount) <br /></td></tr>
+<tr class="memitem:a774c2420ced00981afe23c9af08c366b"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a774c2420ced00981afe23c9af08c366b">Feature</a> = std::vector&lt; float &gt;</td></tr>
+<tr class="memdesc:a774c2420ced00981afe23c9af08c366b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Feature with one or more values (defined by <a class="el" href="structrtvamp_1_1pluginsdk_1_1PluginBase_1_1OutputDescriptor.html#ae26f67d6c2a4c00bfbe601593ff813a7">OutputDescriptor::binCount</a>)  <a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a774c2420ced00981afe23c9af08c366b">More...</a><br /></td></tr>
 <tr class="separator:a774c2420ced00981afe23c9af08c366b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:a2a8fff9afed79cfeef0c4167f6f2d49c"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a2a8fff9afed79cfeef0c4167f6f2d49c">~PluginBase</a> ()=default</td></tr>
+<tr class="separator:a2a8fff9afed79cfeef0c4167f6f2d49c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Non-templated plugin base class with type definitions. </p>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a774c2420ced00981afe23c9af08c366b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a774c2420ced00981afe23c9af08c366b">&#9670;&nbsp;</a></span>Feature</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a774c2420ced00981afe23c9af08c366b">rtvamp::pluginsdk::PluginBase::Feature</a> =  std::vector&lt;float&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Feature with one or more values (defined by <a class="el" href="structrtvamp_1_1pluginsdk_1_1PluginBase_1_1OutputDescriptor.html#ae26f67d6c2a4c00bfbe601593ff813a7">OutputDescriptor::binCount</a>) </p>
+
+</div>
+</div>
+<a id="a1fe1c5b99f71f7042fb15a680bdaaa6a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1fe1c5b99f71f7042fb15a680bdaaa6a">&#9670;&nbsp;</a></span>FrequencyDomainBuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a">rtvamp::pluginsdk::PluginBase::FrequencyDomainBuffer</a> =  std::span&lt;const std::complex&lt;float&gt; &gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Frequency domain buffer (FFT) </p>
+
+</div>
+</div>
+<a id="a685c0af79f3e0b958fef63917800767c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a685c0af79f3e0b958fef63917800767c">&#9670;&nbsp;</a></span>InputBuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a685c0af79f3e0b958fef63917800767c">rtvamp::pluginsdk::PluginBase::InputBuffer</a> =  std::variant&lt;<a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446">TimeDomainBuffer</a>, <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a">FrequencyDomainBuffer</a>&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Input domain variant. </p>
+
+</div>
+</div>
+<a id="a30c79354d421924ce80413e69c5de446"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30c79354d421924ce80413e69c5de446">&#9670;&nbsp;</a></span>TimeDomainBuffer</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446">rtvamp::pluginsdk::PluginBase::TimeDomainBuffer</a> =  std::span&lt;const float&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Time domain buffer. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Enumeration Documentation</h2>
+<a id="a4a5b84e95073b1322521a6d95e8f402b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4a5b84e95073b1322521a6d95e8f402b">&#9670;&nbsp;</a></span>InputDomain</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">enum <a class="el" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402b">rtvamp::pluginsdk::PluginBase::InputDomain</a></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">strong</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Input domain of the plugin. </p>
+<table class="fieldtable">
+<tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a4a5b84e95073b1322521a6d95e8f402baa76d4ef5f3f6a672bbfab2865563e530"></a>Time&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a4a5b84e95073b1322521a6d95e8f402ba7cf395303ce3665a9834721d4b748e4b"></a>Frequency&#160;</td><td class="fielddoc"></td></tr>
+</table>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a2a8fff9afed79cfeef0c4167f6f2d49c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2a8fff9afed79cfeef0c4167f6f2d49c">&#9670;&nbsp;</a></span>~PluginBase()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual rtvamp::pluginsdk::PluginBase::~PluginBase </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">virtual</span><span class="mlabel">default</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/runner/work/rt-vamp-plugin-sdk/rt-vamp-plugin-sdk/pluginsdk/include/rtvamp/pluginsdk/<a class="el" href="pluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp_source.html">Plugin.hpp</a></li>
 </ul>
 </div><!-- contents -->

@@ -151,7 +151,7 @@ Minimal example</h1>
 Plugin</h2>
 <div class="fragment"><div class="line"><span class="keyword">class </span>ZeroCrossing : <span class="keyword">public</span> <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html">rtvamp::pluginsdk::Plugin</a>&lt;1 <span class="comment">/* one output */</span>&gt; {</div>
 <div class="line"><span class="keyword">public</span>:</div>
-<div class="line">    <span class="keyword">using</span> Plugin::Plugin;  <span class="comment">// inherit constructor</span></div>
+<div class="line">    <span class="keyword">using</span> <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html#acc3c2089aab8294b3e1238ac891a074f">Plugin::Plugin</a>;  <span class="comment">// inherit constructor</span></div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">static</span> constexpr Meta meta{</div>
 <div class="line">        .identifier    = <span class="stringliteral">&quot;zerocrossing&quot;</span>,</div>
@@ -160,10 +160,10 @@ Plugin</h2>
 <div class="line">        .maker         = <span class="stringliteral">&quot;LB&quot;</span>,</div>
 <div class="line">        .copyright     = <span class="stringliteral">&quot;MIT&quot;</span>,</div>
 <div class="line">        .pluginVersion = 1,</div>
-<div class="line">        .inputDomain   = InputDomain::Time,</div>
+<div class="line">        .inputDomain   = <a class="code" href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402baa76d4ef5f3f6a672bbfab2865563e530">InputDomain::Time</a>,</div>
 <div class="line">    };</div>
 <div class="line"> </div>
-<div class="line">    OutputList getOutputDescriptors()<span class="keyword"> const override </span>{</div>
+<div class="line">    OutputList <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html#aff67a3f8aefa406842d25bffa5423f33">getOutputDescriptors</a>()<span class="keyword"> const override </span>{</div>
 <div class="line">        <span class="keywordflow">return</span> {</div>
 <div class="line">            OutputDescriptor{</div>
 <div class="line">                .identifier  = <span class="stringliteral">&quot;counts&quot;</span>,</div>
@@ -175,16 +175,16 @@ Plugin</h2>
 <div class="line">        };</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordtype">bool</span> initialise(uint32_t stepSize, uint32_t blockSize)<span class="keyword"> override </span>{</div>
-<div class="line">        initialiseFeatureSet();  <span class="comment">// automatically resizes feature set to number of outputs and bins</span></div>
+<div class="line">    <span class="keywordtype">bool</span> <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html#ac68171e439f26700f83698624b3f878d">initialise</a>(uint32_t stepSize, uint32_t blockSize)<span class="keyword"> override </span>{</div>
+<div class="line">        <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html#a50bafe8e3e53817555574d6bbcc22701">initialiseFeatureSet</a>();  <span class="comment">// automatically resizes feature set to number of outputs and bins</span></div>
 <div class="line">        <span class="keywordflow">return</span> <span class="keyword">true</span>;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="keywordtype">void</span> reset()<span class="keyword"> override </span>{</div>
+<div class="line">    <span class="keywordtype">void</span> <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html#a323cabf03e4613e2ac5f39241eb492df">reset</a>()<span class="keyword"> override </span>{</div>
 <div class="line">        previousSample_ = 0.0f;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    <span class="keyword">const</span> FeatureSet&amp; process(InputBuffer buffer, uint64_t nsec)<span class="keyword"> override </span>{</div>
+<div class="line">    <span class="keyword">const</span> FeatureSet&amp; <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html#a7579b14cd22bf479e01689e9c82c5141">process</a>(InputBuffer buffer, uint64_t nsec)<span class="keyword"> override </span>{</div>
 <div class="line">        <span class="keyword">const</span> <span class="keyword">auto</span> signal = std::get&lt;TimeDomainBuffer&gt;(buffer);</div>
 <div class="line"> </div>
 <div class="line">        <span class="keywordtype">size_t</span> crossings   = 0;</div>
@@ -198,7 +198,7 @@ Plugin</h2>
 <div class="line"> </div>
 <div class="line">        previousSample_ = signal.back();</div>
 <div class="line"> </div>
-<div class="line">        <span class="keyword">auto</span>&amp; result = getFeatureSet();</div>
+<div class="line">        <span class="keyword">auto</span>&amp; result = <a class="code" href="classrtvamp_1_1pluginsdk_1_1Plugin.html#aab3dee6eb0f20c0bb69a54345b49ae7b">getFeatureSet</a>();</div>
 <div class="line">        result[0][0] = crossings;  <span class="comment">// first and only output, first and only bin</span></div>
 <div class="line">        <span class="keywordflow">return</span> result;             <span class="comment">// return span/view of the results</span></div>
 <div class="line">    }</div>
@@ -207,17 +207,15 @@ Plugin</h2>
 <div class="line">    <span class="keywordtype">float</span> previousSample_ = 0.0f;</div>
 <div class="line">};</div>
 <div class="line"> </div>
-<div class="line">RTVAMP_ENTRY_POINT(ZeroCrossing)</div>
+<div class="line"><a class="code" href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">RTVAMP_ENTRY_POINT</a>(ZeroCrossing)</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md8"></a>
 Host</h2>
-<div class="fragment"><div class="line"><a class="code" href="classrtvamp_1_1hostsdk_1_1PluginLoader.html">rtvamp::hostsdk::PluginLoader</a> loader;</div>
-<div class="line"> </div>
-<div class="line"><span class="comment">// list all plugins keys (library:plugin)</span></div>
-<div class="line"><span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; keys : loader.listPlugins()) {</div>
-<div class="line">    std::cout &lt;&lt; keys.get() &lt;&lt; std::endl;</div>
+<div class="fragment"><div class="line"><span class="comment">// list all plugins keys (library:plugin)</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; key : <a class="code" href="namespacertvamp_1_1hostsdk.html#a8d1566692095aca0023d780268cd71eb">rtvamp::hostsdk::listPlugins</a>()) {</div>
+<div class="line">    std::cout &lt;&lt; key.get() &lt;&lt; std::endl;</div>
 <div class="line">}</div>
 <div class="line"> </div>
-<div class="line"><span class="keyword">auto</span> plugin = loader.loadPlugin(<span class="stringliteral">&quot;minimal-plugin:zerocrossing&quot;</span>, 48000 <span class="comment">/* samplerate */</span>);</div>
+<div class="line"><span class="keyword">auto</span> plugin = <a class="code" href="namespacertvamp_1_1hostsdk.html#a434978857091cf3b9c2d27a42e0190ef">rtvamp::hostsdk::loadPlugin</a>(<span class="stringliteral">&quot;minimal-plugin:zerocrossing&quot;</span>, 48000 <span class="comment">/* samplerate */</span>);</div>
 <div class="line">plugin-&gt;initialise(4096 <span class="comment">/* step size */</span>, 4096 <span class="comment">/* block size */</span>);</div>
 <div class="line"> </div>
 <div class="line">std::vector&lt;float&gt; buffer(4096);</div>
@@ -227,8 +225,18 @@ Host</h2>
 <div class="line">std::cout &lt;&lt; <span class="stringliteral">&quot;Zero crossings: &quot;</span> &lt;&lt; features[0][0] &lt;&lt; std::endl;</div>
 </div><!-- fragment --> </div></div><!-- PageDoc -->
 </div><!-- contents -->
-<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html">rtvamp::pluginsdk::Plugin</a></div><div class="ttdoc">Base class to implement feature extraction plugins.</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:75</div></div>
-<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginLoader_html"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginLoader.html">rtvamp::hostsdk::PluginLoader</a></div><div class="ttdef"><b>Definition:</b> PluginLoader.hpp:14</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_a434978857091cf3b9c2d27a42e0190ef"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#a434978857091cf3b9c2d27a42e0190ef">rtvamp::hostsdk::loadPlugin</a></div><div class="ttdeci">std::unique_ptr&lt; Plugin &gt; loadPlugin(const PluginKey &amp;key, float inputSampleRate)</div><div class="ttdoc">Load plugin.</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_ac68171e439f26700f83698624b3f878d"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#ac68171e439f26700f83698624b3f878d">rtvamp::pluginsdk::Plugin::initialise</a></div><div class="ttdeci">virtual bool initialise(uint32_t stepSize, uint32_t blockSize)=0</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1PluginBase_html_a4a5b84e95073b1322521a6d95e8f402baa76d4ef5f3f6a672bbfab2865563e530"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402baa76d4ef5f3f6a672bbfab2865563e530">rtvamp::pluginsdk::PluginBase::InputDomain::Time</a></div><div class="ttdeci">@ Time</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_a323cabf03e4613e2ac5f39241eb492df"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#a323cabf03e4613e2ac5f39241eb492df">rtvamp::pluginsdk::Plugin::reset</a></div><div class="ttdeci">virtual void reset()=0</div></div>
+<div class="ttc" id="aEntryPoint_8hpp_html_ab9e8a9880a2de6797b776d72d446ae98"><div class="ttname"><a href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">RTVAMP_ENTRY_POINT</a></div><div class="ttdeci">#define RTVAMP_ENTRY_POINT(...)</div><div class="ttdoc">Generate entry point for given PluginDefintion types and export symbol with pragma.</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:62</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html">rtvamp::pluginsdk::Plugin</a></div><div class="ttdoc">Base class to implement feature extraction plugins.</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:73</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_a50bafe8e3e53817555574d6bbcc22701"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#a50bafe8e3e53817555574d6bbcc22701">rtvamp::pluginsdk::Plugin::initialiseFeatureSet</a></div><div class="ttdeci">void initialiseFeatureSet()</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:125</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_aff67a3f8aefa406842d25bffa5423f33"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#aff67a3f8aefa406842d25bffa5423f33">rtvamp::pluginsdk::Plugin::getOutputDescriptors</a></div><div class="ttdeci">virtual OutputList getOutputDescriptors() const =0</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_aab3dee6eb0f20c0bb69a54345b49ae7b"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#aab3dee6eb0f20c0bb69a54345b49ae7b">rtvamp::pluginsdk::Plugin::getFeatureSet</a></div><div class="ttdeci">FeatureSet &amp; getFeatureSet() noexcept</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:114</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_a7579b14cd22bf479e01689e9c82c5141"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#a7579b14cd22bf479e01689e9c82c5141">rtvamp::pluginsdk::Plugin::process</a></div><div class="ttdeci">virtual const FeatureSet &amp; process(InputBuffer buffer, uint64_t nsec)=0</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_a8d1566692095aca0023d780268cd71eb"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#a8d1566692095aca0023d780268cd71eb">rtvamp::hostsdk::listPlugins</a></div><div class="ttdeci">std::vector&lt; PluginKey &gt; listPlugins()</div><div class="ttdoc">List plugins in default Vamp search paths.</div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_acc3c2089aab8294b3e1238ac891a074f"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#acc3c2089aab8294b3e1238ac891a074f">rtvamp::pluginsdk::Plugin::Plugin</a></div><div class="ttdeci">constexpr Plugin(float inputSampleRate)</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:75</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

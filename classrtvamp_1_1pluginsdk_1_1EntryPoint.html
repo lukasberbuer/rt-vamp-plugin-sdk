@@ -63,7 +63,7 @@ $(function() {
 
 <div id="nav-path" class="navpath">
   <ul>
-<li class="navelem"><b>rtvamp</b></li><li class="navelem"><a class="el" href="namespacertvamp_1_1pluginsdk.html">pluginsdk</a></li><li class="navelem"><a class="el" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html">EntryPoint</a></li>  </ul>
+<li class="navelem"><a class="el" href="namespacertvamp.html">rtvamp</a></li><li class="navelem"><a class="el" href="namespacertvamp_1_1pluginsdk.html">pluginsdk</a></li><li class="navelem"><a class="el" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html">EntryPoint</a></li>  </ul>
 </div>
 </div><!-- top -->
 <div class="header">
@@ -78,12 +78,11 @@ $(function() {
 <p>Helper class to create the entry point for plugin libraries.  
  <a href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#details">More...</a></p>
 
-<p><code>#include &lt;<a class="el" href="EntryPoint_8hpp_source.html">EntryPoint.hpp</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="EntryPoint_8hpp_source.html">rtvamp/pluginsdk/EntryPoint.hpp</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a3df94be74d902aa8db39029806983595"><td class="memItemLeft" align="right" valign="top"><a id="a3df94be74d902aa8db39029806983595"></a>
-static constexpr const VampPluginDescriptor *&#160;</td><td class="memItemRight" valign="bottom"><b>getDescriptor</b> (unsigned int version, unsigned int index)</td></tr>
+<tr class="memitem:a3df94be74d902aa8db39029806983595"><td class="memItemLeft" align="right" valign="top">static constexpr const <a class="el" href="PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8">VampPluginDescriptor</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#a3df94be74d902aa8db39029806983595">getDescriptor</a> (unsigned int version, unsigned int index)</td></tr>
 <tr class="separator:a3df94be74d902aa8db39029806983595"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
@@ -92,22 +91,63 @@ class rtvamp::pluginsdk::EntryPoint&lt; Plugins &gt;</h3>
 
 <p>Helper class to create the entry point for plugin libraries. </p>
 <p>The plugins are defined as template parameters</p>
-<p>A Vamp plugin must export a function <code>vampGetPluginDescriptor</code>. The EntryPoint::getDescriptor() method has the same signature as the required function. You have following options:</p><ol type="1">
+<p>A Vamp plugin must export a function <code>vampGetPluginDescriptor</code>. The <a class="el" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#a3df94be74d902aa8db39029806983595">EntryPoint::getDescriptor()</a> method has the same signature as the required function. You have following options:</p><ol type="1">
 <li>Define, implement and export the <code>vampGetPluginDescriptor</code> manually</li>
-<li>Define, link and export the <code>vampGetPluginDescriptor</code> to the EntryPoint::getDescriptor() method</li>
-<li><p class="startli">Use the <code>RTVAMP_ENTRY_POINT(...)</code> macro to automatically define and export the entry point.</p>
-<p class="startli">Example: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;rtvamp/pluginsdk.hpp&quot;</span></div>
+<li>Define, link and export the <code>vampGetPluginDescriptor</code> to the <a class="el" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#a3df94be74d902aa8db39029806983595">EntryPoint::getDescriptor()</a> method</li>
+<li><p class="startli">Use the <code><a class="el" href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98" title="Generate entry point for given PluginDefintion types and export symbol with pragma.">RTVAMP_ENTRY_POINT(...)</a></code> macro to automatically define and export the entry point.</p>
+<p class="startli">Example: </p><div class="fragment"><div class="line"><span class="preprocessor">#include &quot;<a class="code" href="pluginsdk_8hpp.html">rtvamp/pluginsdk.hpp</a>&quot;</span></div>
 <div class="line"> </div>
 <div class="line"><span class="preprocessor">#include &quot;RMS.hpp&quot;</span></div>
 <div class="line"><span class="preprocessor">#include &quot;SpectralRolloff.hpp&quot;</span></div>
 <div class="line"> </div>
-<div class="line">RTVAMP_ENTRY_POINT(RMS, SpectralRolloff)</div>
+<div class="line"><a class="code" href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">RTVAMP_ENTRY_POINT</a>(RMS, SpectralRolloff)</div>
 </div><!-- fragment --> </li>
 </ol>
-</div><hr/>The documentation for this class was generated from the following file:<ul>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3df94be74d902aa8db39029806983595"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3df94be74d902aa8db39029806983595">&#9670;&nbsp;</a></span>getDescriptor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;IsPlugin... Plugins&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static constexpr const <a class="el" href="PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8">VampPluginDescriptor</a>* <a class="el" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html">rtvamp::pluginsdk::EntryPoint</a>&lt; Plugins &gt;::getDescriptor </td>
+          <td>(</td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>version</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unsigned int&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<hr/>The documentation for this class was generated from the following file:<ul>
 <li>/home/runner/work/rt-vamp-plugin-sdk/rt-vamp-plugin-sdk/pluginsdk/include/rtvamp/pluginsdk/<a class="el" href="EntryPoint_8hpp_source.html">EntryPoint.hpp</a></li>
 </ul>
 </div><!-- contents -->
+<div class="ttc" id="aEntryPoint_8hpp_html_ab9e8a9880a2de6797b776d72d446ae98"><div class="ttname"><a href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">RTVAMP_ENTRY_POINT</a></div><div class="ttdeci">#define RTVAMP_ENTRY_POINT(...)</div><div class="ttdoc">Generate entry point for given PluginDefintion types and export symbol with pragma.</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:62</div></div>
+<div class="ttc" id="apluginsdk_8hpp_html"><div class="ttname"><a href="pluginsdk_8hpp.html">pluginsdk.hpp</a></div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

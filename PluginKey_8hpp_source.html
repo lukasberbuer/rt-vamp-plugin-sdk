@@ -71,34 +71,40 @@ $(function() {
 <div class="title">PluginKey.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<a href="PluginKey_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;string&gt;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;string_view&gt;</span></div>
 <div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160; </div>
-<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span>rtvamp::hostsdk {</div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacertvamp_1_1hostsdk.html">rtvamp::hostsdk</a> {</div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
-<div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">    8</a></span>&#160;<span class="keyword">class </span><a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a> {</div>
-<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* key);</div>
-<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>(std::string key);</div>
-<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>(std::string_view key);</div>
-<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>(std::string_view library, std::string_view identifier);</div>
-<div class="line"><a name="l00014"></a><span class="lineno">   14</span>&#160; </div>
-<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160;    std::string_view get()           <span class="keyword">const</span> noexcept { <span class="keywordflow">return</span> key_; }</div>
-<div class="line"><a name="l00016"></a><span class="lineno">   16</span>&#160;    std::string_view getLibrary()    <span class="keyword">const</span> noexcept;</div>
-<div class="line"><a name="l00017"></a><span class="lineno">   17</span>&#160;    std::string_view getIdentifier() <span class="keyword">const</span> noexcept;</div>
-<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160; </div>
-<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <span class="keyword">auto</span> operator&lt;=&gt;(<span class="keyword">const</span> <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>&amp;) <span class="keyword">const</span> = <span class="keywordflow">default</span>;  </div>
-<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160; </div>
-<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;<span class="keyword">private</span>:</div>
-<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    std::string key_;</div>
-<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160;    <span class="keywordtype">size_t</span>      pos_;</div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;};</div>
-<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160; </div>
-<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;}  <span class="comment">// namespace rtvamp::hostsdk</span></div>
+<div class="line"><a name="l00017"></a><span class="lineno"><a class="line" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">   17</a></span>&#160;<span class="keyword">class </span><a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a> {</div>
+<div class="line"><a name="l00018"></a><span class="lineno">   18</span>&#160;<span class="keyword">public</span>:</div>
+<div class="line"><a name="l00019"></a><span class="lineno">   19</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a12cbd8e44d93564cf18fd5308a35245a">PluginKey</a>(<span class="keyword">const</span> <span class="keywordtype">char</span>* key);</div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a12cbd8e44d93564cf18fd5308a35245a">PluginKey</a>(std::string key);</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a12cbd8e44d93564cf18fd5308a35245a">PluginKey</a>(std::string_view key);</div>
+<div class="line"><a name="l00022"></a><span class="lineno">   22</span>&#160;    <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a12cbd8e44d93564cf18fd5308a35245a">PluginKey</a>(std::string_view library, std::string_view identifier);</div>
+<div class="line"><a name="l00023"></a><span class="lineno">   23</span>&#160; </div>
+<div class="line"><a name="l00024"></a><span class="lineno"><a class="line" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a4a5f5864950908ad5107386fe3a1fb48">   24</a></span>&#160;    std::string_view <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a4a5f5864950908ad5107386fe3a1fb48">get</a>()           const noexcept { <span class="keywordflow">return</span> key_; }</div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;    std::string_view <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#aa2c42c0756a90deb27684d54a04409e2">getLibrary</a>()    const noexcept;</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;    std::string_view <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#abe0fd65fcf88d8fed66cd2561c107fe1">getIdentifier</a>() const noexcept;</div>
+<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160; </div>
+<div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;    auto <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a6da0e6f40ee0aa927e5fa2c9c08148e5">operator</a>&lt;=&gt;(const <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>&amp;) const = default;  </div>
+<div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;private:</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160;    std::<span class="keywordtype">string</span> key_;</div>
+<div class="line"><a name="l00032"></a><span class="lineno">   32</span>&#160;    <span class="keywordtype">size_t</span>      pos_;</div>
+<div class="line"><a name="l00033"></a><span class="lineno">   33</span>&#160;};</div>
+<div class="line"><a name="l00034"></a><span class="lineno">   34</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;}  <span class="comment">// namespace rtvamp::hostsdk</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html">rtvamp::hostsdk::PluginKey</a></div><div class="ttdef"><b>Definition:</b> PluginKey.hpp:8</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html_a6da0e6f40ee0aa927e5fa2c9c08148e5"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a6da0e6f40ee0aa927e5fa2c9c08148e5">rtvamp::hostsdk::PluginKey::operator</a></div><div class="ttdeci">auto operator(const PluginKey &amp;) const =default</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html_abe0fd65fcf88d8fed66cd2561c107fe1"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html#abe0fd65fcf88d8fed66cd2561c107fe1">rtvamp::hostsdk::PluginKey::getIdentifier</a></div><div class="ttdeci">std::string_view getIdentifier() const noexcept</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html_aa2c42c0756a90deb27684d54a04409e2"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html#aa2c42c0756a90deb27684d54a04409e2">rtvamp::hostsdk::PluginKey::getLibrary</a></div><div class="ttdeci">std::string_view getLibrary() const noexcept</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html_a4a5f5864950908ad5107386fe3a1fb48"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a4a5f5864950908ad5107386fe3a1fb48">rtvamp::hostsdk::PluginKey::get</a></div><div class="ttdeci">std::string_view get() const noexcept</div><div class="ttdef"><b>Definition:</b> PluginKey.hpp:24</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html">rtvamp::hostsdk</a></div><div class="ttdef"><b>Definition:</b> Plugin.hpp:11</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html_a12cbd8e44d93564cf18fd5308a35245a"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html#a12cbd8e44d93564cf18fd5308a35245a">rtvamp::hostsdk::PluginKey::PluginKey</a></div><div class="ttdeci">PluginKey(const char *key)</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html">rtvamp::hostsdk::PluginKey</a></div><div class="ttdoc">Identifier for a plugin uniquely within the scope of the current system.</div><div class="ttdef"><b>Definition:</b> PluginKey.hpp:17</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

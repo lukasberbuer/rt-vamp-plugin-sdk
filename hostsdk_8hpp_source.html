@@ -71,12 +71,58 @@ $(function() {
 <div class="title">hostsdk.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<a href="hostsdk_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
-<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;rtvamp/hostsdk/Plugin.hpp&quot;</span></div>
-<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &quot;rtvamp/hostsdk/PluginKey.hpp&quot;</span></div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;rtvamp/hostsdk/PluginLoader.hpp&quot;</span></div>
+<div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &lt;filesystem&gt;</span></div>
+<div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160;<span class="preprocessor">#include &lt;memory&gt;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &lt;span&gt;</span></div>
+<div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &lt;vector&gt;</span></div>
+<div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
+<div class="line"><a name="l00008"></a><span class="lineno">    8</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="hostsdk_2include_2rtvamp_2hostsdk_2Plugin_8hpp.html">rtvamp/hostsdk/Plugin.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="PluginKey_8hpp.html">rtvamp/hostsdk/PluginKey.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00010"></a><span class="lineno">   10</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="PluginLibrary_8hpp.html">rtvamp/hostsdk/PluginLibrary.hpp</a>&quot;</span></div>
+<div class="line"><a name="l00011"></a><span class="lineno">   11</span>&#160; </div>
+<div class="line"><a name="l00012"></a><span class="lineno">   12</span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacertvamp_1_1hostsdk.html">rtvamp::hostsdk</a> {</div>
+<div class="line"><a name="l00013"></a><span class="lineno">   13</span>&#160; </div>
+<div class="line"><a name="l00014"></a><span class="lineno"><a class="line" href="namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c">   14</a></span>&#160;<span class="keyword">using</span> <a class="code" href="namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c">PathList</a> = std::vector&lt;std::filesystem::path&gt;;</div>
+<div class="line"><a name="l00015"></a><span class="lineno">   15</span>&#160; </div>
+<div class="line"><a name="l00020"></a><span class="lineno">   20</span>&#160;<a class="code" href="namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c">PathList</a> <a class="code" href="namespacertvamp_1_1hostsdk.html#ae316efb759dc75482db9356d59d53269">getVampPaths</a>();</div>
+<div class="line"><a name="l00021"></a><span class="lineno">   21</span>&#160; </div>
+<div class="line"><a name="l00025"></a><span class="lineno">   25</span>&#160;<span class="keywordtype">bool</span> <a class="code" href="namespacertvamp_1_1hostsdk.html#a4d0f704ed3ff4d262e32ad17f4ed7852">isVampLibrary</a>(<span class="keyword">const</span> std::filesystem::path&amp; libraryPath);</div>
+<div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160; </div>
+<div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;<a class="code" href="namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c">PathList</a> <a class="code" href="namespacertvamp_1_1hostsdk.html#aac46c7ec8f9cc84d346712afb6337b7d">listLibraries</a>();</div>
+<div class="line"><a name="l00031"></a><span class="lineno">   31</span>&#160; </div>
+<div class="line"><a name="l00035"></a><span class="lineno">   35</span>&#160;<a class="code" href="namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c">PathList</a> <a class="code" href="namespacertvamp_1_1hostsdk.html#aac46c7ec8f9cc84d346712afb6337b7d">listLibraries</a>(<span class="keyword">const</span> std::filesystem::path&amp; path);</div>
+<div class="line"><a name="l00036"></a><span class="lineno">   36</span>&#160; </div>
+<div class="line"><a name="l00040"></a><span class="lineno">   40</span>&#160;<a class="code" href="namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c">PathList</a> <a class="code" href="namespacertvamp_1_1hostsdk.html#aac46c7ec8f9cc84d346712afb6337b7d">listLibraries</a>(std::span&lt;const std::filesystem::path&gt; paths);</div>
+<div class="line"><a name="l00041"></a><span class="lineno">   41</span>&#160; </div>
+<div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160;<a class="code" href="classrtvamp_1_1hostsdk_1_1PluginLibrary.html">PluginLibrary</a> <a class="code" href="namespacertvamp_1_1hostsdk.html#a93ba77bed0931ea4f6f673f4ea4bf97b">loadLibrary</a>(<span class="keyword">const</span> std::filesystem::path&amp; libraryPath);</div>
+<div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160; </div>
+<div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160;std::vector&lt;PluginKey&gt; <a class="code" href="namespacertvamp_1_1hostsdk.html#a8d1566692095aca0023d780268cd71eb">listPlugins</a>();</div>
+<div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160; </div>
+<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;std::vector&lt;PluginKey&gt; <a class="code" href="namespacertvamp_1_1hostsdk.html#a8d1566692095aca0023d780268cd71eb">listPlugins</a>(<span class="keyword">const</span> std::filesystem::path&amp; libraryPath);</div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160; </div>
+<div class="line"><a name="l00060"></a><span class="lineno">   60</span>&#160;std::vector&lt;PluginKey&gt; <a class="code" href="namespacertvamp_1_1hostsdk.html#a8d1566692095aca0023d780268cd71eb">listPlugins</a>(std::span&lt;const std::filesystem::path&gt; libraryPaths);</div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160; </div>
+<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;std::unique_ptr&lt;Plugin&gt; <a class="code" href="namespacertvamp_1_1hostsdk.html#a434978857091cf3b9c2d27a42e0190ef">loadPlugin</a>(<span class="keyword">const</span> <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>&amp; key, <span class="keywordtype">float</span> inputSampleRate);</div>
+<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160; </div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;std::unique_ptr&lt;Plugin&gt; <a class="code" href="namespacertvamp_1_1hostsdk.html#a434978857091cf3b9c2d27a42e0190ef">loadPlugin</a>(<span class="keyword">const</span> <a class="code" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a>&amp; key, <span class="keywordtype">float</span> inputSampleRate, std::span&lt;const std::filesystem::path&gt; libraryPaths);</div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160; </div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;}  <span class="comment">// namespace rtvamp::hostsdk</span></div>
 </div><!-- fragment --></div><!-- contents -->
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_a434978857091cf3b9c2d27a42e0190ef"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#a434978857091cf3b9c2d27a42e0190ef">rtvamp::hostsdk::loadPlugin</a></div><div class="ttdeci">std::unique_ptr&lt; Plugin &gt; loadPlugin(const PluginKey &amp;key, float inputSampleRate)</div><div class="ttdoc">Load plugin.</div></div>
+<div class="ttc" id="aPluginLibrary_8hpp_html"><div class="ttname"><a href="PluginLibrary_8hpp.html">PluginLibrary.hpp</a></div></div>
+<div class="ttc" id="aPluginKey_8hpp_html"><div class="ttname"><a href="PluginKey_8hpp.html">PluginKey.hpp</a></div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_a82157aee3d3d23fadc85436e9b78ee0c"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c">rtvamp::hostsdk::PathList</a></div><div class="ttdeci">std::vector&lt; std::filesystem::path &gt; PathList</div><div class="ttdef"><b>Definition:</b> hostsdk.hpp:14</div></div>
+<div class="ttc" id="ahostsdk_2include_2rtvamp_2hostsdk_2Plugin_8hpp_html"><div class="ttname"><a href="hostsdk_2include_2rtvamp_2hostsdk_2Plugin_8hpp.html">Plugin.hpp</a></div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html">rtvamp::hostsdk</a></div><div class="ttdef"><b>Definition:</b> Plugin.hpp:11</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_aac46c7ec8f9cc84d346712afb6337b7d"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#aac46c7ec8f9cc84d346712afb6337b7d">rtvamp::hostsdk::listLibraries</a></div><div class="ttdeci">PathList listLibraries()</div><div class="ttdoc">List all plugin libraries in default Vamp search paths.</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_a8d1566692095aca0023d780268cd71eb"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#a8d1566692095aca0023d780268cd71eb">rtvamp::hostsdk::listPlugins</a></div><div class="ttdeci">std::vector&lt; PluginKey &gt; listPlugins()</div><div class="ttdoc">List plugins in default Vamp search paths.</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginLibrary_html"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginLibrary.html">rtvamp::hostsdk::PluginLibrary</a></div><div class="ttdef"><b>Definition:</b> PluginLibrary.hpp:19</div></div>
+<div class="ttc" id="aclassrtvamp_1_1hostsdk_1_1PluginKey_html"><div class="ttname"><a href="classrtvamp_1_1hostsdk_1_1PluginKey.html">rtvamp::hostsdk::PluginKey</a></div><div class="ttdoc">Identifier for a plugin uniquely within the scope of the current system.</div><div class="ttdef"><b>Definition:</b> PluginKey.hpp:17</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_ae316efb759dc75482db9356d59d53269"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#ae316efb759dc75482db9356d59d53269">rtvamp::hostsdk::getVampPaths</a></div><div class="ttdeci">PathList getVampPaths()</div><div class="ttdoc">Get default Vamp search paths for plugin libraries.</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_a93ba77bed0931ea4f6f673f4ea4bf97b"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#a93ba77bed0931ea4f6f673f4ea4bf97b">rtvamp::hostsdk::loadLibrary</a></div><div class="ttdeci">PluginLibrary loadLibrary(const std::filesystem::path &amp;libraryPath)</div><div class="ttdoc">Load plugin library by file path.</div></div>
+<div class="ttc" id="anamespacertvamp_1_1hostsdk_html_a4d0f704ed3ff4d262e32ad17f4ed7852"><div class="ttname"><a href="namespacertvamp_1_1hostsdk.html#a4d0f704ed3ff4d262e32ad17f4ed7852">rtvamp::hostsdk::isVampLibrary</a></div><div class="ttdeci">bool isVampLibrary(const std::filesystem::path &amp;libraryPath)</div><div class="ttdoc">Check if the library is an existing and valid Vamp library.</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

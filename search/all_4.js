@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['outputcount_7',['outputCount',['../classrtvamp_1_1pluginsdk_1_1Plugin.html#a01e5977ffd9055fb3ab5334642fd87ac',1,'rtvamp::pluginsdk::Plugin']]],
-  ['outputdescriptor_8',['OutputDescriptor',['../structrtvamp_1_1pluginsdk_1_1PluginBase_1_1OutputDescriptor.html',1,'rtvamp::pluginsdk::PluginBase::OutputDescriptor'],['../structrtvamp_1_1hostsdk_1_1Plugin_1_1OutputDescriptor.html',1,'rtvamp::hostsdk::Plugin::OutputDescriptor']]],
-  ['outputlist_9',['OutputList',['../classrtvamp_1_1hostsdk_1_1Plugin.html#aa34c80bfb7b71a0c4defab733d9b142f',1,'rtvamp::hostsdk::Plugin::OutputList()'],['../classrtvamp_1_1pluginsdk_1_1Plugin.html#a5f98c8cfda890e26e8e4e454ee7dbad3',1,'rtvamp::pluginsdk::Plugin::OutputList()']]]
+  ['feature_7',['Feature',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a94006a05cee6599ab71152365a142819',1,'rtvamp::hostsdk::Plugin::Feature()'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a774c2420ced00981afe23c9af08c366b',1,'rtvamp::pluginsdk::PluginBase::Feature()']]],
+  ['featureset_8',['FeatureSet',['../classrtvamp_1_1hostsdk_1_1Plugin.html#ad2ba4f0a7a8c07672057b46f26bfc349',1,'rtvamp::hostsdk::Plugin::FeatureSet()'],['../classrtvamp_1_1pluginsdk_1_1Plugin.html#acadc13c7614aceda5bbcf23d6e40424e',1,'rtvamp::pluginsdk::Plugin::FeatureSet()']]],
+  ['frequency_9',['Frequency',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a9788a57377656a6b3f7dbb4fcf1e23a9a7cf395303ce3665a9834721d4b748e4b',1,'rtvamp::hostsdk::Plugin::Frequency()'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402ba7cf395303ce3665a9834721d4b748e4b',1,'rtvamp::pluginsdk::PluginBase::Frequency()']]],
+  ['frequencydomainbuffer_10',['FrequencyDomainBuffer',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a7a607792a03ccfab37f36ebee379e350',1,'rtvamp::hostsdk::Plugin::FrequencyDomainBuffer()'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a',1,'rtvamp::pluginsdk::PluginBase::FrequencyDomainBuffer()']]]
 ];

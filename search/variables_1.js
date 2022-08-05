@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['outputcount_36',['outputCount',['../classrtvamp_1_1pluginsdk_1_1Plugin.html#a01e5977ffd9055fb3ab5334642fd87ac',1,'rtvamp::pluginsdk::Plugin']]]
+  ['copyright_171',['copyright',['../structrtvamp_1_1pluginsdk_1_1Plugin_1_1Meta.html#a1b2eee7156551a6edfec3e1ad6d7aeae',1,'rtvamp::pluginsdk::Plugin::Meta']]]
 ];

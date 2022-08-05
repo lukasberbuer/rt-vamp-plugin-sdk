@@ -71,19 +71,19 @@ $(function() {
 <div class="title">EntryPoint.hpp</div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
+<a href="EntryPoint_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a name="l00001"></a><span class="lineno">    1</span>&#160;<span class="preprocessor">#pragma once</span></div>
 <div class="line"><a name="l00002"></a><span class="lineno">    2</span>&#160; </div>
 <div class="line"><a name="l00003"></a><span class="lineno">    3</span>&#160;<span class="preprocessor">#include &quot;vamp/vamp.h&quot;</span></div>
 <div class="line"><a name="l00004"></a><span class="lineno">    4</span>&#160; </div>
-<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;rtvamp/pluginsdk/Plugin.hpp&quot;</span></div>
+<div class="line"><a name="l00005"></a><span class="lineno">    5</span>&#160;<span class="preprocessor">#include &quot;<a class="code" href="pluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp.html">rtvamp/pluginsdk/Plugin.hpp</a>&quot;</span></div>
 <div class="line"><a name="l00006"></a><span class="lineno">    6</span>&#160;<span class="preprocessor">#include &quot;rtvamp/pluginsdk/detail/PluginAdapter.hpp&quot;</span></div>
 <div class="line"><a name="l00007"></a><span class="lineno">    7</span>&#160; </div>
 <div class="line"><a name="l00008"></a><span class="lineno"><a class="line" href="namespacertvamp_1_1pluginsdk.html">    8</a></span>&#160;<span class="keyword">namespace </span><a class="code" href="namespacertvamp_1_1pluginsdk.html">rtvamp::pluginsdk</a> {</div>
 <div class="line"><a name="l00009"></a><span class="lineno">    9</span>&#160; </div>
-<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">template</span> &lt;IsPlugin... Plugins&gt;</div>
+<div class="line"><a name="l00024"></a><span class="lineno">   24</span>&#160;<span class="keyword">template</span> &lt;<a class="code" href="namespacertvamp_1_1pluginsdk.html#a04084c528aa20333aace8cedb129adc4">IsPlugin</a>... Plugins&gt;</div>
 <div class="line"><a name="l00025"></a><span class="lineno"><a class="line" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html">   25</a></span>&#160;<span class="keyword">class </span><a class="code" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html">EntryPoint</a> {</div>
 <div class="line"><a name="l00026"></a><span class="lineno">   26</span>&#160;<span class="keyword">public</span>:</div>
-<div class="line"><a name="l00027"></a><span class="lineno">   27</span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">const</span> VampPluginDescriptor* getDescriptor(</div>
+<div class="line"><a name="l00027"></a><span class="lineno"><a class="line" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#a3df94be74d902aa8db39029806983595">   27</a></span>&#160;    <span class="keyword">static</span> constexpr <span class="keyword">const</span> <a class="code" href="PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8">VampPluginDescriptor</a>* <a class="code" href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#a3df94be74d902aa8db39029806983595">getDescriptor</a>(</div>
 <div class="line"><a name="l00028"></a><span class="lineno">   28</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> version,</div>
 <div class="line"><a name="l00029"></a><span class="lineno">   29</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index</div>
 <div class="line"><a name="l00030"></a><span class="lineno">   30</span>&#160;    ) {</div>
@@ -108,10 +108,10 @@ $(function() {
 <div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    #define RTVAMP_EXPORT_ENTRY_POINT \</span></div>
 <div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">        _Pragma(&quot;comment(linker, \&quot;/export:vampGetPluginDescriptor\&quot;)&quot;)</span></div>
 <div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">    #define RTVAMP_EXPORT_ENTRY_POINT</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="EntryPoint_8hpp.html#a824efb6020c6c3a47a4ee2f4040e0117">   56</a></span>&#160;<span class="preprocessor">    #define RTVAMP_EXPORT_ENTRY_POINT</span></div>
 <div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
 <div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160;<span class="preprocessor">#define RTVAMP_ENTRY_POINT(...)                                                                    \</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">   62</a></span>&#160;<span class="preprocessor">#define RTVAMP_ENTRY_POINT(...)                                                                    \</span></div>
 <div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">    RTVAMP_EXPORT_ENTRY_POINT                                                                      \</span></div>
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">                                                                                                   \</span></div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">    extern &quot;C&quot; const VampPluginDescriptor* vampGetPluginDescriptor(                                \</span></div>
@@ -121,7 +121,11 @@ $(function() {
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">        return ::rtvamp::pluginsdk::EntryPoint&lt;__VA_ARGS__&gt;::getDescriptor(hostApiVersion, index); \</span></div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">    }</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="anamespacertvamp_1_1pluginsdk_html"><div class="ttname"><a href="namespacertvamp_1_1pluginsdk.html">rtvamp::pluginsdk</a></div><div class="ttdoc">Vamp C API uses unsigned int as size type (blockSize, stepSize, channelCount, outputCount,...</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:8</div></div>
+<div class="ttc" id="apluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp_html"><div class="ttname"><a href="pluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp.html">Plugin.hpp</a></div></div>
+<div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1EntryPoint_html_a3df94be74d902aa8db39029806983595"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#a3df94be74d902aa8db39029806983595">rtvamp::pluginsdk::EntryPoint::getDescriptor</a></div><div class="ttdeci">static constexpr const VampPluginDescriptor * getDescriptor(unsigned int version, unsigned int index)</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:27</div></div>
+<div class="ttc" id="aPluginHostAdapter_8hpp_html_a62c3d7e643a67e30fc1def11423108a8"><div class="ttname"><a href="PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8">VampPluginDescriptor</a></div><div class="ttdeci">_VampPluginDescriptor VampPluginDescriptor</div><div class="ttdef"><b>Definition:</b> PluginHostAdapter.hpp:12</div></div>
+<div class="ttc" id="anamespacertvamp_1_1pluginsdk_html"><div class="ttname"><a href="namespacertvamp_1_1pluginsdk.html">rtvamp::pluginsdk</a></div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:8</div></div>
+<div class="ttc" id="anamespacertvamp_1_1pluginsdk_html_a04084c528aa20333aace8cedb129adc4"><div class="ttname"><a href="namespacertvamp_1_1pluginsdk.html#a04084c528aa20333aace8cedb129adc4">rtvamp::pluginsdk::IsPlugin</a></div><div class="ttdeci">concept IsPlugin</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:153</div></div>
 <div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1EntryPoint_html"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html">rtvamp::pluginsdk::EntryPoint</a></div><div class="ttdoc">Helper class to create the entry point for plugin libraries.</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:25</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
