@@ -267,10 +267,9 @@ bool PluginHostAdapter::initialise(uint32_t stepSize, uint32_t blockSize) {
     if (featureSet_.size() != outputCount_) {
         featureSet_.resize(outputCount_);
     }
-    const auto success = descriptor_.initialise(handle_, 1, stepSize, blockSize);
+    initialised_ = descriptor_.initialise(handle_, 1, stepSize, blockSize);
     checkRequirements();  // output definitions might change dynamically
-    initialised_ = true;
-    return success;
+    return initialised_;
 }
 
 void PluginHostAdapter::reset() {
