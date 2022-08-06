@@ -39,7 +39,7 @@ public:
     bool                 setParameter(std::string_view id, float value) override; 
 
     ProgramList          getPrograms()       const noexcept override;
-    std::string_view     getCurrentProgram() const override;
+    CurrentProgram       getCurrentProgram() const override;
     bool                 selectProgram(std::string_view name) override;
 
     uint32_t             getPreferredStepSize()  const override;

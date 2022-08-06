@@ -44,7 +44,7 @@ public:
     };
 
     using ParameterList          = std::span<const ParameterDescriptor>;  ///< List of parameter descriptors
-    using ProgramList            = std::span<const char* const>;  ///< List of programs
+    using CurrentProgram         = std::optional<std::string_view>;  ///< Current program (if programs avaiable)
     using OutputList             = std::vector<OutputDescriptor>;  ///< List of output descriptors
     using TimeDomainBuffer       = std::span<const float>;  ///< Time domain buffer
     using FrequencyDomainBuffer  = std::span<const std::complex<float>>;  ///< Frequency domain buffer (FFT)
@@ -67,7 +67,7 @@ public:
     virtual bool                 setParameter(std::string_view id, float value) = 0;
 
     virtual ProgramList          getPrograms()       const noexcept = 0;
-    virtual std::string_view     getCurrentProgram() const = 0;
+    virtual CurrentProgram       getCurrentProgram() const = 0;
     virtual bool                 selectProgram(std::string_view name) = 0;
 
     virtual uint32_t             getPreferredStepSize()  const = 0;

@@ -196,6 +196,7 @@ Plugin::ProgramList PluginHostAdapter::getPrograms() const noexcept {
     return programs_;
 }
 
+Plugin::CurrentProgram PluginHostAdapter::getCurrentProgram() const {
     if (descriptor_.programCount == 0) return {};
     const auto index = descriptor_.getCurrentProgram(handle_);
     assert(index < descriptor_.programCount);

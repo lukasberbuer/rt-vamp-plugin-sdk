@@ -166,13 +166,13 @@ TEST_CASE("PluginHostAdapter get/set programs") {
         }
     };
 
-    REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[0]));
+    REQUIRE_THAT(std::string(plugin.getCurrentProgram().value()), Equals(descriptor.programs[0]));
 
     REQUIRE_FALSE(plugin.selectProgram("invalid"));
-    REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[0]));
+    REQUIRE_THAT(std::string(plugin.getCurrentProgram().value()), Equals(descriptor.programs[0]));
 
     REQUIRE(plugin.selectProgram(descriptor.programs[1]));
-    REQUIRE_THAT(std::string(plugin.getCurrentProgram()), Equals(descriptor.programs[1]));
+    REQUIRE_THAT(std::string(plugin.getCurrentProgram().value()), Equals(descriptor.programs[1]));
 }
 
 TEST_CASE("PluginHostAdapter preferred step/block size") {
