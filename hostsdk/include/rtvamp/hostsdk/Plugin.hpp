@@ -44,6 +44,7 @@ public:
     };
 
     using ParameterList          = std::span<const ParameterDescriptor>;  ///< List of parameter descriptors
+    using ProgramList            = std::span<const std::string_view>;  ///< List of programs
     using CurrentProgram         = std::optional<std::string_view>;  ///< Current program (if programs avaiable)
     using OutputList             = std::vector<OutputDescriptor>;  ///< List of output descriptors
     using TimeDomainBuffer       = std::span<const float>;  ///< Time domain buffer

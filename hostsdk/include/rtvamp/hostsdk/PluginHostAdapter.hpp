@@ -59,7 +59,7 @@ private:
     const std::function<void()>      onDelete_;
     VampPluginHandle                 handle_{nullptr};
     std::vector<ParameterDescriptor> parameters_;
-    std::vector<const char*>         programs_;
+    std::vector<std::string_view>    programs_;
     std::vector<Feature>             featureSet_;
     uint32_t                         outputCount_{0};
     bool                             initialised_{false};

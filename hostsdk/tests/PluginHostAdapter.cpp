@@ -108,7 +108,7 @@ TEST_CASE("PluginHostAdapter static plugin data") {
         REQUIRE(programs.size() == descriptor.programCount);
 
         for (size_t i = 0; i < descriptor.programCount; ++i) {
-            CHECK_THAT(programs[i], Equals(descriptor.programs[i]));
+            CHECK_THAT(std::string(programs[i]), Equals(descriptor.programs[i]));
         }
     }
 }

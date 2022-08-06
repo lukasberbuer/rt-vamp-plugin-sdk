@@ -12,12 +12,12 @@
 
 namespace rtvamp::hostsdk {
 
-static const char* notNull(const char* str) {
+inline static const char* notNull(const char* str) {
     return str ? str : "";
 }
 
 template <typename T>
-static std::optional<T> createOptional(T value, bool hasValue) {
+inline static std::optional<T> createOptional(T value, bool hasValue) {
     if (hasValue) return value;
     return {};
 }
@@ -52,7 +52,7 @@ static std::vector<Plugin::ParameterDescriptor> convertParameterDescriptors(
     return result;
 }
 
-static std::optional<int> findParameterIndex(
+inline static std::optional<int> findParameterIndex(
     const VampPluginDescriptor& descriptor, std::string_view identifier
 ) {
     for (int i = 0; i < static_cast<int>(descriptor.parameterCount); ++i) {
@@ -62,7 +62,16 @@ static std::optional<int> findParameterIndex(
     return {};
 }
 
-static std::optional<int> findProgramIndex(
+static std::vector<std::string_view> convertPrograms(const VampPluginDescriptor& descriptor) {
+    std::vector<std::string_view> result;
+    result.reserve(descriptor.programCount);
+    for (size_t i = 0; i < descriptor.programCount; ++i) {
+        result.emplace_back(descriptor.programs[i]);
+    }
+    return result;
+}
+
+inline static std::optional<int> findProgramIndex(
     const VampPluginDescriptor& descriptor, std::string_view program
 ) {
     for (int i = 0; i < static_cast<int>(descriptor.programCount); ++i) {
@@ -124,10 +133,7 @@ PluginHostAdapter::PluginHostAdapter(
     }
 
     parameters_ = convertParameterDescriptors(descriptor_);
-    programs_   = std::vector<const char*>(
-        descriptor_.programs,
-        descriptor_.programs + descriptor_.programCount
-    );
+    programs_   = convertPrograms(descriptor_);
 
     try {
         checkRequirements();
