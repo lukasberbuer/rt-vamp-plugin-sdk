@@ -102,6 +102,12 @@ TEST_CASE("listPlugins") {
         REQUIRE(plugins.size() == 0);
     }
 
+    SECTION("Library path") {
+        const auto plugins = rtvamp::hostsdk::listPlugins(getLibraryPath("example-plugin"));
+        REQUIRE(plugins.size() >= 1);
+        REQUIRE_THAT(plugins, Contains(PluginKey("example-plugin:rms")));
+    }
+
     SECTION("Default paths including VAMP_PATH") {
         const auto plugins = rtvamp::hostsdk::listPlugins();
         REQUIRE(plugins.size() >= 1);
@@ -128,5 +134,11 @@ TEST_CASE("loadPlugin") {
         auto plugin = rtvamp::hostsdk::loadPlugin("example-plugin:rms", 48000);
         REQUIRE(plugin != nullptr);
         REQUIRE_THAT(std::string(plugin->getIdentifier()), Equals("rms"));
+    }
+
+    SECTION("Load valid plugin with given library paths") {
+        const std::vector<std::filesystem::path> libraryPaths{getLibraryPath("example-plugin")};
+        auto plugin = rtvamp::hostsdk::loadPlugin("example-plugin:rms", 48000, libraryPaths);
+        REQUIRE(plugin != nullptr);
     }
 }

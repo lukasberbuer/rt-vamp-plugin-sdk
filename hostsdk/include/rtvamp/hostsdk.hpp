@@ -50,14 +50,14 @@ PluginLibrary loadLibrary(const std::filesystem::path& libraryPath);
 std::vector<PluginKey> listPlugins();
 
 /**
- * List plugins in plugin library.
+ * List plugins in path (either directory or library).
  */
-std::vector<PluginKey> listPlugins(const std::filesystem::path& libraryPath);
+std::vector<PluginKey> listPlugins(const std::filesystem::path& path);
 
 /**
- * List plugins in plugin libraries.
+ * List plugins in given list of paths (either search paths or library paths).
  */
-std::vector<PluginKey> listPlugins(std::span<const std::filesystem::path> libraryPaths);
+std::vector<PluginKey> listPlugins(std::span<const std::filesystem::path> paths);
 
 /**
  * Load plugin.
@@ -65,9 +65,9 @@ std::vector<PluginKey> listPlugins(std::span<const std::filesystem::path> librar
 std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate);
 
 /**
- * Load plugin from given list of library paths.
+ * Load plugin from given list of paths (either search paths or library paths).
  * Providing the cached library paths `libraryPaths` speeds up the search.
  */
-std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate, std::span<const std::filesystem::path> libraryPaths);
+std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate, std::span<const std::filesystem::path> paths);
 
 }  // namespace rtvamp::hostsdk

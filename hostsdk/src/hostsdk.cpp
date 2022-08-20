@@ -1,5 +1,6 @@
 #include "rtvamp/hostsdk.hpp"
 
+#include <cassert>
 #include <optional>
 #include <set>
 
@@ -80,8 +81,7 @@ PathList listLibraries(const std::filesystem::path& path) {
     if (!std::filesystem::is_directory(path, ec)) {
         return {};
     }
-
-    PathList result;
+    std::vector<std::filesystem::path> result;
     for (auto&& entry : std::filesystem::directory_iterator(path, ec)) {
         if (isVampLibrary(entry)) {
             result.push_back(entry.path());
@@ -108,22 +108,44 @@ std::vector<PluginKey> listPlugins() {
     return listPlugins(libraryPaths);
 }
 
-std::vector<PluginKey> listPlugins(const std::filesystem::path& libraryPath) {
+static std::vector<PluginKey> listPluginsInLibrary(const std::filesystem::path& path) {
+    assert(std::filesystem::is_regular_file(path));
     try {
-        const auto library = loadLibrary(libraryPath);
+        const auto library = loadLibrary(path);
         return library.listPlugins();
     } catch (...) {
         return {};
     }
 }
 
-std::vector<PluginKey> listPlugins(std::span<const std::filesystem::path> libraryPaths) {
+static std::vector<PluginKey> listPluginsInDirectory(const std::filesystem::path& path) {
+    assert(std::filesystem::is_directory(path));
     std::vector<PluginKey> result;
-    for (auto&& libraryPath : libraryPaths) {
-        const auto plugins = listPlugins(libraryPath);
+    for (auto&& libraryPath : listLibraries(path)) {
+        const auto plugins = listPluginsInLibrary(libraryPath);
         result.insert(result.end(), plugins.begin(), plugins.end());
     }
-    return result;
+    return {result.begin(), result.end()};
+}
+
+std::vector<PluginKey> listPlugins(const std::filesystem::path& path) {
+    std::error_code ec;
+    if (std::filesystem::is_directory(path, ec)) {
+        return listPluginsInDirectory(path);
+    }
+    if (std::filesystem::is_regular_file(path, ec)) {
+        return listPluginsInLibrary(path);
+    }
+    return {};
+}
+
+std::vector<PluginKey> listPlugins(std::span<const std::filesystem::path> paths) {
+    std::set<PluginKey> result;  // use set to avoid duplicates (paths may have duplicates)
+    for (auto&& path : paths) {
+        const auto plugins = listPlugins(path);
+        result.insert(plugins.begin(), plugins.end());
+    }
+    return {result.begin(), result.end()};
 }
 
 static std::optional<std::filesystem::path> findLibrary(std::string_view stem) {
@@ -156,8 +178,8 @@ std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate) 
     return library.loadPlugin(key, inputSampleRate);
 }
 
-std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate, std::span<const std::filesystem::path> libraryPaths) {
-    const auto libraryPath = findLibrary(key.getLibrary(), libraryPaths);
+std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate, std::span<const std::filesystem::path> paths) {
+    const auto libraryPath = findLibrary(key.getLibrary(), paths);
     if (!libraryPath) {
         throw std::invalid_argument(helper::concat("Plugin not found: ", key.get()));
     }
