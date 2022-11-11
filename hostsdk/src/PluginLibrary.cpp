@@ -69,11 +69,7 @@ std::unique_ptr<Plugin> PluginLibrary::loadPlugin(const PluginKey& key, float in
         );
     }();
 
-    return std::make_unique<PluginHostAdapter>(
-        *descriptor,
-        inputSampleRate,
-        [dl = dl_] {}  // capture copy of library handle (reference counted) to be released after plugin
-    );
+    return std::make_unique<PluginHostAdapter>(*descriptor, inputSampleRate, dl_);
 }
 
 std::unique_ptr<Plugin> PluginLibrary::loadPlugin(size_t index, float inputSampleRate) const {
@@ -84,11 +80,7 @@ std::unique_ptr<Plugin> PluginLibrary::loadPlugin(size_t index, float inputSampl
         );
     }
 
-    return std::make_unique<PluginHostAdapter>(
-        *descriptors_[index],
-        inputSampleRate,
-        [dl = dl_] {}  // capture copy of library handle (reference counted) to be released after plugin
-    );
+    return std::make_unique<PluginHostAdapter>(*descriptors_[index], inputSampleRate, dl_);
 }
 
 }  // namespace rtvamp::hostsdk

@@ -1,7 +1,7 @@
 #pragma once
 
 #include <cstdint>
-#include <functional>
+#include <memory>
 #include <optional>
 #include <string_view>
 #include <vector>
@@ -15,12 +15,14 @@ typedef void* VampPluginHandle;
 
 namespace rtvamp::hostsdk {
 
+class DynamicLibrary;
+
 class PluginHostAdapter : public Plugin {
 public:
     PluginHostAdapter(
-        const VampPluginDescriptor& descriptor,
-        float                       inputSampleRate,
-        std::function<void()>       onDelete = [] {}  // used in PluginLoader to unload library
+        const VampPluginDescriptor&     descriptor,
+        float                           inputSampleRate,
+        std::shared_ptr<DynamicLibrary> library = nullptr  // extend lifetime of dl handle
     );
     ~PluginHostAdapter();
 
@@ -56,7 +58,7 @@ private:
     void checkRequirements();
 
     const VampPluginDescriptor&      descriptor_;
-    const std::function<void()>      onDelete_;
+    std::shared_ptr<DynamicLibrary>  library_;
     VampPluginHandle                 handle_{nullptr};
     std::vector<ParameterDescriptor> parameters_;
     std::vector<std::string_view>    programs_;

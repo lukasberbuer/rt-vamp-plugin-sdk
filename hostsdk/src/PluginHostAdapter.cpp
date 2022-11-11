@@ -8,6 +8,7 @@
 
 #include "vamp/vamp.h"
 
+#include "DynamicLibrary.hpp"
 #include "helper.hpp"
 
 namespace rtvamp::hostsdk {
@@ -123,8 +124,10 @@ static void checkPluginDescriptor(const VampPluginDescriptor& d) {
 }
 
 PluginHostAdapter::PluginHostAdapter(
-    const VampPluginDescriptor& descriptor, float inputSampleRate, std::function<void()> onDelete
-) : Plugin(inputSampleRate), descriptor_(descriptor), onDelete_(std::move(onDelete)) {
+    const VampPluginDescriptor&     descriptor,
+    float                           inputSampleRate,
+    std::shared_ptr<DynamicLibrary> library
+) : Plugin(inputSampleRate), descriptor_(descriptor), library_(std::move(library)) {
     checkPluginDescriptor(descriptor_);
 
     handle_ = descriptor_.instantiate(&descriptor_, inputSampleRate);
@@ -145,7 +148,6 @@ PluginHostAdapter::PluginHostAdapter(
 
 PluginHostAdapter::~PluginHostAdapter() {
     descriptor_.cleanup(handle_);
-    onDelete_();
 }
 
 uint32_t PluginHostAdapter::getVampApiVersion() const noexcept {
