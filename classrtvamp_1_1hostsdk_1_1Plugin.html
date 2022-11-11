@@ -102,9 +102,12 @@ Public Types</h2></td></tr>
 <tr class="memitem:ab6be967288a5e955d4e6f468ee466794"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ab6be967288a5e955d4e6f468ee466794">ParameterList</a> = std::span&lt; const <a class="el" href="structrtvamp_1_1hostsdk_1_1Plugin_1_1ParameterDescriptor.html">ParameterDescriptor</a> &gt;</td></tr>
 <tr class="memdesc:ab6be967288a5e955d4e6f468ee466794"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of parameter descriptors.  <a href="classrtvamp_1_1hostsdk_1_1Plugin.html#ab6be967288a5e955d4e6f468ee466794">More...</a><br /></td></tr>
 <tr class="separator:ab6be967288a5e955d4e6f468ee466794"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adaeb599d8ac373b98272eb22a1a3fab9"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#adaeb599d8ac373b98272eb22a1a3fab9">ProgramList</a> = std::span&lt; const char *const  &gt;</td></tr>
-<tr class="memdesc:adaeb599d8ac373b98272eb22a1a3fab9"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of programs.  <a href="classrtvamp_1_1hostsdk_1_1Plugin.html#adaeb599d8ac373b98272eb22a1a3fab9">More...</a><br /></td></tr>
-<tr class="separator:adaeb599d8ac373b98272eb22a1a3fab9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3a7e2919ab4671bbcdcd7e13f57796c"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ad3a7e2919ab4671bbcdcd7e13f57796c">ProgramList</a> = std::span&lt; const std::string_view &gt;</td></tr>
+<tr class="memdesc:ad3a7e2919ab4671bbcdcd7e13f57796c"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of programs.  <a href="classrtvamp_1_1hostsdk_1_1Plugin.html#ad3a7e2919ab4671bbcdcd7e13f57796c">More...</a><br /></td></tr>
+<tr class="separator:ad3a7e2919ab4671bbcdcd7e13f57796c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5728449d70c8f96c396aba5e2ff59ebf"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a5728449d70c8f96c396aba5e2ff59ebf">CurrentProgram</a> = std::optional&lt; std::string_view &gt;</td></tr>
+<tr class="memdesc:a5728449d70c8f96c396aba5e2ff59ebf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Current program (if programs avaiable)  <a href="classrtvamp_1_1hostsdk_1_1Plugin.html#a5728449d70c8f96c396aba5e2ff59ebf">More...</a><br /></td></tr>
+<tr class="separator:a5728449d70c8f96c396aba5e2ff59ebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa34c80bfb7b71a0c4defab733d9b142f"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#aa34c80bfb7b71a0c4defab733d9b142f">OutputList</a> = std::vector&lt; <a class="el" href="structrtvamp_1_1hostsdk_1_1Plugin_1_1OutputDescriptor.html">OutputDescriptor</a> &gt;</td></tr>
 <tr class="memdesc:aa34c80bfb7b71a0c4defab733d9b142f"><td class="mdescLeft">&#160;</td><td class="mdescRight">List of output descriptors.  <a href="classrtvamp_1_1hostsdk_1_1Plugin.html#aa34c80bfb7b71a0c4defab733d9b142f">More...</a><br /></td></tr>
 <tr class="separator:aa34c80bfb7b71a0c4defab733d9b142f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -130,6 +133,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a193d60fdabb7edfab9d7c00c8b23d10f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae57b2e1eee6556997849960444d3c2b1"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ae57b2e1eee6556997849960444d3c2b1">~Plugin</a> ()=default</td></tr>
 <tr class="separator:ae57b2e1eee6556997849960444d3c2b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9783ae66312c428c656e7b40c42b2c2f"><td class="memItemLeft" align="right" valign="top">virtual std::filesystem::path&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a9783ae66312c428c656e7b40c42b2c2f">getLibraryPath</a> () const noexcept=0</td></tr>
+<tr class="separator:a9783ae66312c428c656e7b40c42b2c2f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8bda5f2fb7a3d041f071a9d86cdd23a2"><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a8bda5f2fb7a3d041f071a9d86cdd23a2">getVampApiVersion</a> () const noexcept=0</td></tr>
 <tr class="separator:a8bda5f2fb7a3d041f071a9d86cdd23a2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab3cb37e40f806879b005d33f26b6b92e"><td class="memItemLeft" align="right" valign="top">virtual std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ab3cb37e40f806879b005d33f26b6b92e">getIdentifier</a> () const noexcept=0</td></tr>
@@ -152,10 +157,10 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aaabd9690211a16e85d9523cbca319e6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acee25927ddc43a04773c151ce4ba6362"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#acee25927ddc43a04773c151ce4ba6362">setParameter</a> (std::string_view id, float value)=0</td></tr>
 <tr class="separator:acee25927ddc43a04773c151ce4ba6362"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1ee875586e7356d7430e25e643cb32b9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#adaeb599d8ac373b98272eb22a1a3fab9">ProgramList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a1ee875586e7356d7430e25e643cb32b9">getPrograms</a> () const noexcept=0</td></tr>
+<tr class="memitem:a1ee875586e7356d7430e25e643cb32b9"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ad3a7e2919ab4671bbcdcd7e13f57796c">ProgramList</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a1ee875586e7356d7430e25e643cb32b9">getPrograms</a> () const noexcept=0</td></tr>
 <tr class="separator:a1ee875586e7356d7430e25e643cb32b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6308be807ab6ecfa6c884d47984827be"><td class="memItemLeft" align="right" valign="top">virtual std::string_view&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a6308be807ab6ecfa6c884d47984827be">getCurrentProgram</a> () const =0</td></tr>
-<tr class="separator:a6308be807ab6ecfa6c884d47984827be"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace503669a98c2fc341ce440db5c96f61"><td class="memItemLeft" align="right" valign="top">virtual <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a5728449d70c8f96c396aba5e2ff59ebf">CurrentProgram</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ace503669a98c2fc341ce440db5c96f61">getCurrentProgram</a> () const =0</td></tr>
+<tr class="separator:ace503669a98c2fc341ce440db5c96f61"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34edf89048fc949147f3bb33a86e3fac"><td class="memItemLeft" align="right" valign="top">virtual bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a34edf89048fc949147f3bb33a86e3fac">selectProgram</a> (std::string_view name)=0</td></tr>
 <tr class="separator:a34edf89048fc949147f3bb33a86e3fac"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5313601a3c53ff29e67e6d5145778674"><td class="memItemLeft" align="right" valign="top">virtual uint32_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a5313601a3c53ff29e67e6d5145778674">getPreferredStepSize</a> () const =0</td></tr>
@@ -176,6 +181,22 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:af6cb42b578a42971a5e1c39612055ca0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a5728449d70c8f96c396aba5e2ff59ebf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5728449d70c8f96c396aba5e2ff59ebf">&#9670;&nbsp;</a></span>CurrentProgram</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a5728449d70c8f96c396aba5e2ff59ebf">rtvamp::hostsdk::Plugin::CurrentProgram</a> =  std::optional&lt;std::string_view&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Current program (if programs avaiable) </p>
+
+</div>
+</div>
 <a id="a94006a05cee6599ab71152365a142819"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a94006a05cee6599ab71152365a142819">&#9670;&nbsp;</a></span>Feature</h2>
 
@@ -272,14 +293,14 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="adaeb599d8ac373b98272eb22a1a3fab9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adaeb599d8ac373b98272eb22a1a3fab9">&#9670;&nbsp;</a></span>ProgramList</h2>
+<a id="ad3a7e2919ab4671bbcdcd7e13f57796c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3a7e2919ab4671bbcdcd7e13f57796c">&#9670;&nbsp;</a></span>ProgramList</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">using <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#adaeb599d8ac373b98272eb22a1a3fab9">rtvamp::hostsdk::Plugin::ProgramList</a> =  std::span&lt;const char* const&gt;</td>
+          <td class="memname">using <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ad3a7e2919ab4671bbcdcd7e13f57796c">rtvamp::hostsdk::Plugin::ProgramList</a> =  std::span&lt;const std::string_view&gt;</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -413,8 +434,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a6308be807ab6ecfa6c884d47984827be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6308be807ab6ecfa6c884d47984827be">&#9670;&nbsp;</a></span>getCurrentProgram()</h2>
+<a id="ace503669a98c2fc341ce440db5c96f61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace503669a98c2fc341ce440db5c96f61">&#9670;&nbsp;</a></span>getCurrentProgram()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -423,7 +444,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual std::string_view rtvamp::hostsdk::Plugin::getCurrentProgram </td>
+          <td class="memname">virtual <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#a5728449d70c8f96c396aba5e2ff59ebf">CurrentProgram</a> rtvamp::hostsdk::Plugin::getCurrentProgram </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -436,7 +457,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Implemented in <a class="el" href="classrtvamp_1_1hostsdk_1_1PluginHostAdapter.html#afd18f024cf977d5a7b19e7a0e0247f0b">rtvamp::hostsdk::PluginHostAdapter</a>.</p>
+<p>Implemented in <a class="el" href="classrtvamp_1_1hostsdk_1_1PluginHostAdapter.html#a866b14b0baa41e411179bf8af25dffcf">rtvamp::hostsdk::PluginHostAdapter</a>.</p>
 
 </div>
 </div>
@@ -543,6 +564,33 @@ Public Member Functions</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9783ae66312c428c656e7b40c42b2c2f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9783ae66312c428c656e7b40c42b2c2f">&#9670;&nbsp;</a></span>getLibraryPath()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual std::filesystem::path rtvamp::hostsdk::Plugin::getLibraryPath </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Implemented in <a class="el" href="classrtvamp_1_1hostsdk_1_1PluginHostAdapter.html#a7fa677b70898af8602b7308c0bce9e23">rtvamp::hostsdk::PluginHostAdapter</a>.</p>
 
 </div>
 </div>
@@ -800,7 +848,7 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#adaeb599d8ac373b98272eb22a1a3fab9">ProgramList</a> rtvamp::hostsdk::Plugin::getPrograms </td>
+          <td class="memname">virtual <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html#ad3a7e2919ab4671bbcdcd7e13f57796c">ProgramList</a> rtvamp::hostsdk::Plugin::getPrograms </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>

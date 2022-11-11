@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['timedomainbuffer_198',['TimeDomainBuffer',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a97a6be40e860b4a171c563dcf2f7a5de',1,'rtvamp::hostsdk::Plugin::TimeDomainBuffer()'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446',1,'rtvamp::pluginsdk::PluginBase::TimeDomainBuffer()']]]
+  ['parameterlist_197',['ParameterList',['../classrtvamp_1_1hostsdk_1_1Plugin.html#ab6be967288a5e955d4e6f468ee466794',1,'rtvamp::hostsdk::Plugin']]],
+  ['pathlist_198',['PathList',['../namespacertvamp_1_1hostsdk.html#a82157aee3d3d23fadc85436e9b78ee0c',1,'rtvamp::hostsdk']]],
+  ['programlist_199',['ProgramList',['../classrtvamp_1_1hostsdk_1_1Plugin.html#ad3a7e2919ab4671bbcdcd7e13f57796c',1,'rtvamp::hostsdk::Plugin']]]
 ];

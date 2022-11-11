@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['outputlist_194',['OutputList',['../classrtvamp_1_1hostsdk_1_1Plugin.html#aa34c80bfb7b71a0c4defab733d9b142f',1,'rtvamp::hostsdk::Plugin::OutputList()'],['../classrtvamp_1_1pluginsdk_1_1Plugin.html#a5f98c8cfda890e26e8e4e454ee7dbad3',1,'rtvamp::pluginsdk::Plugin::OutputList()']]]
+  ['inputbuffer_195',['InputBuffer',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a57c32215a3a01b324b054567e03e6339',1,'rtvamp::hostsdk::Plugin::InputBuffer()'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a685c0af79f3e0b958fef63917800767c',1,'rtvamp::pluginsdk::PluginBase::InputBuffer()']]]
 ];

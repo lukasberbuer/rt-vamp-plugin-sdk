@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['vampplugindescriptor_199',['VampPluginDescriptor',['../PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8',1,'VampPluginDescriptor():&#160;PluginHostAdapter.hpp'],['../PluginLibrary_8hpp.html#a62c3d7e643a67e30fc1def11423108a8',1,'VampPluginDescriptor():&#160;PluginLibrary.hpp']]],
-  ['vamppluginhandle_200',['VampPluginHandle',['../PluginHostAdapter_8hpp.html#ad3be2952b1f4ad7d775940a6db75c79b',1,'PluginHostAdapter.hpp']]]
+  ['timedomainbuffer_200',['TimeDomainBuffer',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a97a6be40e860b4a171c563dcf2f7a5de',1,'rtvamp::hostsdk::Plugin::TimeDomainBuffer()'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a30c79354d421924ce80413e69c5de446',1,'rtvamp::pluginsdk::PluginBase::TimeDomainBuffer()']]]
 ];
