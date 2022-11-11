@@ -236,8 +236,9 @@ Plugin::OutputList PluginHostAdapter::getOutputDescriptors() const {
         auto& output     = outputs[i];
         auto* vampOutput = descriptor_.getOutputDescriptor(handle_, static_cast<int>(i));
 
-        if (!vampOutput)
+        if (!vampOutput) {
             throw std::runtime_error(helper::concat("Output descriptor ", i, " is null"));
+        }
 
         output.identifier  = vampOutput->identifier;
         output.name        = vampOutput->name;
@@ -274,6 +275,7 @@ bool PluginHostAdapter::initialise(uint32_t stepSize, uint32_t blockSize) {
         featureSet_.resize(outputCount_);
     }
     initialised_ = descriptor_.initialise(handle_, 1, stepSize, blockSize);
+    initialisedBlockSize_ = blockSize;
     checkRequirements();  // output definitions might change dynamically
     return initialised_;
 }
@@ -283,25 +285,46 @@ void PluginHostAdapter::reset() {
 }
 
 Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec) {
+#ifdef RTVAMP_VALIDATE
+    if (!initialised_) {
+        throw std::logic_error("Plugin must be initialised before process");
+    }
+#else
     assert(initialised_ && "Plugin must be initialised before process");
+#endif
+
+        const bool isTimeDomain = getInputDomain() == InputDomain::Time;
+    const bool validType    = std::holds_alternative<TimeDomainBuffer>(buffer) == isTimeDomain;
+
+    if (!validType && isTimeDomain) {
+            throw std::invalid_argument("Wrong input buffer type: Time domain required");
+    }
+    if (!validType && !isTimeDomain) {
+            throw std::invalid_argument("Wrong input buffer type: Frequency domain required");
+    }
+
+#ifdef RTVAMP_VALIDATE
+    const auto blockSize         = std::visit([] (auto&& buf) { return buf.size(); }, buffer);
+    const auto expectedBlockSize = isTimeDomain
+        ? initialisedBlockSize_
+        : initialisedBlockSize_ / 2 + 1;
+    if (blockSize != expectedBlockSize) {
+        throw std::invalid_argument(
+            helper::concat(
+                "Wrong input buffer size: Buffer size must match initialised block size of ",
+                initialisedBlockSize_
+            )
+        );
+    }
+#endif
 
     const auto getInputBuffer = [&] {
-        const bool isTimeDomain = getInputDomain() == InputDomain::Time;
-        const bool validInput   = std::holds_alternative<TimeDomainBuffer>(buffer) == isTimeDomain;
-
-        if (!validInput && isTimeDomain)
-            throw std::invalid_argument("Wrong input buffer type: Time domain required");
-        if (!validInput && !isTimeDomain)
-            throw std::invalid_argument("Wrong input buffer type: Frequency domain required");
-
         if (isTimeDomain) {
             return std::get<TimeDomainBuffer>(buffer).data();
         } else {
             // casts between interleaved arrays and std::complex are guaranteed to be valid
             // https://en.cppreference.com/w/cpp/numeric/complex
-            return reinterpret_cast<const float*>(
-                std::get<FrequencyDomainBuffer>(buffer).data()
-            );
+            return reinterpret_cast<const float*>(std::get<FrequencyDomainBuffer>(buffer).data());
         }
     };
 
@@ -315,8 +338,9 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
         static_cast<int>(nsec % 1'000'000'000)
     );
 
-    if (!vampFeatureLists)
+    if (!vampFeatureLists) {
         throw std::runtime_error("Returned feature list is null");
+    }
 
     for (size_t i = 0; i < outputCount_; ++i) {
         const auto& vampFeatureList = vampFeatureLists[i];
@@ -343,17 +367,20 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
 void PluginHostAdapter::checkRequirements() {
     using Error = std::runtime_error;
 
-    if (descriptor_.vampApiVersion < 1 || descriptor_.vampApiVersion > 2)
+    if (descriptor_.vampApiVersion < 1 || descriptor_.vampApiVersion > 2) {
         throw Error("Only Vamp API versions 1 and 2 supported");
+    }
 
-    if (descriptor_.getMinChannelCount(handle_) > 1)
+    if (descriptor_.getMinChannelCount(handle_) > 1) {
         throw Error("Minimum channel count > 1 not supported");
+    }
 
     for (uint32_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
         const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
 
-        if (!outputDescriptor)
+        if (!outputDescriptor) {
             throw Error(helper::concat("Output descriptor ", outputIndex, " is null"));
+        }
 
         if (outputDescriptor->hasFixedBinCount != 1) {
             throw Error(

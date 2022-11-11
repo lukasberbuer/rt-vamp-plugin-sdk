@@ -63,6 +63,7 @@ private:
     std::vector<Feature>             featureSet_;
     uint32_t                         outputCount_{0};
     bool                             initialised_{false};
+    uint32_t                         initialisedBlockSize_{0};
 };
 
 }  // namespace rtvamp::hostsdk

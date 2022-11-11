@@ -307,10 +307,6 @@ TEST_CASE("PluginHostAdapter process") {
     REQUIRE(result.size() == 1);
     REQUIRE_THAT(result[0], Equals(values));
 
-    SECTION("Wrong input domain / variant type") {
-        REQUIRE_THROWS(plugin.process(Plugin::FrequencyDomainBuffer{}, 0));
-    }
-
     SECTION("Release feature set after process") {
         static bool released = false;
         descriptor.releaseFeatureSet = [](VampFeatureList*) { released = true; };
@@ -318,3 +314,39 @@ TEST_CASE("PluginHostAdapter process") {
         REQUIRE(released);
     };
 }
+
+TEST_CASE("PluginHostAdapter process with wrong input domain") {
+    auto descriptor = TestPluginDescriptor::get();
+    auto plugin     = PluginHostAdapter(descriptor, 48000);
+
+    plugin.initialise(0, 0);
+    REQUIRE_THROWS_WITH(
+        plugin.process(Plugin::FrequencyDomainBuffer{}, 0),
+        "Wrong input buffer type: Time domain required"
+    );
+}
+
+#ifdef RTVAMP_VALIDATE
+
+TEST_CASE("PluginHostAdapter validation: process before initialise") {
+    auto descriptor = TestPluginDescriptor::get();
+    auto plugin     = PluginHostAdapter(descriptor, 48000);
+
+    REQUIRE_THROWS_WITH(
+        plugin.process(Plugin::TimeDomainBuffer{}, 0),
+        "Plugin must be initialised before process"
+    );
+}
+
+TEST_CASE("PluginHostAdapter validation: process with wrong buffer size") {
+    auto descriptor = TestPluginDescriptor::get();
+    auto plugin     = PluginHostAdapter(descriptor, 48000);
+
+    plugin.initialise(32, 32);
+    REQUIRE_THROWS_WITH(
+        plugin.process(Plugin::TimeDomainBuffer{}, 0),
+        "Wrong input buffer size: Buffer size must match initialised block size of 32"
+    );
+}
+
+#endif

@@ -19,6 +19,11 @@ target_link_libraries(
 )
 target_include_directories(${library_name} PUBLIC include)
 
+option(RTVAMP_VALIDATE "Validate input data and method call order in hostsdk" OFF)
+if(RTVAMP_VALIDATE)
+    target_compile_definitions(${library_name} PUBLIC RTVAMP_VALIDATE)
+endif()
+
 if(RTVAMP_BUILD_TESTS)
     add_subdirectory(tests)
 endif()
