@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <filesystem>
 #include <memory>
 #include <optional>
 #include <string_view>
@@ -26,33 +27,35 @@ public:
     );
     ~PluginHostAdapter();
 
-    uint32_t             getVampApiVersion() const noexcept override;
+    std::filesystem::path getLibraryPath() const noexcept;
 
-    std::string_view     getIdentifier()     const noexcept override;
-    std::string_view     getName()           const noexcept override;
-    std::string_view     getDescription()    const noexcept override;
-    std::string_view     getMaker()          const noexcept override;
-    std::string_view     getCopyright()      const noexcept override;
-    int                  getPluginVersion()  const noexcept override;
-    InputDomain          getInputDomain()    const noexcept override;
+    uint32_t              getVampApiVersion() const noexcept override;
 
-    ParameterList        getParameterDescriptors() const noexcept override;
-    std::optional<float> getParameter(std::string_view id) const override;
-    bool                 setParameter(std::string_view id, float value) override; 
+    std::string_view      getIdentifier()     const noexcept override;
+    std::string_view      getName()           const noexcept override;
+    std::string_view      getDescription()    const noexcept override;
+    std::string_view      getMaker()          const noexcept override;
+    std::string_view      getCopyright()      const noexcept override;
+    int                   getPluginVersion()  const noexcept override;
+    InputDomain           getInputDomain()    const noexcept override;
 
-    ProgramList          getPrograms()       const noexcept override;
-    CurrentProgram       getCurrentProgram() const override;
-    bool                 selectProgram(std::string_view name) override;
+    ParameterList         getParameterDescriptors() const noexcept override;
+    std::optional<float>  getParameter(std::string_view id) const override;
+    bool                  setParameter(std::string_view id, float value) override; 
 
-    uint32_t             getPreferredStepSize()  const override;
-    uint32_t             getPreferredBlockSize() const override;
+    ProgramList           getPrograms()       const noexcept override;
+    CurrentProgram        getCurrentProgram() const override;
+    bool                  selectProgram(std::string_view name) override;
 
-    uint32_t             getOutputCount()       const override;
-    OutputList           getOutputDescriptors() const override;
+    uint32_t              getPreferredStepSize()  const override;
+    uint32_t              getPreferredBlockSize() const override;
 
-    bool                 initialise(uint32_t stepSize, uint32_t blockSize) override;
-    void                 reset() override;
-    FeatureSet           process(InputBuffer buffer, uint64_t nsec) override;
+    uint32_t              getOutputCount()       const override;
+    OutputList            getOutputDescriptors() const override;
+
+    bool                  initialise(uint32_t stepSize, uint32_t blockSize) override;
+    void                  reset() override;
+    FeatureSet            process(InputBuffer buffer, uint64_t nsec) override;
 
 private:
     void checkRequirements();

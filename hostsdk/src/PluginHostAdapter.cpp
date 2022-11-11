@@ -150,6 +150,13 @@ PluginHostAdapter::~PluginHostAdapter() {
     descriptor_.cleanup(handle_);
 }
 
+std::filesystem::path PluginHostAdapter::getLibraryPath() const noexcept {
+    if (library_ && library_->path()) {
+        return library_->path().value();
+    }
+    return {};
+}
+
 uint32_t PluginHostAdapter::getVampApiVersion() const noexcept {
     return descriptor_.vampApiVersion;
 }
@@ -295,14 +302,14 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
     assert(initialised_ && "Plugin must be initialised before process");
 #endif
 
-        const bool isTimeDomain = getInputDomain() == InputDomain::Time;
+    const bool isTimeDomain = getInputDomain() == InputDomain::Time;
     const bool validType    = std::holds_alternative<TimeDomainBuffer>(buffer) == isTimeDomain;
 
     if (!validType && isTimeDomain) {
-            throw std::invalid_argument("Wrong input buffer type: Time domain required");
+        throw std::invalid_argument("Wrong input buffer type: Time domain required");
     }
     if (!validType && !isTimeDomain) {
-            throw std::invalid_argument("Wrong input buffer type: Frequency domain required");
+        throw std::invalid_argument("Wrong input buffer type: Frequency domain required");
     }
 
 #ifdef RTVAMP_VALIDATE
