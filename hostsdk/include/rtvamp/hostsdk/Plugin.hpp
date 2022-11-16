@@ -90,9 +90,4 @@ private:
     const float inputSampleRate_;
 };
 
-/* ------------------------------------------- Concept ------------------------------------------ */
-
-template <typename T>
-concept IsPlugin = std::is_base_of_v<Plugin, T>;
-
 }  // namespace rtvamp::hostsdk
