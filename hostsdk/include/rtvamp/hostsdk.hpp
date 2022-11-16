@@ -66,7 +66,7 @@ std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate);
 
 /**
  * Load plugin from given list of paths (either search paths or library paths).
- * Providing the cached library paths `libraryPaths` speeds up the search.
+ * Providing the cached library paths speeds up the search.
  */
 std::unique_ptr<Plugin> loadPlugin(const PluginKey& key, float inputSampleRate, std::span<const std::filesystem::path> paths);
 

@@ -1,6 +1,6 @@
 # Project related configuration options
 PROJECT_NAME           = rt-vamp-plugin-sdk
-PROJECT_NUMBER         =
+PROJECT_NUMBER         = ${PROJECT_VERSION}
 PROJECT_BRIEF          = "Real-time Vamp plugin SDK for C++20"
 PROJECT_LOGO           =
 
