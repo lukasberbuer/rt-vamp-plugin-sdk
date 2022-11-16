@@ -200,10 +200,10 @@ $(function() {
 <div class="line"><a name="l00147"></a><span class="lineno">  147</span>&#160;    }(std::make_index_sequence&lt;MaxOutputCount&gt;{});</div>
 <div class="line"><a name="l00148"></a><span class="lineno">  148</span>&#160;}</div>
 <div class="line"><a name="l00149"></a><span class="lineno">  149</span>&#160; </div>
-<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;}  <span class="comment">// namespace detail</span></div>
-<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160; </div>
-<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
-<div class="line"><a name="l00153"></a><span class="lineno"><a class="line" href="namespacertvamp_1_1pluginsdk.html#a04084c528aa20333aace8cedb129adc4">  153</a></span>&#160;concept <a class="code" href="namespacertvamp_1_1pluginsdk.html#a04084c528aa20333aace8cedb129adc4">IsPlugin</a> = detail::isPlugin&lt;T&gt;();</div>
+<div class="line"><a name="l00150"></a><span class="lineno">  150</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a name="l00151"></a><span class="lineno">  151</span>&#160;concept IsPlugin = detail::isPlugin&lt;T&gt;();</div>
+<div class="line"><a name="l00152"></a><span class="lineno">  152</span>&#160; </div>
+<div class="line"><a name="l00153"></a><span class="lineno">  153</span>&#160;}  <span class="comment">// namespace detail</span></div>
 <div class="line"><a name="l00154"></a><span class="lineno">  154</span>&#160; </div>
 <div class="line"><a name="l00155"></a><span class="lineno">  155</span>&#160;}  <span class="comment">// namespace rtvamp::pluginsdk</span></div>
 </div><!-- fragment --></div><!-- contents -->
@@ -257,7 +257,6 @@ $(function() {
 <div class="ttc" id="anamespacertvamp_1_1pluginsdk_html"><div class="ttname"><a href="namespacertvamp_1_1pluginsdk.html">rtvamp::pluginsdk</a></div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:8</div></div>
 <div class="ttc" id="astructrtvamp_1_1pluginsdk_1_1PluginBase_1_1OutputDescriptor_html"><div class="ttname"><a href="structrtvamp_1_1pluginsdk_1_1PluginBase_1_1OutputDescriptor.html">rtvamp::pluginsdk::PluginBase::OutputDescriptor</a></div><div class="ttdef"><b>Definition:</b> Plugin.hpp:42</div></div>
 <div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_a01e5977ffd9055fb3ab5334642fd87ac"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#a01e5977ffd9055fb3ab5334642fd87ac">rtvamp::pluginsdk::Plugin::outputCount</a></div><div class="ttdeci">static constexpr uint32_t outputCount</div><div class="ttdoc">Number of outputs (defined by template parameter)</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:80</div></div>
-<div class="ttc" id="anamespacertvamp_1_1pluginsdk_html_a04084c528aa20333aace8cedb129adc4"><div class="ttname"><a href="namespacertvamp_1_1pluginsdk.html#a04084c528aa20333aace8cedb129adc4">rtvamp::pluginsdk::IsPlugin</a></div><div class="ttdeci">concept IsPlugin</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:153</div></div>
 <div class="ttc" id="astructrtvamp_1_1pluginsdk_1_1Plugin_1_1Meta_html_a1b2eee7156551a6edfec3e1ad6d7aeae"><div class="ttname"><a href="structrtvamp_1_1pluginsdk_1_1Plugin_1_1Meta.html#a1b2eee7156551a6edfec3e1ad6d7aeae">rtvamp::pluginsdk::Plugin::Meta::copyright</a></div><div class="ttdeci">const char * copyright</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:88</div></div>
 <div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1Plugin_html_acc3c2089aab8294b3e1238ac891a074f"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1Plugin.html#acc3c2089aab8294b3e1238ac891a074f">rtvamp::pluginsdk::Plugin::Plugin</a></div><div class="ttdeci">constexpr Plugin(float inputSampleRate)</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:75</div></div>
 <div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1PluginBase_html_a685c0af79f3e0b958fef63917800767c"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1PluginBase.html#a685c0af79f3e0b958fef63917800767c">rtvamp::pluginsdk::PluginBase::InputBuffer</a></div><div class="ttdeci">std::variant&lt; TimeDomainBuffer, FrequencyDomainBuffer &gt; InputBuffer</div><div class="ttdoc">Input domain variant.</div><div class="ttdef"><b>Definition:</b> Plugin.hpp:57</div></div>

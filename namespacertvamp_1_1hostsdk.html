@@ -70,8 +70,7 @@ $(function() {
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#typedef-members">Typedefs</a> &#124;
-<a href="#func-members">Functions</a> &#124;
-<a href="#var-members">Variables</a>  </div>
+<a href="#func-members">Functions</a>  </div>
   <div class="headertitle">
 <div class="title">rtvamp::hostsdk Namespace Reference</div>  </div>
 </div><!--header-->
@@ -129,12 +128,6 @@ Functions</h2></td></tr>
 <tr class="memitem:aa0793e1553e518362a7670a667bc17b4"><td class="memItemLeft" align="right" valign="top">std::unique_ptr&lt; <a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html">Plugin</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespacertvamp_1_1hostsdk.html#aa0793e1553e518362a7670a667bc17b4">loadPlugin</a> (const <a class="el" href="classrtvamp_1_1hostsdk_1_1PluginKey.html">PluginKey</a> &amp;key, float inputSampleRate, std::span&lt; const std::filesystem::path &gt; paths)</td></tr>
 <tr class="memdesc:aa0793e1553e518362a7670a667bc17b4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Load plugin from given list of paths (either search paths or library paths).  <a href="namespacertvamp_1_1hostsdk.html#aa0793e1553e518362a7670a667bc17b4">More...</a><br /></td></tr>
 <tr class="separator:aa0793e1553e518362a7670a667bc17b4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
-Variables</h2></td></tr>
-<tr class="memitem:a83a7f0e726f79060061271f6af163bba"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a83a7f0e726f79060061271f6af163bba"><td class="memTemplItemLeft" align="right" valign="top">concept&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="namespacertvamp_1_1hostsdk.html#a83a7f0e726f79060061271f6af163bba">IsPlugin</a> = std::is_base_of_v&lt;<a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html">Plugin</a>, T&gt;</td></tr>
-<tr class="separator:a83a7f0e726f79060061271f6af163bba"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Typedef Documentation</h2>
 <a id="a82157aee3d3d23fadc85436e9b78ee0c"></a>
@@ -393,24 +386,7 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Load plugin from given list of paths (either search paths or library paths). </p>
-<p>Providing the cached library paths <code>libraryPaths</code> speeds up the search. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Variable Documentation</h2>
-<a id="a83a7f0e726f79060061271f6af163bba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a83a7f0e726f79060061271f6af163bba">&#9670;&nbsp;</a></span>IsPlugin</h2>
-
-<div class="memitem">
-<div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
-      <table class="memname">
-        <tr>
-          <td class="memname">concept rtvamp::hostsdk::IsPlugin = std::is_base_of_v&lt;<a class="el" href="classrtvamp_1_1hostsdk_1_1Plugin.html">Plugin</a>, T&gt;</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
+<p>Providing the cached library paths speeds up the search. </p>
 
 </div>
 </div>
