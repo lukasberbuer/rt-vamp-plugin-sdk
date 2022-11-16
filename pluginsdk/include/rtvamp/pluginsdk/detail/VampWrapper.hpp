@@ -16,7 +16,7 @@ namespace rtvamp::pluginsdk::detail {
 /**
  * Generate plugin descriptor from plugin definition at compile time.
  */
-template <IsPlugin TPlugin>
+template <detail::IsPlugin TPlugin>
 class VampPluginDescriptorWrapper {
 public:
     static consteval VampPluginDescriptor get() {

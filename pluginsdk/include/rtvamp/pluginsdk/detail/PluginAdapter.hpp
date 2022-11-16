@@ -12,7 +12,7 @@
 
 namespace rtvamp::pluginsdk::detail {
 
-template <IsPlugin TPlugin>
+template <detail::IsPlugin TPlugin>
 class PluginAdapter {
 public:
     static constexpr const VampPluginDescriptor* getDescriptor() { return &descriptor; }
@@ -186,7 +186,7 @@ private:
 
 /* ------------------------------------------ Instance ------------------------------------------ */
 
-template <IsPlugin TPlugin>
+template <detail::IsPlugin TPlugin>
 class PluginAdapter<TPlugin>::Instance {
 public:
     explicit Instance(float inputSampleRate) : plugin_(inputSampleRate) {

@@ -147,9 +147,9 @@ consteval bool isPlugin() {
     }(std::make_index_sequence<MaxOutputCount>{});
 }
 
-}  // namespace detail
-
 template <typename T>
 concept IsPlugin = detail::isPlugin<T>();
+
+}  // namespace detail
 
 }  // namespace rtvamp::pluginsdk

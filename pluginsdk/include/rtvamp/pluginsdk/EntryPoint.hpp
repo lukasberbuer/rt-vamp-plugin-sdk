@@ -21,7 +21,7 @@ namespace rtvamp::pluginsdk {
  *
  *    Example: \include plugin/plugin.cpp
  */
-template <IsPlugin... Plugins>
+template <detail::IsPlugin... Plugins>
 class EntryPoint {
 public:
     static constexpr const VampPluginDescriptor* getDescriptor(
