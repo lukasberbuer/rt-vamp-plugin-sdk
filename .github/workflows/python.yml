@@ -1,0 +1,28 @@
+name: "Python CI"
+
+on: push
+
+jobs:
+  build:
+    runs-on: ${{ matrix.config.platform }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          # choose compiler with C++20 support
+          - { platform: ubuntu-latest,  CC: gcc-10, CXX: g++-10 }
+          - { platform: macos-latest,   CC: gcc-10, CXX: g++-10 }
+          - { platform: windows-latest, CC: "",     CXX: "" }
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Build and install
+        env:
+          CC: ${{ matrix.config.CC }}
+          CXX: ${{ matrix.config.CXX }}
+        run: pip install --verbose .[tests]
+      - name: Run tests with pytest
+        run: pytest

@@ -22,14 +22,14 @@ jobs:
           - { name: Coverage,     CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
           - { name: Amalgamation, CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_AMALGAMATION=ON" }
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install requirements
         run: |
           sudo apt update
           sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
           pip install conan cpp-coveralls quom
       - name: Cache Conan packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.conan/data
           key: linux-conan-${{ matrix.config.name }}
@@ -70,12 +70,12 @@ jobs:
         config:
           - { name: Visual Studio 17 2022, os: windows-2022 }
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Install requirements
         run: |
           pip install conan
       - name: Cache Conan packages
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: ~/.conan/data
           key: windows-conan-${{ matrix.config.name }}

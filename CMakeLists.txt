@@ -1,6 +1,13 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.12)
 
-project(rtvamp CXX)
+project(
+    rtvamp
+    VERSION 0.1.0
+    DESCRIPTION "Real-time Vamp plugin SDK for C++20"
+    HOMEPAGE_URL "https://github.com/lukasberbuer/rt-vamp-plugin-sdk"
+    LANGUAGES CXX
+)
+
 include(cmake/StandardProjectSettings.cmake)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
@@ -88,5 +95,12 @@ endif()
     
 option(RTVAMP_BUILD_DOCUMENTATION "Build documentation" OFF)
 if(RTVAMP_BUILD_DOCUMENTATION)
+    message(STATUS "Documentation enabled")
     add_subdirectory(doc)
+endif()
+
+option(RTVAMP_BUILD_PYTHON_BINDINGS "Build Python bindings" OFF)
+if(RTVAMP_BUILD_PYTHON_BINDINGS)
+    message(STATUS "Python bindings enabled")
+    add_subdirectory(python)
 endif()
