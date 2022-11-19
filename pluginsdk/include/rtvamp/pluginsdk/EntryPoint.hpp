@@ -46,25 +46,28 @@ private:
 /* -------------------------------------------- Macro ------------------------------------------- */
 
 /**
- * Export entry point symbol with pragma.
+ * Export entry point symbol with pragma for MSVC.
  * Reference: https://docs.microsoft.com/de-de/cpp/build/reference/export-exports-a-function
+ * 
+ * Link error with Win32 builds: error LNK2001: unresolved external symbol vampGetPluginDescriptor
+ * Mangling problem? Fix with pragma inside function body using MSVC variables:
+ * https://stackoverflow.com/a/2805560/9967707
  */
-#ifdef _WIN32
-    #define RTVAMP_EXPORT_ENTRY_POINT \
-        _Pragma("comment(linker, \"/export:vampGetPluginDescriptor\")")
+#ifdef _MSC_VER
+    #define RTVAMP_EXPORT_FUNCTION \
+        __pragma(comment(linker, "/EXPORT:" __FUNCTION__"=" __FUNCDNAME__))
 #else
-    #define RTVAMP_EXPORT_ENTRY_POINT
+    #define RTVAMP_EXPORT_FUNCTION
 #endif
 
 /**
  * Generate entry point for given PluginDefintion types and export symbol with pragma.
  */
 #define RTVAMP_ENTRY_POINT(...)                                                                    \
-    RTVAMP_EXPORT_ENTRY_POINT                                                                      \
-                                                                                                   \
     extern "C" const VampPluginDescriptor* vampGetPluginDescriptor(                                \
         unsigned int hostApiVersion,                                                               \
         unsigned int index                                                                         \
     ) {                                                                                            \
+        RTVAMP_EXPORT_FUNCTION                                                                     \
         return ::rtvamp::pluginsdk::EntryPoint<__VA_ARGS__>::getDescriptor(hostApiVersion, index); \
     }
