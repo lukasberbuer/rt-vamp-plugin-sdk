@@ -11,6 +11,7 @@ LONG_DESCRIPTION = (HERE / "README.md").read_text(encoding="utf-8")
 
 INSTALL_REQUIRES = [
     "numpy",
+    "dataclasses>=0.6; python_version<'3.7'",
 ]
 
 EXTRAS_REQUIRE = {
