@@ -1,6 +1,0 @@
-﻿rtvamp.get\_vamp\_paths
-=======================
-
-.. currentmodule:: rtvamp
-
-.. autofunction:: get_vamp_paths
