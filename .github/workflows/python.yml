@@ -3,16 +3,16 @@ name: "CI Python"
 on: push
 
 jobs:
-  build:
-    runs-on: ${{ matrix.config.platform }}
+  test:
+    runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
         config:
           # choose compiler with C++20 support
-          - { platform: ubuntu-latest,  CC: gcc-10, CXX: g++-10 }
-          - { platform: macos-latest,   CC: gcc-10, CXX: g++-10 }
-          - { platform: windows-latest, CC: "",     CXX: "" }
+          - { os: ubuntu-20.04, CC: gcc-10, CXX: g++-10 }
+          - { os: macOS-11,     CC: gcc-10, CXX: g++-10 }
+          - { os: windows-2022, CC: "",     CXX: "" }
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
     steps:
       - uses: actions/checkout@v3
@@ -26,3 +26,37 @@ jobs:
         run: pip install --verbose .[tests]
       - name: Run tests with pytest
         run: pytest
+
+  build-sdist:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build sdist
+        run: pipx run build --sdist
+      - uses: actions/upload-artifact@v3
+        with:
+          name: builds
+          path: dist/*.tar.gz
+
+  build-wheels:
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          # choose compiler with C++20 support
+          - { os: ubuntu-20.04, CC: gcc-10, CXX: g++-10 }  # using manylinux container anyway
+          - { os: macOS-11,     CC: gcc-10, CXX: g++-10 }
+          - { os: windows-2022, CC: "",     CXX: "" }
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build wheels
+        env:
+          CC: ${{ matrix.config.CC }}
+          CXX: ${{ matrix.config.CXX }}
+          CIBW_SKIP: '*-musllinux_*'  # skip building musllinux images, toolchain broken for C++20
+        uses: pypa/cibuildwheel@v2.11.2
+      - uses: actions/upload-artifact@v3
+        with:
+          name: builds
+          path: wheelhouse/*.whl
