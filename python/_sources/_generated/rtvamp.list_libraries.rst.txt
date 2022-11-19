@@ -1,0 +1,6 @@
+﻿rtvamp.list\_libraries
+======================
+
+.. currentmodule:: rtvamp
+
+.. autofunction:: list_libraries
