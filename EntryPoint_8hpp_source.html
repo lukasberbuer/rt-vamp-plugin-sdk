@@ -105,22 +105,21 @@ $(function() {
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;<span class="comment">/* -------------------------------------------- Macro ------------------------------------------- */</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160; </div>
-<div class="line"><a name="l00052"></a><span class="lineno">   52</span>&#160;<span class="preprocessor">#ifdef _WIN32</span></div>
-<div class="line"><a name="l00053"></a><span class="lineno">   53</span>&#160;<span class="preprocessor">    #define RTVAMP_EXPORT_ENTRY_POINT \</span></div>
-<div class="line"><a name="l00054"></a><span class="lineno">   54</span>&#160;<span class="preprocessor">        _Pragma(&quot;comment(linker, \&quot;/export:vampGetPluginDescriptor\&quot;)&quot;)</span></div>
-<div class="line"><a name="l00055"></a><span class="lineno">   55</span>&#160;<span class="preprocessor">#else</span></div>
-<div class="line"><a name="l00056"></a><span class="lineno"><a class="line" href="EntryPoint_8hpp.html#a824efb6020c6c3a47a4ee2f4040e0117">   56</a></span>&#160;<span class="preprocessor">    #define RTVAMP_EXPORT_ENTRY_POINT</span></div>
-<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">#endif</span></div>
-<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160; </div>
-<div class="line"><a name="l00062"></a><span class="lineno"><a class="line" href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">   62</a></span>&#160;<span class="preprocessor">#define RTVAMP_ENTRY_POINT(...)                                                                    \</span></div>
-<div class="line"><a name="l00063"></a><span class="lineno">   63</span>&#160;<span class="preprocessor">    RTVAMP_EXPORT_ENTRY_POINT                                                                      \</span></div>
-<div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;<span class="preprocessor">                                                                                                   \</span></div>
-<div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;<span class="preprocessor">    extern &quot;C&quot; const VampPluginDescriptor* vampGetPluginDescriptor(                                \</span></div>
-<div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;<span class="preprocessor">        unsigned int hostApiVersion,                                                               \</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">        unsigned int index                                                                         \</span></div>
-<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">    ) {                                                                                            \</span></div>
-<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">        return ::rtvamp::pluginsdk::EntryPoint&lt;__VA_ARGS__&gt;::getDescriptor(hostApiVersion, index); \</span></div>
-<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">    }</span></div>
+<div class="line"><a name="l00056"></a><span class="lineno">   56</span>&#160;<span class="preprocessor">#ifdef _MSC_VER</span></div>
+<div class="line"><a name="l00057"></a><span class="lineno">   57</span>&#160;<span class="preprocessor">    #define RTVAMP_EXPORT_FUNCTION \</span></div>
+<div class="line"><a name="l00058"></a><span class="lineno">   58</span>&#160;<span class="preprocessor">        __pragma(comment(linker, &quot;/EXPORT:&quot; __FUNCTION__&quot;=&quot; __FUNCDNAME__))</span></div>
+<div class="line"><a name="l00059"></a><span class="lineno">   59</span>&#160;<span class="preprocessor">#else</span></div>
+<div class="line"><a name="l00060"></a><span class="lineno"><a class="line" href="EntryPoint_8hpp.html#a6a1321320507dae050728a7781adec81">   60</a></span>&#160;<span class="preprocessor">    #define RTVAMP_EXPORT_FUNCTION</span></div>
+<div class="line"><a name="l00061"></a><span class="lineno">   61</span>&#160;<span class="preprocessor">#endif</span></div>
+<div class="line"><a name="l00062"></a><span class="lineno">   62</span>&#160; </div>
+<div class="line"><a name="l00066"></a><span class="lineno"><a class="line" href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">   66</a></span>&#160;<span class="preprocessor">#define RTVAMP_ENTRY_POINT(...)                                                                    \</span></div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;<span class="preprocessor">    extern &quot;C&quot; const VampPluginDescriptor* vampGetPluginDescriptor(                                \</span></div>
+<div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;<span class="preprocessor">        unsigned int hostApiVersion,                                                               \</span></div>
+<div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;<span class="preprocessor">        unsigned int index                                                                         \</span></div>
+<div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;<span class="preprocessor">    ) {                                                                                            \</span></div>
+<div class="line"><a name="l00071"></a><span class="lineno">   71</span>&#160;<span class="preprocessor">        RTVAMP_EXPORT_FUNCTION                                                                     \</span></div>
+<div class="line"><a name="l00072"></a><span class="lineno">   72</span>&#160;<span class="preprocessor">        return ::rtvamp::pluginsdk::EntryPoint&lt;__VA_ARGS__&gt;::getDescriptor(hostApiVersion, index); \</span></div>
+<div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;<span class="preprocessor">    }</span></div>
 </div><!-- fragment --></div><!-- contents -->
 <div class="ttc" id="apluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp_html"><div class="ttname"><a href="pluginsdk_2include_2rtvamp_2pluginsdk_2Plugin_8hpp.html">Plugin.hpp</a></div></div>
 <div class="ttc" id="aclassrtvamp_1_1pluginsdk_1_1EntryPoint_html_a3df94be74d902aa8db39029806983595"><div class="ttname"><a href="classrtvamp_1_1pluginsdk_1_1EntryPoint.html#a3df94be74d902aa8db39029806983595">rtvamp::pluginsdk::EntryPoint::getDescriptor</a></div><div class="ttdeci">static constexpr const VampPluginDescriptor * getDescriptor(unsigned int version, unsigned int index)</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:27</div></div>

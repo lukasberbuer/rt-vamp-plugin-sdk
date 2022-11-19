@@ -109,9 +109,9 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
-<tr class="memitem:a824efb6020c6c3a47a4ee2f4040e0117"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EntryPoint_8hpp.html#a824efb6020c6c3a47a4ee2f4040e0117">RTVAMP_EXPORT_ENTRY_POINT</a></td></tr>
-<tr class="memdesc:a824efb6020c6c3a47a4ee2f4040e0117"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export entry point symbol with pragma.  <a href="EntryPoint_8hpp.html#a824efb6020c6c3a47a4ee2f4040e0117">More...</a><br /></td></tr>
-<tr class="separator:a824efb6020c6c3a47a4ee2f4040e0117"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6a1321320507dae050728a7781adec81"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EntryPoint_8hpp.html#a6a1321320507dae050728a7781adec81">RTVAMP_EXPORT_FUNCTION</a></td></tr>
+<tr class="memdesc:a6a1321320507dae050728a7781adec81"><td class="mdescLeft">&#160;</td><td class="mdescRight">Export entry point symbol with pragma for MSVC.  <a href="EntryPoint_8hpp.html#a6a1321320507dae050728a7781adec81">More...</a><br /></td></tr>
+<tr class="separator:a6a1321320507dae050728a7781adec81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab9e8a9880a2de6797b776d72d446ae98"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">RTVAMP_ENTRY_POINT</a>(...)</td></tr>
 <tr class="memdesc:ab9e8a9880a2de6797b776d72d446ae98"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generate entry point for given PluginDefintion types and export symbol with pragma.  <a href="EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98">More...</a><br /></td></tr>
 <tr class="separator:ab9e8a9880a2de6797b776d72d446ae98"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -132,12 +132,11 @@ Macros</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <a class="code" href="EntryPoint_8hpp.html#a824efb6020c6c3a47a4ee2f4040e0117">RTVAMP_EXPORT_ENTRY_POINT</a>                                                                      \</div>
-<div class="line">                                                                                                   \</div>
-<div class="line">    extern <span class="stringliteral">&quot;C&quot;</span> <span class="keyword">const</span> <a class="code" href="PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8">VampPluginDescriptor</a>* vampGetPluginDescriptor(                                \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keyword">const</span> <a class="code" href="PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8">VampPluginDescriptor</a>* vampGetPluginDescriptor(                                \</div>
 <div class="line">        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> hostApiVersion,                                                               \</div>
 <div class="line">        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> index                                                                         \</div>
 <div class="line">    ) {                                                                                            \</div>
+<div class="line">        RTVAMP_EXPORT_FUNCTION                                                                     \</div>
 <div class="line">        return ::rtvamp::pluginsdk::EntryPoint&lt;__VA_ARGS__&gt;::getDescriptor(hostApiVersion, index); \</div>
 <div class="line">    }</div>
 </div><!-- fragment -->
@@ -145,26 +144,26 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="a824efb6020c6c3a47a4ee2f4040e0117"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a824efb6020c6c3a47a4ee2f4040e0117">&#9670;&nbsp;</a></span>RTVAMP_EXPORT_ENTRY_POINT</h2>
+<a id="a6a1321320507dae050728a7781adec81"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6a1321320507dae050728a7781adec81">&#9670;&nbsp;</a></span>RTVAMP_EXPORT_FUNCTION</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">#define RTVAMP_EXPORT_ENTRY_POINT</td>
+          <td class="memname">#define RTVAMP_EXPORT_FUNCTION</td>
         </tr>
       </table>
 </div><div class="memdoc">
 
-<p>Export entry point symbol with pragma. </p>
-<p>Reference: <a href="https://docs.microsoft.com/de-de/cpp/build/reference/export-exports-a-function">https://docs.microsoft.com/de-de/cpp/build/reference/export-exports-a-function</a> </p>
+<p>Export entry point symbol with pragma for MSVC. </p>
+<p>Reference: <a href="https://docs.microsoft.com/de-de/cpp/build/reference/export-exports-a-function">https://docs.microsoft.com/de-de/cpp/build/reference/export-exports-a-function</a></p>
+<p>Link error with Win32 builds: error LNK2001: unresolved external symbol vampGetPluginDescriptor Mangling problem? Fix with pragma inside function body using MSVC variables: <a href="https://stackoverflow.com/a/2805560/9967707">https://stackoverflow.com/a/2805560/9967707</a> </p>
 
 </div>
 </div>
 </div><!-- contents -->
 <div class="ttc" id="aPluginHostAdapter_8hpp_html_a62c3d7e643a67e30fc1def11423108a8"><div class="ttname"><a href="PluginHostAdapter_8hpp.html#a62c3d7e643a67e30fc1def11423108a8">VampPluginDescriptor</a></div><div class="ttdeci">_VampPluginDescriptor VampPluginDescriptor</div><div class="ttdef"><b>Definition:</b> PluginHostAdapter.hpp:13</div></div>
-<div class="ttc" id="aEntryPoint_8hpp_html_a824efb6020c6c3a47a4ee2f4040e0117"><div class="ttname"><a href="EntryPoint_8hpp.html#a824efb6020c6c3a47a4ee2f4040e0117">RTVAMP_EXPORT_ENTRY_POINT</a></div><div class="ttdeci">#define RTVAMP_EXPORT_ENTRY_POINT</div><div class="ttdoc">Export entry point symbol with pragma.</div><div class="ttdef"><b>Definition:</b> EntryPoint.hpp:56</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">
