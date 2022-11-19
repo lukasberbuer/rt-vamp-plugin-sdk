@@ -9,7 +9,6 @@ on:
 
 jobs:
   amalgamation:
-    name: Amalgamation
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
@@ -29,7 +28,6 @@ jobs:
           path: build/amalgamation/pluginsdk/include/rtvamp/pluginsdk.hpp
 
   release:
-    name: Release
     runs-on: ubuntu-20.04
     needs: amalgamation
     steps:

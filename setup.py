@@ -14,7 +14,15 @@ INSTALL_REQUIRES = [
 ]
 
 EXTRAS_REQUIRE = {
-    "docs": [],
+    "docs": [
+        "sphinx>=5",
+        "sphinx-gallery",
+        "myst-parser",
+        "furo",
+        # for examples
+        "librosa",
+        "matplotlib",
+    ],
     "tests": [
         "pytest>=6",  # pyproject.toml support
     ],
