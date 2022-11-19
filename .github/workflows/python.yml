@@ -1,6 +1,12 @@
 name: "CI Python"
 
-on: push
+on:
+  push:
+    branches:
+     - master
+  release:
+    types:
+      - published
 
 jobs:
   test:
@@ -60,3 +66,24 @@ jobs:
         with:
           name: builds
           path: wheelhouse/*.whl
+
+  publish:
+    needs: [test, build-sdist, build-wheels]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          # unpacks builds artifact into dist/
+          name: builds
+          path: dist
+      - name: Publish package to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          repository_url: https://test.pypi.org/legacy/
+          skip_existing: true
+      - name: Publish package to PyPI
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
