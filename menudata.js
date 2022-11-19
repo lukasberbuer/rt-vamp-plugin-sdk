@@ -86,4 +86,6 @@ var menudata={children:[
 {text:"All",url:"globals.html"},
 {text:"Typedefs",url:"globals_type.html"},
 {text:"Macros",url:"globals_defs.html"}]}]}]},
+{text:"Bindings",url:"usergroup1.html",children:[
+{text:"Python",url:"python/"}]},
 {text:"GitHub",url:"https://github.com/lukasberbuer/rt-vamp-plugin-sdk"}]}
