@@ -1,4 +1,4 @@
-name: "CI Python"
+name: "Python"
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
         config:
           # choose compiler with C++20 support
           - { os: ubuntu-20.04, CC: gcc-10, CXX: g++-10 }
-          - { os: macOS-11,     CC: gcc-10, CXX: g++-10 }
+          - { os: macos-11,     CC: gcc-10, CXX: g++-10 }
           - { os: windows-2022, CC: "",     CXX: "" }
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
     steps:
@@ -52,7 +52,7 @@ jobs:
         config:
           # choose compiler with C++20 support
           - { os: ubuntu-20.04, CC: gcc-10, CXX: g++-10 }  # using manylinux container anyway
-          - { os: macOS-11,     CC: gcc-10, CXX: g++-10 }
+          - { os: macos-11,     CC: gcc-10, CXX: g++-10 }
           - { os: windows-2022, CC: "",     CXX: "" }
     steps:
       - uses: actions/checkout@v3
