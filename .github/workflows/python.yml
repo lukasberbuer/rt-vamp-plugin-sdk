@@ -60,7 +60,8 @@ jobs:
         env:
           CC: ${{ matrix.config.CC }}
           CXX: ${{ matrix.config.CXX }}
-          CIBW_SKIP: '*-musllinux_*'  # skip building musllinux images, toolchain broken for C++20
+          # disable builds of PyPy and musllinux wheels (toolchain broken for C++20)
+          CIBW_SKIP: 'pp* *-musllinux_*'
         uses: pypa/cibuildwheel@v2.11.2
       - uses: actions/upload-artifact@v3
         with:
