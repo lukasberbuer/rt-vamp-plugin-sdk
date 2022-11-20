@@ -1,0 +1,6 @@
+﻿rtvamp.get\_plugin\_metadata
+============================
+
+.. currentmodule:: rtvamp
+
+.. autofunction:: get_plugin_metadata
