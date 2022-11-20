@@ -7,7 +7,7 @@ from skbuild import setup
 
 HERE = Path(__file__).parent
 
-LONG_DESCRIPTION = (HERE / "README.md").read_text(encoding="utf-8")
+LONG_DESCRIPTION = (HERE / "python" / "README.md").read_text(encoding="utf-8")
 
 INSTALL_REQUIRES = [
     "numpy",
