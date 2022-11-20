@@ -1,0 +1,6 @@
+﻿rtvamp.compute\_features
+========================
+
+.. currentmodule:: rtvamp
+
+.. autofunction:: compute_features

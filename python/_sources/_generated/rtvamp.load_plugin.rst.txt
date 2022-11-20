@@ -1,0 +1,6 @@
+﻿rtvamp.load\_plugin
+===================
+
+.. currentmodule:: rtvamp
+
+.. autofunction:: load_plugin
