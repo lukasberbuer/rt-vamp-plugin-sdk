@@ -2,7 +2,11 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![CI](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/ci.yml)
+[![Doc](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/doc.yml/badge.svg)](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/doc.yml)
+[![Python](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/python.yml/badge.svg)](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/actions/workflows/python.yml)
 [![Coverage](https://coveralls.io/repos/github/lukasberbuer/rt-vamp-plugin-sdk/badge.svg)](https://coveralls.io/github/lukasberbuer/rt-vamp-plugin-sdk)
+[![PyPI](https://img.shields.io/pypi/v/rtvamp)](https://pypi.org/project/rtvamp)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/rtvamp)](https://pypi.org/project/rtvamp)
 
 Vamp is an C/C++ plugin API for audio analysis / feature extraction plugins: https://www.vamp-plugins.org
 
@@ -16,6 +20,10 @@ The SDK aims to be **well tested**, **cross-platform** and use **modern C++**.
 The plugin SDK is available as a [single-header library](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/releases/latest/download/pluginsdk.hpp) (download as asset from [latest release](https://github.com/lukasberbuer/rt-vamp-plugin-sdk/releases/latest) page).
 
 Compiler support: `GCC >= 10`, `Clang >= 11`, `MSVC >= 19.30`
+
+> **Note**:
+> Python bindings for the hostsdk are available via [PyPI](https://pypi.org/project/rtvamp).
+> Please check out the [documentation](https://lukasberbuer.github.io/rt-vamp-plugin-sdk/python).
 
 ## Links
 

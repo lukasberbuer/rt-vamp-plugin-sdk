@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.12)
 
 project(
     rtvamp
-    VERSION 0.1.0
+    VERSION 0.2.0
     DESCRIPTION "Real-time Vamp plugin SDK for C++20"
     HOMEPAGE_URL "https://github.com/lukasberbuer/rt-vamp-plugin-sdk"
     LANGUAGES CXX
