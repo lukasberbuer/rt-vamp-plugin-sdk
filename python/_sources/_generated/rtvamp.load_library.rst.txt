@@ -1,0 +1,6 @@
+﻿rtvamp.load\_library
+====================
+
+.. currentmodule:: rtvamp
+
+.. autofunction:: load_library
