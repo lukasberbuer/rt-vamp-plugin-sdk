@@ -1,0 +1,28 @@
+﻿rtvamp.PluginLibrary
+====================
+
+.. currentmodule:: rtvamp
+
+.. autoclass:: PluginLibrary
+   :members:
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~PluginLibrary.__init__
+      ~PluginLibrary.get_library_name
+      ~PluginLibrary.get_library_path
+      ~PluginLibrary.get_plugin_count
+      ~PluginLibrary.list_plugins
+      ~PluginLibrary.load_plugin
+   
+   
+
+   
+   
+   
