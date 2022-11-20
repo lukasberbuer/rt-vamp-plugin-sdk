@@ -1,0 +1,6 @@
+﻿rtvamp.list\_plugins
+====================
+
+.. currentmodule:: rtvamp
+
+.. autofunction:: list_plugins
