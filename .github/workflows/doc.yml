@@ -26,11 +26,6 @@ jobs:
         with:
           name: doc
           path: build/doc/html/
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/doc/html/
 
   doc-python:
     runs-on: ubuntu-20.04
@@ -56,9 +51,23 @@ jobs:
         with:
           name: doc-python
           path: python/docs/_build/html/
+
+  deploy:
+    runs-on: ubuntu-20.04
+    needs: [doc, doc-python]
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: doc
+          path: html
+      - uses: actions/download-artifact@v3
+        with:
+          name: doc-python
+          path: html/python
+      - name: List files
+        run: ls -R
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: python/docs/_build/html/
-          destination_dir: python  # upload to subdirectory python
+          publish_dir: html
