@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Missing `<mutex>` import for `std::unique_lock` in `PluginAdapter.hpp`
 
 ## [0.2.0] - 2022-11-20
 
@@ -27,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - `hostsdk::loadPlugin`
 - Set default `binCount` of `pluginsdk::Plugin::OutputDescriptor` to 1 (instead of 0)
 - Use optional as return type for `hostsdk::Plugin::getCurrentProgram`
-- Use `string_view` for `pluginsdk::Plugin::ProgramList` (instead of const char* const)
+- Use `string_view` for `pluginsdk::Plugin::ProgramList` (instead of const char\* const)
 
 ### Fixed
 
@@ -37,11 +40,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Zero-crossing plugin
 - Handle or prevent copy/move of pluginsdk wrapper classes (pointer invalidation)
 
-
 ## [0.1.0] - 2022-01-17
 
 First release
 
-[Unreleased]: https://github.com/lukasberbuer/rt-vamp-plugin-sdk/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/lukasberbuer/rt-vamp-plugin-sdk/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/lukasberbuer/rt-vamp-plugin-sdk/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/lukasberbuer/rt-vamp-plugin-sdk/releases/tag/v0.1.0
