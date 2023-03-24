@@ -3,12 +3,13 @@
 
 .. _sphx_glr__examples_sg_execution_times:
 
+
 Computation times
 =================
-**00:02.796** total execution time for **_examples** files:
+**00:10.513** total execution time for **_examples** files:
 
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_ex2_compute_features.py` (``ex2_compute_features.py``) | 00:02.788 | 0.0 MB |
+| :ref:`sphx_glr__examples_ex2_compute_features.py` (``ex2_compute_features.py``) | 00:10.504 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr__examples_ex1_discovery.py` (``ex1_discovery.py``)               | 00:00.008 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+

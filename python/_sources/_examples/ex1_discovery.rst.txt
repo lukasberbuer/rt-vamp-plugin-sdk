@@ -10,7 +10,7 @@
     .. note::
         :class: sphx-glr-download-link-note
 
-        Click :ref:`here <sphx_glr_download__examples_ex1_discovery.py>`
+        :ref:`Go to the end <sphx_glr_download__examples_ex1_discovery.py>`
         to download the full example code
 
 .. rst-class:: sphx-glr-example-title
@@ -63,7 +63,7 @@ List libraries:
  .. code-block:: none
 
 
-    [PosixPath('/opt/hostedtoolcache/Python/3.10.8/x64/lib/python3.10/site-packages/rtvamp/example-plugin.so')]
+    [PosixPath('/opt/hostedtoolcache/Python/3.10.10/x64/lib/python3.10/site-packages/rtvamp/example-plugin.so')]
 
 
 
@@ -196,6 +196,8 @@ Get metadata and descriptors from plugin
 .. only:: html
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
+
+
 
 
     .. container:: sphx-glr-download sphx-glr-download-python

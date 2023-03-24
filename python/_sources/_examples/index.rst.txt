@@ -19,7 +19,7 @@ A collection of examples how to use `rtvamp` to analyze audio data.
 .. only:: html
 
   .. image:: /_examples/images/thumb/sphx_glr_ex1_discovery_thumb.png
-    :alt: Plugin discovery and browsing
+    :alt:
 
   :ref:`sphx_glr__examples_ex1_discovery.py`
 
@@ -36,7 +36,7 @@ A collection of examples how to use `rtvamp` to analyze audio data.
 .. only:: html
 
   .. image:: /_examples/images/thumb/sphx_glr_ex2_compute_features_thumb.png
-    :alt: Compute features
+    :alt:
 
   :ref:`sphx_glr__examples_ex2_compute_features.py`
 
