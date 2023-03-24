@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
-          pip install conan cpp-coveralls quom
+          pip install conan~=1.59 cpp-coveralls quom
       - uses: actions/cache@v3
         with:
           path: ~/.conan/data
@@ -99,7 +99,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Install requirements
-        run: pip install conan
+        run: pip install conan~=1.59
       - uses: actions/cache@v3
         with:
           path: ~/.conan/data
