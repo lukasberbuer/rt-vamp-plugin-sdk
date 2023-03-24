@@ -6,10 +6,10 @@
 
 Computation times
 =================
-**00:10.513** total execution time for **_examples** files:
+**00:07.800** total execution time for **_examples** files:
 
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_ex2_compute_features.py` (``ex2_compute_features.py``) | 00:10.504 | 0.0 MB |
+| :ref:`sphx_glr__examples_ex2_compute_features.py` (``ex2_compute_features.py``) | 00:07.794 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_ex1_discovery.py` (``ex1_discovery.py``)               | 00:00.008 | 0.0 MB |
+| :ref:`sphx_glr__examples_ex1_discovery.py` (``ex1_discovery.py``)               | 00:00.006 | 0.0 MB |
 +---------------------------------------------------------------------------------+-----------+--------+
