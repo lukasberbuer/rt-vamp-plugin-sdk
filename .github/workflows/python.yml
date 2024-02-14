@@ -21,7 +21,7 @@ jobs:
           - { os: windows-2022, CC: "",     CXX: "" }
         python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
@@ -36,10 +36,10 @@ jobs:
   build-sdist:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build sdist
         run: pipx run build --sdist
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: builds
           path: dist/*.tar.gz
@@ -55,7 +55,7 @@ jobs:
           - { os: macos-11,     CC: gcc-10, CXX: g++-10 }
           - { os: windows-2022, CC: "",     CXX: "" }
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Build wheels
         env:
           CC: ${{ matrix.config.CC }}
@@ -63,7 +63,7 @@ jobs:
           # disable builds of PyPy and musllinux wheels (toolchain broken for C++20)
           CIBW_SKIP: 'pp* *-musllinux_*'
         uses: pypa/cibuildwheel@v2.11.2
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: builds
           path: wheelhouse/*.whl
@@ -72,7 +72,7 @@ jobs:
     needs: [test, build-sdist, build-wheels]
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           # unpacks builds artifact into dist/
           name: builds

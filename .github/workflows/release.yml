@@ -9,7 +9,7 @@ jobs:
   amalgamation:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Install requirements
         run: |
           pip install quom
@@ -19,7 +19,7 @@ jobs:
           cd build
           cmake -DRTVAMP_ENABLE_AMALGAMATION=ON ..
           cmake --build . --target rtvamp-pluginsdk-amalgamation
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: pluginsdk_amalgamated
           path: build/amalgamation/pluginsdk/include/rtvamp/pluginsdk.hpp
@@ -28,7 +28,7 @@ jobs:
     runs-on: ubuntu-20.04
     needs: amalgamation
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: pluginsdk_amalgamated
       - name: List files

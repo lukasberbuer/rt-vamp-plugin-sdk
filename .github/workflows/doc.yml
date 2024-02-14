@@ -13,7 +13,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y doxygen graphviz
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           submodules: true
       - name: Build doc with CMake
@@ -22,7 +22,7 @@ jobs:
           cd build
           cmake -DRTVAMP_BUILD_DOCUMENTATION=ON ..
           cmake --build . --target rtvamp-doc
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: doc
           path: build/doc/html/
@@ -30,7 +30,7 @@ jobs:
   doc-python:
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
@@ -47,7 +47,7 @@ jobs:
         run: |
           cd python/docs/
           make html
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: doc-python
           path: python/docs/_build/html/
@@ -56,11 +56,11 @@ jobs:
     runs-on: ubuntu-20.04
     needs: [doc, doc-python]
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: doc
           path: html
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: doc-python
           path: html/python
