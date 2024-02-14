@@ -41,7 +41,7 @@ jobs:
         run: pipx run build --sdist
       - uses: actions/upload-artifact@v4
         with:
-          name: builds
+          name: dist-sdist
           path: dist/*.tar.gz
 
   build-wheels:
@@ -65,7 +65,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.2
       - uses: actions/upload-artifact@v4
         with:
-          name: builds
+          name: dist-wheels
           path: wheelhouse/*.whl
 
   publish:
@@ -74,15 +74,16 @@ jobs:
     steps:
       - uses: actions/download-artifact@v4
         with:
-          # unpacks builds artifact into dist/
-          name: builds
+          # unpacks builds artifacts into dist/
+          name: dist-*
           path: dist
+          merge-multiple: true
       - name: Publish package to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository_url: https://test.pypi.org/legacy/
-          skip_existing: true
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
       - name: Publish package to PyPI
         if: github.event_name == 'release' && github.event.action == 'published'
         uses: pypa/gh-action-pypi-publish@release/v1
