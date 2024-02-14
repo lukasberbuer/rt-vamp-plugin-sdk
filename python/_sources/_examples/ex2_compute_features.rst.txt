@@ -23,7 +23,7 @@ Compute features
 
 .. GENERATED FROM PYTHON SOURCE LINES 5-17
 
-.. code-block:: default
+.. code-block:: Python
 
 
     import os
@@ -51,7 +51,7 @@ Load sample audio data
 
 .. GENERATED FROM PYTHON SOURCE LINES 20-22
 
-.. code-block:: default
+.. code-block:: Python
 
     y, sr = librosa.load(librosa.ex("trumpet"))
 
@@ -75,7 +75,7 @@ Compute features with rtvamp
 
 .. GENERATED FROM PYTHON SOURCE LINES 25-28
 
-.. code-block:: default
+.. code-block:: Python
 
     t_rms, y_rms = rtvamp.compute_features(y, sr, plugin="example-plugin:rms", blocksize=256)
     t_sro, y_sro = rtvamp.compute_features(y, sr, plugin="example-plugin:spectralrolloff", parameter={"rolloff": 0.5})
@@ -94,7 +94,7 @@ Plot features with spectrogram
 
 .. GENERATED FROM PYTHON SOURCE LINES 31-43
 
-.. code-block:: default
+.. code-block:: Python
 
     fig, ax = plt.subplots(nrows=3, ncols=1, sharex=True, tight_layout=True)
     D = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
@@ -123,7 +123,7 @@ Plot features with spectrogram
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  7.794 seconds)
+   **Total running time of the script:** (0 minutes 8.584 seconds)
 
 
 .. _sphx_glr_download__examples_ex2_compute_features.py:
@@ -132,16 +132,13 @@ Plot features with spectrogram
 
   .. container:: sphx-glr-footer sphx-glr-footer-example
 
+    .. container:: sphx-glr-download sphx-glr-download-jupyter
 
-
+      :download:`Download Jupyter notebook: ex2_compute_features.ipynb <ex2_compute_features.ipynb>`
 
     .. container:: sphx-glr-download sphx-glr-download-python
 
       :download:`Download Python source code: ex2_compute_features.py <ex2_compute_features.py>`
-
-    .. container:: sphx-glr-download sphx-glr-download-jupyter
-
-      :download:`Download Jupyter notebook: ex2_compute_features.ipynb <ex2_compute_features.ipynb>`
 
 
 .. only:: html
