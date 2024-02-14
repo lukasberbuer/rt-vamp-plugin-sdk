@@ -75,7 +75,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           # unpacks builds artifacts into dist/
-          name: dist-*
+          pattern: dist-*
           path: dist
           merge-multiple: true
       - name: Publish package to Test PyPI
