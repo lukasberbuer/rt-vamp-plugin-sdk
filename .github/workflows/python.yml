@@ -62,7 +62,7 @@ jobs:
           CXX: ${{ matrix.config.CXX }}
           # disable builds of PyPy and musllinux wheels (toolchain broken for C++20)
           CIBW_SKIP: 'pp* *-musllinux_*'
-        uses: pypa/cibuildwheel@v2.11.2
+        uses: pypa/cibuildwheel@v2.16.5
       - uses: actions/upload-artifact@v4
         with:
           name: dist-wheels-${{ matrix.config.os }}
