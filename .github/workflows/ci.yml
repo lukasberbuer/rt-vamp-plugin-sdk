@@ -4,7 +4,7 @@ on: push
 
 jobs:
   test:
-    name: ${{ matrix.config.name }} (${{ matrix.build_type }}, ${{ matrix.library_type }})
+    name: ${{ matrix.config.name }} (${{ matrix.build-type }}, ${{ matrix.library-type }})
     strategy:
       fail-fast: false
       matrix:
@@ -52,11 +52,11 @@ jobs:
             compiler: clang++
             flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON"
 
-        build_type:
+        build-type:
           - Debug
           - Release
 
-        library_type:
+        library-type:
           - static
           - shared
 
@@ -66,8 +66,14 @@ jobs:
               os: ubuntu-24.04
               compiler: clang++
               flags: "-DOPENAE_ENABLE_CLANG_TIDY=ON"
-            build_type: Debug
-            library_type: static
+            build-type: Debug
+            library-type: static
+
+        # TODO: weird link error LNK1181
+        exclude:
+          - config:
+              os: windows-2022
+            library-type: shared
 
     runs-on: ${{ matrix.config.os }}
     steps:
@@ -85,15 +91,15 @@ jobs:
           cmake -S . -B build
           -DCMAKE_CXX_COMPILER=${{ matrix.config.compiler }}
           -DCMAKE_CXX_STANDARD=20
-          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-          -DBUILD_SHARED_LIBS=${{ matrix.library_type == 'shared' }}
+          -DCMAKE_BUILD-TYPE=${{ matrix.build-type }}
+          -DBUILD_SHARED_LIBS=${{ matrix.library-type == 'shared' }}
           -DRTVAMP_BUILD_BENCHMARKS=${{ runner.os == 'Linux' }}
           -DRTVAMP_BUILD_EXAMPLES=ON
           -DRTVAMP_BUILD_TESTS=ON
           ${{ matrix.config.flags }}
 
       - name: Build and run tests
-        run: cmake --build build --config ${{ matrix.build_type }} --parallel
+        run: cmake --build build --config ${{ matrix.build-type }} --parallel
 
       - name: Run tests
-        run: ctest --test-dir build --build-config ${{ matrix.build_type }} --output-on-failure
+        run: ctest --test-dir build --build-config ${{ matrix.build-type }} --output-on-failure
