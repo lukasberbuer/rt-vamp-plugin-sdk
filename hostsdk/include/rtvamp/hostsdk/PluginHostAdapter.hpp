@@ -27,7 +27,7 @@ public:
     );
     ~PluginHostAdapter();
 
-    std::filesystem::path getLibraryPath() const noexcept;
+    std::filesystem::path getLibraryPath() const noexcept override;
 
     uint32_t              getVampApiVersion() const noexcept override;
 

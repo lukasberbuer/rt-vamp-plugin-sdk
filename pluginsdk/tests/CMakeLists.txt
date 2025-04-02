@@ -18,4 +18,4 @@ target_link_libraries(
         Threads::Threads
 )
 
-discover_and_run_tests(tests_pluginsdk)
+catch_discover_tests(tests_pluginsdk)

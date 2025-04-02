@@ -9,68 +9,65 @@ on:
       - published
 
 jobs:
-  test:
-    runs-on: ${{ matrix.config.os }}
+  tests:
+    name: Run tests on Python ${{ matrix.python-version }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        config:
-          # choose compiler with C++20 support
-          - { os: ubuntu-20.04, CC: gcc-10, CXX: g++-10 }
-          - { os: macos-11,     CC: gcc-10, CXX: g++-10 }
-          - { os: windows-2022, CC: "",     CXX: "" }
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12", "3.13"]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Build and install
-        env:
-          CC: ${{ matrix.config.CC }}
-          CXX: ${{ matrix.config.CXX }}
         run: pip install --verbose .[tests]
       - name: Run tests with pytest
         run: pytest
 
   build-sdist:
-    runs-on: ubuntu-20.04
+    name: Build source distribution
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - name: Build sdist
         run: pipx run build --sdist
       - uses: actions/upload-artifact@v4
         with:
-          name: dist-sdist
-          path: dist/*.tar.gz
+          name: cibw-sdist
+          path: ./dist/*.tar.gz
 
   build-wheels:
+    name: Build wheels on ${{ matrix.config.os }}
     runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
       matrix:
         config:
-          # choose compiler with C++20 support
-          - { os: ubuntu-20.04, CC: gcc-10, CXX: g++-10 }  # using manylinux container anyway
-          - { os: macos-11,     CC: gcc-10, CXX: g++-10 }
-          - { os: windows-2022, CC: "",     CXX: "" }
+          - os: ubuntu-24.04 # using manylinux/musllinux images
+          - os: ubuntu-24.04-arm # using manylinux/musllinux images
+          - os: windows-latest
+          - os: macos-15
     steps:
       - uses: actions/checkout@v4
       - name: Build wheels
         env:
-          CC: ${{ matrix.config.CC }}
-          CXX: ${{ matrix.config.CXX }}
-          # disable builds of PyPy and musllinux wheels (toolchain broken for C++20)
-          CIBW_SKIP: 'pp* *-musllinux_*'
-        uses: pypa/cibuildwheel@v2.16.5
+          # <filesystem> requires 10.15: https://developer.apple.com/xcode/cpp/
+          # https://cibuildwheel.pypa.io/en/stable/cpp_standards/#macos-and-deployment-target-versions
+          MACOSX_DEPLOYMENT_TARGET: "10.15"
+          CIBW_ARCHS_MACOS: "x86_64 arm64" # https://cibuildwheel.pypa.io/en/stable/faq/#cross-compiling
+        uses: pypa/cibuildwheel@v2.23.0
       - uses: actions/upload-artifact@v4
         with:
-          name: dist-wheels-${{ matrix.config.os }}
-          path: wheelhouse/*.whl
+          name: cibw-wheels-${{ matrix.config.os }}-${{ strategy.job-index }}
+          path: ./wheelhouse/*.whl
 
   publish:
-    needs: [test, build-sdist, build-wheels]
-    runs-on: ubuntu-20.04
+    needs: [tests, build-sdist, build-wheels]
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
       - uses: actions/download-artifact@v4
         with:
@@ -81,11 +78,8 @@ jobs:
       - name: Publish package to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository-url: https://test.pypi.org/legacy/
           skip-existing: true
       - name: Publish package to PyPI
         if: github.event_name == 'release' && github.event.action == 'published'
         uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          password: ${{ secrets.PYPI_API_TOKEN }}

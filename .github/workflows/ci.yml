@@ -3,110 +3,103 @@ name: CI
 on: push
 
 jobs:
-  linux:
-    name: Linux ${{ matrix.config.name }}
-    runs-on: ubuntu-20.04  # https://github.com/actions/virtual-environments
+  test:
+    name: ${{ matrix.config.name }} (${{ matrix.build-type }}, ${{ matrix.library-type }})
     strategy:
       fail-fast: false
       matrix:
         config:
-          - { name: GCC 10,       CC: gcc-10,   CXX: g++-10,     flags: ""}
-          - { name: Clang 11,     CC: clang-11, CXX: clang++-11, flags: "" }
-          - { name: Clang 12,     CC: clang-12, CXX: clang++-12, flags: "" }
-          - { name: ASan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_ADDRESS=ON" }
-          - { name: LSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_LEAK=ON" }
-          # Memory sanitizer requires all the code (including libc++) to be MSan-instrumented otherwise it reports false positives
-          # - { name: MSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_MEMORY=ON" }
-          - { name: TSan,         CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON" }
-          - { name: UBSan,        CC: clang-12, CXX: clang++-12, flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" }
-          - { name: Coverage,     CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
-          - { name: Amalgamation, CC: gcc-10,   CXX: g++-10,     flags: "-DRTVAMP_ENABLE_AMALGAMATION=ON" }
+          - name: Linux GCC 10
+            os: ubuntu-22.04
+            compiler: g++-10
+
+          - name: Linux GCC 14
+            os: ubuntu-24.04
+            compiler: g++-14
+
+          - name: Linux Clang 13
+            os: ubuntu-22.04
+            compiler: clang++-13
+
+          - name: Linux Clang 18
+            os: ubuntu-24.04
+            compiler: clang++-18
+
+          - name: macOS AppleClang 15
+            os: macos-13
+            compiler: clang++
+
+          - name: macOS AppleClang 16
+            os: macos-15
+            compiler: clang++
+
+          - name: Windows Visual Studio 17
+            os: windows-2022
+            compiler: msvc
+
+          - name: ASan
+            os: ubuntu-24.04
+            compiler: clang++
+            flags: "-DRTVAMP_ENABLE_SANITIZER_ADDRESS=ON"
+
+          - name: TSan
+            os: ubuntu-24.04
+            compiler: clang++
+            flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON"
+
+          - name: UBSan
+            os: ubuntu-24.04
+            compiler: clang++
+            flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON"
+
+        build-type:
+          - Debug
+          - Release
+
+        library-type:
+          - static
+          - shared
+
+        include:
+          - config:
+              name: Clang-Tidy
+              os: ubuntu-24.04
+              compiler: clang++
+              flags: "-DOPENAE_ENABLE_CLANG_TIDY=ON"
+            build-type: Debug
+            library-type: static
+
+        # TODO: weird link error LNK1181
+        exclude:
+          - config:
+              os: windows-2022
+            library-type: shared
+
+    runs-on: ${{ matrix.config.os }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Install requirements
+        if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
-          pip install conan~=1.59 cpp-coveralls quom
-      - uses: actions/cache@v3
-        with:
-          path: ~/.conan/data
-          key: linux-conan-${{ matrix.config.name }}
-      - name: Compile and run tests
-        env:
-          CC: ${{ matrix.config.CC }}
-          CXX: ${{ matrix.config.CXX }}
-        run: |
-          mkdir build
-          cd build
-          cmake \
-            -DRTVAMP_ENABLE_CONAN=ON \
-            -DRTVAMP_BUILD_BENCHMARKS=ON \
-            -DRTVAMP_BUILD_EXAMPLES=ON \
-            -DRTVAMP_BUILD_TESTS=ON \
-            ${{ matrix.config.flags }} \
-            ..
-          cmake --build .
-      - name: Upload coverage results to coveralls.io
-        if: ${{ github.ref == 'refs/heads/master' && matrix.config.name == 'Coverage' }}
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: |
-          coveralls \
-            -E '.*/3rdparty/.*' \
-            -E '.*/benchmarks/.*' \
-            -E '.*/build/.*' \
-            -E '.*/examples/.*' \
-            -E '.*/tests/.*' \
-            --gcov-options '\-lp';
+          sudo apt install -y catch2 libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
+          pip install cpp-coveralls quom
 
-  macos:
-    name: macOS ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - { name: GCC 10,   os: macos-11, CC: gcc-10, CXX: g++-10 }
-          - { name: GCC 11,   os: macos-11, CC: gcc-11, CXX: g++-11 }
-          # - { name: Clang 13, os: macos-11, CC: clang,  CXX: clang++ }  # AppleClang 13 does not support C++20
-    steps:
-      - uses: actions/checkout@v4
-      # - name: Install requirements
-      #   run: brew install catch2
-      - name: Compile and run tests
-        env:
-          CC: ${{ matrix.config.CC }}
-          CXX: ${{ matrix.config.CXX }}
-        # skip tests due to problems with catch2
-        run: |
-          mkdir build
-          cd build
-          cmake \
-            -DRTVAMP_BUILD_EXAMPLES=OFF \
-            -DRTVAMP_BUILD_TESTS=OFF \
-            ..
-          cmake --build .
+      - name: Configure CMake
+        run: >
+          cmake -S . -B build
+          -DCMAKE_CXX_COMPILER=${{ matrix.config.compiler }}
+          -DCMAKE_CXX_STANDARD=20
+          -DCMAKE_BUILD-TYPE=${{ matrix.build-type }}
+          -DBUILD_SHARED_LIBS=${{ matrix.library-type == 'shared' }}
+          -DRTVAMP_BUILD_BENCHMARKS=${{ runner.os == 'Linux' }}
+          -DRTVAMP_BUILD_EXAMPLES=ON
+          -DRTVAMP_BUILD_TESTS=ON
+          ${{ matrix.config.flags }}
 
-  windows:
-    name: Windows ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - { name: Visual Studio 17 2022, os: windows-2022 }
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install requirements
-        run: pip install conan~=1.59
-      - uses: actions/cache@v3
-        with:
-          path: ~/.conan/data
-          key: windows-conan-${{ matrix.config.name }}
-      - name: Compile and run tests
-        run: |
-          mkdir build
-          cd build
-          cmake -DRTVAMP_ENABLE_CONAN=ON -DRTVAMP_BUILD_EXAMPLES=ON -DRTVAMP_BUILD_TESTS=ON ..
-          cmake --build . --config RelWithDebInfo
+      - name: Build and run tests
+        run: cmake --build build --config ${{ matrix.build-type }} --parallel
+
+      - name: Run tests
+        run: ctest --test-dir build --build-config ${{ matrix.build-type }} --output-on-failure

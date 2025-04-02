@@ -12,17 +12,9 @@ include(cmake/StandardProjectSettings.cmake)
 
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
-# set same directories for multi-configuration build systems (e.g. MSVC)
-foreach(config ${CMAKE_CONFIGURATION_TYPES})
-    string(TOUPPER ${config} config)
-    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_${config} ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY})
-    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_${config} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_${config} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-endforeach()
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 set(project_options "${PROJECT_NAME}_project_options")
 add_library(${project_options} INTERFACE)
@@ -54,7 +46,7 @@ else()
     )
 endif()
 
-option(RTVAMP_ENABLE_COVERAGE "Enable coverage reporting for gcc/clang" OFF)
+option(RTVAMP_ENABLE_COVERAGE "Enable coverage reporting for GCC/Clang" OFF)
 if(RTVAMP_ENABLE_COVERAGE)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
         target_compile_options(${project_options} INTERFACE --coverage -O0 -g)
@@ -71,9 +63,25 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)  # for find_package if 
 option(RTVAMP_BUILD_TESTS "Build and run tests" OFF)
 if(RTVAMP_BUILD_TESTS)
     message(STATUS "Tests enabled")
-    find_package(Catch2 REQUIRED)
-    include(cmake/Tests.cmake)
+
+    include(FetchContent)
+    option(CATCH_INSTALL_DOCS "Install documentation alongside library" OFF)
+    FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY    https://github.com/catchorg/Catch2.git
+        GIT_TAG           v3.8.0
+        EXCLUDE_FROM_ALL
+        SYSTEM
+        FIND_PACKAGE_ARGS 3.8.0
+    )
+    FetchContent_MakeAvailable(Catch2)
+    if(TARGET Catch2)
+        set_target_properties(Catch2 Catch2WithMain PROPERTIES CXX_CLANG_TIDY "")
+    endif()
+
     enable_testing()
+    include(CTest)
+    include(Catch)
 endif()
 
 add_subdirectory(hostsdk)
