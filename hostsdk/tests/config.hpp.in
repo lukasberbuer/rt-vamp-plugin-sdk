@@ -1,0 +1,12 @@
+#pragma once
+
+#include <array>
+#include <filesystem>
+
+inline const std::array searchPaths{
+    std::filesystem::path{"@CMAKE_LIBRARY_OUTPUT_DIRECTORY@"},
+    std::filesystem::path{"@CMAKE_LIBRARY_OUTPUT_DIRECTORY@/Debug"},
+    std::filesystem::path{"@CMAKE_LIBRARY_OUTPUT_DIRECTORY@/Release"},
+    std::filesystem::path{"@CMAKE_LIBRARY_OUTPUT_DIRECTORY@/RelWithDebInfo"},
+    std::filesystem::path{"@CMAKE_LIBRARY_OUTPUT_DIRECTORY@/MinSizeRel"},
+};

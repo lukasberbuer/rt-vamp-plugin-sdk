@@ -95,5 +95,5 @@ jobs:
       - name: Build and run tests
         run: cmake --build build --config ${{ matrix.build_type }} --parallel
 
-      # - name: Run tests
-      #   run: ctest --test-dir build --build-config ${{ matrix.build_type }} --output-on-failure
+      - name: Run tests
+        run: ctest --test-dir build --build-config ${{ matrix.build_type }} --output-on-failure

@@ -79,8 +79,9 @@ if(RTVAMP_BUILD_TESTS)
         set_target_properties(Catch2 Catch2WithMain PROPERTIES CXX_CLANG_TIDY "")
     endif()
 
-    include(cmake/Tests.cmake)
     enable_testing()
+    include(CTest)
+    include(Catch)
 endif()
 
 add_subdirectory(hostsdk)
