@@ -7,7 +7,7 @@ on:
 
 jobs:
   doc:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Install requirements
         run: |
@@ -28,10 +28,10 @@ jobs:
           path: build/doc/html/
 
   doc-python:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.10'
       - name: Install requirements (libsndfile required by librosa)
@@ -39,9 +39,6 @@ jobs:
           sudo apt update
           sudo apt install -y libsndfile1
       - name: Build and install
-        env:
-          CC: gcc-10
-          CXX: g++-10
         run: pip install .[docs]
       - name: Build HTML
         run: |
@@ -53,7 +50,7 @@ jobs:
           path: python/docs/_build/html/
 
   deploy:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     needs: [doc, doc-python]
     steps:
       - uses: actions/download-artifact@v4
@@ -67,7 +64,7 @@ jobs:
       - name: List files
         run: ls -R
       - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: html
