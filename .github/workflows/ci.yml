@@ -3,96 +3,97 @@ name: CI
 on: push
 
 jobs:
-  linux:
-    name: Linux ${{ matrix.config.name }}
-    runs-on: ubuntu-22.04
+  test:
+    name: ${{ matrix.config.name }} (${{ matrix.build_type }}, ${{ matrix.library_type }})
     strategy:
       fail-fast: false
       matrix:
         config:
-          - { name: GCC 10,       CC: gcc-10,   CXX: g++-10,     flags: ""}
-          - { name: GCC 11,       CC: gcc-11,   CXX: g++-11,     flags: ""}
-          - { name: GCC 12,       CC: gcc-12,   CXX: g++-12,     flags: ""}
-          - { name: Clang 13,     CC: clang-13, CXX: clang++-13, flags: "" }
-          - { name: Clang 14,     CC: clang-14, CXX: clang++-14, flags: "" }
-          - { name: Clang 15,     CC: clang-15, CXX: clang++-15, flags: "" }
-          - { name: ASan,         CC: clang-15, CXX: clang++-15, flags: "-DRTVAMP_ENABLE_SANITIZER_ADDRESS=ON" }
-          - { name: LSan,         CC: clang-15, CXX: clang++-15, flags: "-DRTVAMP_ENABLE_SANITIZER_LEAK=ON" }
-          - { name: TSan,         CC: clang-15, CXX: clang++-15, flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON" }
-          - { name: UBSan,        CC: clang-15, CXX: clang++-15, flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON" }
-          - { name: Coverage,     CC: gcc-12,   CXX: g++-12,     flags: "-DRTVAMP_ENABLE_COVERAGE=ON" }
-          - { name: Amalgamation, CC: gcc-12,   CXX: g++-12,     flags: "-DRTVAMP_ENABLE_AMALGAMATION=ON" }
+          - name: Linux GCC 10
+            os: ubuntu-22.04
+            compiler: g++-10
+
+          - name: Linux GCC 14
+            os: ubuntu-24.04
+            compiler: g++-14
+
+          - name: Linux Clang 13
+            os: ubuntu-22.04
+            compiler: clang++-13
+
+          - name: Linux Clang 18
+            os: ubuntu-24.04
+            compiler: clang++-18
+
+          - name: macOS AppleClang 15
+            os: macos-13
+            compiler: clang++
+
+          - name: macOS AppleClang 16
+            os: macos-15
+            compiler: clang++
+
+          - name: Windows Visual Studio 17
+            os: windows-2022
+            compiler: msvc
+
+          - name: ASan
+            os: ubuntu-24.04
+            compiler: clang++
+            flags: "-DRTVAMP_ENABLE_SANITIZER_ADDRESS=ON"
+
+          - name: TSan
+            os: ubuntu-24.04
+            compiler: clang++
+            flags: "-DRTVAMP_ENABLE_SANITIZER_THREAD=ON"
+
+          - name: UBSan
+            os: ubuntu-24.04
+            compiler: clang++
+            flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON"
+
+        build_type:
+          - Debug
+          - Release
+
+        library_type:
+          - static
+          - shared
+
+        include:
+          - config:
+              name: Clang-Tidy
+              os: ubuntu-24.04
+              compiler: clang++
+              flags: "-DOPENAE_ENABLE_CLANG_TIDY=ON"
+            build_type: Debug
+            library_type: static
+
+    runs-on: ${{ matrix.config.os }}
     steps:
       - uses: actions/checkout@v4
+
       - name: Install requirements
+        if: runner.os == 'Linux'
         run: |
           sudo apt update
-          sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
+          sudo apt install -y catch2 libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
           pip install cpp-coveralls quom
-      - name: Compile and run tests
-        env:
-          CC: ${{ matrix.config.CC }}
-          CXX: ${{ matrix.config.CXX }}
-        run: |
-          mkdir build
-          cd build
-          cmake \
-            -DRTVAMP_BUILD_BENCHMARKS=ON \
-            -DRTVAMP_BUILD_EXAMPLES=ON \
-            -DRTVAMP_BUILD_TESTS=ON \
-            ${{ matrix.config.flags }} \
-            ..
-          cmake --build .
-      - name: Upload coverage results to coveralls.io
-        if: ${{ github.ref == 'refs/heads/master' && matrix.config.name == 'Coverage' }}
-        env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
-        run: |
-          coveralls \
-            -E '.*/3rdparty/.*' \
-            -E '.*/benchmarks/.*' \
-            -E '.*/build/.*' \
-            -E '.*/examples/.*' \
-            -E '.*/tests/.*' \
-            --gcov-options '\-lp';
 
-  macos:
-    name: macOS ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - { name: macOS 13, os: macos-13 }
-          - { name: macOS 14, os: macos-14 }
-    steps:
-      - uses: actions/checkout@v4
-      # - name: Install requirements
-      #   run: brew install catch2
-      - name: Compile and run tests
-        # skip tests due to problems with catch2
-        run: |
-          mkdir build
-          cd build
-          cmake \
-            -DRTVAMP_BUILD_EXAMPLES=OFF \
-            -DRTVAMP_BUILD_TESTS=OFF \
-            ..
-          cmake --build .
+      - name: Configure CMake
+        run: >
+          cmake -S . -B build
+          -DCMAKE_CXX_COMPILER=${{ matrix.config.compiler }}
+          -DCMAKE_CXX_STANDARD=20
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DBUILD_SHARED_LIBS=${{ matrix.library_type == 'shared' }}
+          -DRTVAMP_BUILD_BENCHMARKS=${{ runner.os == 'Linux' }}
+          -DRTVAMP_BUILD_EXAMPLES=ON
+          -DRTVAMP_BUILD_TESTS=ON
+          ${{ matrix.config.flags }}
 
-  windows:
-    name: Windows ${{ matrix.config.name }}
-    runs-on: ${{ matrix.config.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - { name: Visual Studio 17 2022, os: windows-2022 }
-    steps:
-      - uses: actions/checkout@v4
-      - name: Compile and run tests
-        run: |
-          mkdir build
-          cd build
-          cmake -DRTVAMP_BUILD_EXAMPLES=ON -DRTVAMP_BUILD_TESTS=ON ..
-          cmake --build . --config RelWithDebInfo
+      - name: Build
+        run: cmake --build build --config ${{ matrix.build_type }} --parallel
+
+      - name: Run tests
+        run: ctest --test-dir build --build-config ${{ matrix.build_type }} --output-on-failure
