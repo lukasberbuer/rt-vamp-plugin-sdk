@@ -6,7 +6,7 @@
 
 Computation times
 =================
-**00:08.238** total execution time for 2 files **from _examples**:
+**00:34.513** total execution time for 2 files **from _examples**:
 
 .. container::
 
@@ -33,7 +33,7 @@ Computation times
      - Time
      - Mem (MB)
    * - :ref:`sphx_glr__examples_ex2_compute_features.py` (``ex2_compute_features.py``)
-     - 00:08.233
+     - 00:34.507
      - 0.0
    * - :ref:`sphx_glr__examples_ex1_discovery.py` (``ex1_discovery.py``)
      - 00:00.005

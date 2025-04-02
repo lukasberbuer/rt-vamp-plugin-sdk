@@ -11,6 +11,7 @@ A collection of examples how to use `rtvamp` to analyze audio data.
 
     <div class="sphx-glr-thumbnails">
 
+.. thumbnail-parent-div-open
 
 .. raw:: html
 
@@ -45,6 +46,8 @@ A collection of examples how to use `rtvamp` to analyze audio data.
       <div class="sphx-glr-thumbnail-title">Compute features</div>
     </div>
 
+
+.. thumbnail-parent-div-close
 
 .. raw:: html
 
