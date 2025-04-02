@@ -18,7 +18,7 @@ static void BM_rtvamp(benchmark::State& state) {
     adapter.initialise(blockSize, blockSize);
 
     for (auto _ : state) {
-        const auto result = adapter.process(inputBuffer, 0);
+        auto result = adapter.process(inputBuffer, 0);
         benchmark::DoNotOptimize(result);
     }
     addRateCounter(state, blockSize);
@@ -36,7 +36,7 @@ static void BM_vamp(benchmark::State& state) {
     adapter.initialise(1, blockSize, blockSize);
 
     for (auto _ : state) {
-        const auto result = adapter.process(inputBuffers.data(), Vamp::RealTime{});
+        auto result = adapter.process(inputBuffers.data(), Vamp::RealTime{});
         benchmark::DoNotOptimize(result);
     }
     addRateCounter(state, blockSize);

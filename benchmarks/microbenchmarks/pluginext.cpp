@@ -48,7 +48,7 @@ public:
 static void BM_getParameter(benchmark::State& state) {
     TestPluginExt plugin(48000);
     for (auto _ : state) {
-        const auto value = plugin.getParameter("limited");
+        auto value = plugin.getParameter("limited");
         benchmark::DoNotOptimize(value);
     }
 }
