@@ -71,7 +71,22 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)  # for find_package if 
 option(RTVAMP_BUILD_TESTS "Build and run tests" OFF)
 if(RTVAMP_BUILD_TESTS)
     message(STATUS "Tests enabled")
-    find_package(Catch2 REQUIRED)
+
+    include(FetchContent)
+    option(CATCH_INSTALL_DOCS "Install documentation alongside library" OFF)
+    FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY    https://github.com/catchorg/Catch2.git
+        GIT_TAG           v3.8.0
+        EXCLUDE_FROM_ALL
+        SYSTEM
+        FIND_PACKAGE_ARGS 3.8.0
+    )
+    FetchContent_MakeAvailable(Catch2)
+    if(TARGET Catch2)
+        set_target_properties(Catch2 Catch2WithMain PROPERTIES CXX_CLANG_TIDY "")
+    endif()
+
     include(cmake/Tests.cmake)
     enable_testing()
 endif()

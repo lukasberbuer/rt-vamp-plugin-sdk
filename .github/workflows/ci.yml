@@ -28,11 +28,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install -y libbenchmark-dev libsndfile1-dev vamp-plugin-sdk
-          pip install conan~=1.59 cpp-coveralls quom
-      - uses: actions/cache@v3
-        with:
-          path: ~/.conan/data
-          key: linux-conan-${{ matrix.config.name }}
+          pip install cpp-coveralls quom
       - name: Compile and run tests
         env:
           CC: ${{ matrix.config.CC }}
@@ -41,7 +37,6 @@ jobs:
           mkdir build
           cd build
           cmake \
-            -DRTVAMP_ENABLE_CONAN=ON \
             -DRTVAMP_BUILD_BENCHMARKS=ON \
             -DRTVAMP_BUILD_EXAMPLES=ON \
             -DRTVAMP_BUILD_TESTS=ON \
@@ -95,15 +90,9 @@ jobs:
           - { name: Visual Studio 17 2022, os: windows-2022 }
     steps:
       - uses: actions/checkout@v4
-      - name: Install requirements
-        run: pip install conan~=1.59
-      - uses: actions/cache@v3
-        with:
-          path: ~/.conan/data
-          key: windows-conan-${{ matrix.config.name }}
       - name: Compile and run tests
         run: |
           mkdir build
           cd build
-          cmake -DRTVAMP_ENABLE_CONAN=ON -DRTVAMP_BUILD_EXAMPLES=ON -DRTVAMP_BUILD_TESTS=ON ..
+          cmake -DRTVAMP_BUILD_EXAMPLES=ON -DRTVAMP_BUILD_TESTS=ON ..
           cmake --build . --config RelWithDebInfo
