@@ -72,7 +72,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           # unpacks builds artifacts into dist/
-          pattern: dist-*
+          pattern: cibw-*
           path: dist
           merge-multiple: true
       - name: Publish package to Test PyPI
