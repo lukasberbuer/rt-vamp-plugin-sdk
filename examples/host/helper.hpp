@@ -1,7 +1,9 @@
 #pragma once
 
+#include <algorithm>  // find
 #include <charconv>
 #include <iostream>
+#include <iterator>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -69,7 +71,7 @@ std::ostream& operator<<(std::ostream& os, const Escape& code) {
     return os << "\033[" << static_cast<int>(code) << "m";
 }
 
-template<typename... Ts>
+template <typename... Ts>
 std::string concat(Ts const&... ts){
     std::stringstream s;
     (s << ... << ts);
