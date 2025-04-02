@@ -1,5 +1,7 @@
 <map id="/home/runner/work/rt&#45;vamp&#45;plugin&#45;sdk/rt&#45;vamp&#45;plugin&#45;sdk/hostsdk/include/rtvamp/hostsdk/PluginKey.hpp" name="/home/runner/work/rt&#45;vamp&#45;plugin&#45;sdk/rt&#45;vamp&#45;plugin&#45;sdk/hostsdk/include/rtvamp/hostsdk/PluginKey.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="5,5,228,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="37,124,95,151"/>
-<area shape="rect" id="node3" title=" " alt="" coords="120,124,217,151"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="5,5,228,75"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="37,123,95,148"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="101,76,81,112,77,109,96,74"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="120,123,217,148"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="138,73,158,109,153,112,133,76"/>
 </map>

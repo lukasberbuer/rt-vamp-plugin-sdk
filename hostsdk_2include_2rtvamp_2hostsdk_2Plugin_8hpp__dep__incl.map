@@ -1,6 +1,10 @@
 <map id="/home/runner/work/rt&#45;vamp&#45;plugin&#45;sdk/rt&#45;vamp&#45;plugin&#45;sdk/hostsdk/include/rtvamp/hostsdk/Plugin.hpp" name="/home/runner/work/rt&#45;vamp&#45;plugin&#45;sdk/rt&#45;vamp&#45;plugin&#45;sdk/hostsdk/include/rtvamp/hostsdk/Plugin.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="330,5,531,76"/>
-<area shape="rect" id="node2" href="$PluginHostAdapter_8hpp.html" title=" " alt="" coords="5,124,285,195"/>
-<area shape="rect" id="node3" href="$PluginLibrary_8hpp.html" title=" " alt="" coords="309,124,552,195"/>
-<area shape="rect" id="node4" href="$hostsdk_8hpp.html" title=" " alt="" coords="409,243,610,313"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="69,5,271,75"/>
+<area shape="rect" id="Node000002" href="$hostsdk_8hpp.html" title=" " alt="" coords="123,240,324,309"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="61,84,38,102,20,124,11,142,8,158,11,173,20,190,40,213,66,232,94,245,123,256,121,261,92,250,63,236,37,217,16,194,6,175,3,158,6,140,16,121,34,98,57,80"/>
+<area shape="rect" id="Node000003" href="$PluginHostAdapter_8hpp.html" title=" " alt="" coords="30,123,310,192"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,89,173,122,167,122,167,89"/>
+<area shape="rect" id="Node000004" href="$PluginLibrary_8hpp.html" title=" " alt="" coords="334,123,577,192"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="267,77,373,120,371,125,265,82"/>
+<area shape="poly" id="edge4_Node000004_Node000002" title=" " alt="" coords="377,200,292,242,290,237,374,196"/>
 </map>

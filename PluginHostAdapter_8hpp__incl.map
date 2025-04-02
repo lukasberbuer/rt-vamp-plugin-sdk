@@ -1,13 +1,28 @@
 <map id="/home/runner/work/rt&#45;vamp&#45;plugin&#45;sdk/rt&#45;vamp&#45;plugin&#45;sdk/hostsdk/include/rtvamp/hostsdk/PluginHostAdapter.hpp" name="/home/runner/work/rt&#45;vamp&#45;plugin&#45;sdk/rt&#45;vamp&#45;plugin&#45;sdk/hostsdk/include/rtvamp/hostsdk/PluginHostAdapter.hpp">
-<area shape="rect" id="node1" title=" " alt="" coords="159,5,439,76"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,199,72,225"/>
-<area shape="rect" id="node3" title=" " alt="" coords="96,199,187,225"/>
-<area shape="rect" id="node4" title=" " alt="" coords="608,124,685,151"/>
-<area shape="rect" id="node5" title=" " alt="" coords="211,199,285,225"/>
-<area shape="rect" id="node6" title=" " alt="" coords="310,199,407,225"/>
-<area shape="rect" id="node7" title=" " alt="" coords="705,199,767,225"/>
-<area shape="rect" id="node8" href="$hostsdk_2include_2rtvamp_2hostsdk_2Plugin_8hpp.html" title=" " alt="" coords="337,124,533,151"/>
-<area shape="rect" id="node9" title=" " alt="" coords="431,199,510,225"/>
-<area shape="rect" id="node10" title=" " alt="" coords="535,199,588,225"/>
-<area shape="rect" id="node11" title=" " alt="" coords="613,199,681,225"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="159,5,439,75"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,196,72,221"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="247,77,70,191,67,186,245,73"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="96,196,187,221"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="269,77,164,188,160,184,265,73"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="608,123,685,148"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="425,72,595,118,594,123,424,77"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="211,196,285,221"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="291,76,258,184,253,182,286,74"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="310,196,407,221"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="307,74,328,147,346,183,341,186,323,149,302,75"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="705,196,767,221"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="413,72,546,120,597,146,696,188,694,193,595,150,544,125,411,77"/>
+<area shape="rect" id="Node000008" href="$hostsdk_2include_2rtvamp_2hostsdk_2Plugin_8hpp.html" title=" " alt="" coords="337,123,533,148"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="349,73,408,112,405,117,346,77"/>
+<area shape="poly" id="edge9_Node000008_Node000002" title=" " alt="" coords="357,151,234,171,86,198,85,193,233,165,357,145"/>
+<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="388,151,201,196,199,191,387,145"/>
+<area shape="poly" id="edge11_Node000008_Node000005" title=" " alt="" coords="406,151,292,193,290,189,404,146"/>
+<area shape="poly" id="edge13_Node000008_Node000006" title=" " alt="" coords="424,150,383,188,379,185,421,146"/>
+<area shape="poly" id="edge15_Node000008_Node000007" title=" " alt="" coords="487,145,692,193,691,198,486,151"/>
+<area shape="rect" id="Node000009" title=" " alt="" coords="431,196,510,221"/>
+<area shape="poly" id="edge8_Node000008_Node000009" title=" " alt="" coords="443,147,461,182,456,185,438,150"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="535,196,588,221"/>
+<area shape="poly" id="edge12_Node000008_Node000010" title=" " alt="" coords="456,146,530,187,527,191,454,150"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="613,196,681,221"/>
+<area shape="poly" id="edge14_Node000008_Node000011" title=" " alt="" coords="470,145,600,189,599,194,468,151"/>
 </map>

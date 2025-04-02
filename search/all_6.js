@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['hasknownextents_37',['hasKnownExtents',['../structrtvamp_1_1hostsdk_1_1Plugin_1_1OutputDescriptor.html#a11912b29606c96bc0e7f0cfbd53a822c',1,'rtvamp::hostsdk::Plugin::OutputDescriptor::hasKnownExtents()'],['../structrtvamp_1_1pluginsdk_1_1PluginBase_1_1OutputDescriptor.html#a84dd4ee3e22bc39a9289e9cf96ce78af',1,'rtvamp::pluginsdk::PluginBase::OutputDescriptor::hasKnownExtents()']]],
-  ['hostsdk_2ehpp_38',['hostsdk.hpp',['../hostsdk_8hpp.html',1,'']]]
+  ['feature_0',['feature',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a94006a05cee6599ab71152365a142819',1,'rtvamp::hostsdk::Plugin::Feature'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a774c2420ced00981afe23c9af08c366b',1,'rtvamp::pluginsdk::PluginBase::Feature']]],
+  ['featureset_1',['featureset',['../classrtvamp_1_1hostsdk_1_1Plugin.html#ad2ba4f0a7a8c07672057b46f26bfc349',1,'rtvamp::hostsdk::Plugin::FeatureSet'],['../classrtvamp_1_1pluginsdk_1_1Plugin.html#acadc13c7614aceda5bbcf23d6e40424e',1,'rtvamp::pluginsdk::Plugin::FeatureSet']]],
+  ['for_20c_2020_2',['Real-time Vamp plugin SDK for C++20',['../index.html',1,'']]],
+  ['frequency_3',['frequency',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a9788a57377656a6b3f7dbb4fcf1e23a9a7cf395303ce3665a9834721d4b748e4b',1,'rtvamp::hostsdk::Plugin::Frequency'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a4a5b84e95073b1322521a6d95e8f402ba7cf395303ce3665a9834721d4b748e4b',1,'rtvamp::pluginsdk::PluginBase::Frequency']]],
+  ['frequencydomainbuffer_4',['frequencydomainbuffer',['../classrtvamp_1_1hostsdk_1_1Plugin.html#a7a607792a03ccfab37f36ebee379e350',1,'rtvamp::hostsdk::Plugin::FrequencyDomainBuffer'],['../classrtvamp_1_1pluginsdk_1_1PluginBase.html#a1fe1c5b99f71f7042fb15a680bdaaa6a',1,'rtvamp::pluginsdk::PluginBase::FrequencyDomainBuffer']]]
 ];

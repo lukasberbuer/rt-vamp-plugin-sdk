@@ -1,5 +1,7 @@
 <map id="rtvamp::pluginsdk::PluginBase" name="rtvamp::pluginsdk::PluginBase">
-<area shape="rect" id="node1" title="Non&#45;templated plugin base class with type definitions." alt="" coords="19,5,167,47"/>
-<area shape="rect" id="node2" href="$classrtvamp_1_1pluginsdk_1_1Plugin.html" title="Base class to implement feature extraction plugins." alt="" coords="16,95,169,136"/>
-<area shape="rect" id="node3" href="$classrtvamp_1_1pluginsdk_1_1PluginExt.html" title="Extended plugin base class with automatic parameter / program handling." alt="" coords="5,184,180,225"/>
+<area shape="rect" id="Node000001" title="Non&#45;templated plugin base class with type definitions." alt="" coords="35,5,183,45"/>
+<area shape="rect" id="Node000002" href="$classrtvamp_1_1pluginsdk_1_1Plugin.html" title="Base class to implement feature extraction plugins." alt="" coords="32,93,185,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="111,59,111,93,106,93,106,59"/>
+<area shape="rect" id="Node000003" href="$classrtvamp_1_1pluginsdk_1_1PluginExt.html" title="Extended plugin base class with automatic parameter / program handling." alt="" coords="5,181,212,221"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="111,147,111,181,106,181,106,147"/>
 </map>
