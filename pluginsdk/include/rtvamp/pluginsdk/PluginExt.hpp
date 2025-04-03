@@ -29,11 +29,11 @@ class PluginExt : public Plugin<NOutputs> {
 public:
     explicit PluginExt(float inputSampleRate) : Plugin<NOutputs>(inputSampleRate) {}
 
-    std::optional<float> getParameter(std::string_view id) const override final;
-    bool                 setParameter(std::string_view id, float value) override final;
+    std::optional<float> getParameter(std::string_view id) const final;
+    bool                 setParameter(std::string_view id, float value) final;
 
-    std::string_view     getCurrentProgram() const override final;
-    bool                 selectProgram(std::string_view name) override final;
+    std::string_view     getCurrentProgram() const final;
+    bool                 selectProgram(std::string_view name) final;
 
     // custom logic can be implemented with following callbacks
     virtual void         onParameterChange(std::string_view id, float newValue) {}
@@ -104,7 +104,9 @@ std::vector<float> PluginExt<Self, NOutputs>::defaultParameterValues() {
 template <typename Self, uint32_t NOutputs>
 constexpr std::optional<size_t> PluginExt<Self, NOutputs>::findParameterIndex(std::string_view id) {
     for (size_t i = 0; i < Self::parameters.size(); ++i) {
-        if (Self::parameters[i].identifier == id) return i;
+        if (Self::parameters[i].identifier == id) {
+            return i;
+        }
     }
     return {};
 }
@@ -112,7 +114,9 @@ constexpr std::optional<size_t> PluginExt<Self, NOutputs>::findParameterIndex(st
 template <typename Self, uint32_t NOutputs>
 constexpr std::optional<size_t> PluginExt<Self, NOutputs>::findProgramIndex(std::string_view name) {
     for (size_t i = 0; i < Self::programs.size(); ++i) {
-        if (Self::programs[i] == name) return i;
+        if (Self::programs[i] == name) {
+            return i;
+        }
     }
     return {};
 }

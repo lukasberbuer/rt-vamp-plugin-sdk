@@ -21,7 +21,13 @@ namespace rtvamp::pluginsdk {
  */
 class PluginBase {
 public:
+    PluginBase() = default;
     virtual ~PluginBase() = default;
+
+    PluginBase(const PluginBase&) = default;
+    PluginBase(PluginBase&&) = default;
+    PluginBase& operator=(const PluginBase&) = default;
+    PluginBase& operator=(PluginBase&&) = default;
 
     /** Input domain of the plugin. */
     enum class InputDomain { Time, Frequency };
@@ -32,9 +38,9 @@ public:
         const char*          name         = "";
         const char*          description  = "";
         const char*          unit         = "";
-        float                defaultValue = 0.0f;
-        float                minValue     = 0.0f;
-        float                maxValue     = 0.0f;
+        float                defaultValue = 0.0F;
+        float                minValue     = 0.0F;
+        float                maxValue     = 0.0F;
         std::optional<float> quantizeStep = std::nullopt;
         // std::vector<const char*> valueNames{};  // currently not possible -> wait for constexpr vectors
     };
@@ -45,10 +51,10 @@ public:
         std::string               description;
         std::string               unit;
         uint32_t                  binCount = 1;
-        std::vector<std::string>  binNames{};
+        std::vector<std::string>  binNames = {};  // NOLINT(*redundant-member-init)
         bool                      hasKnownExtents = false;
-        float                     minValue        = 0.0f;
-        float                     maxValue        = 0.0f;
+        float                     minValue        = 0.0F;
+        float                     maxValue        = 0.0F;
         std::optional<float>      quantizeStep    = std::nullopt;
     };
 
@@ -115,8 +121,8 @@ protected:
     void        initialiseFeatureSet();
 
 private:
-    const float inputSampleRate_;
-    FeatureSet  featureSet_;
+    float      inputSampleRate_;
+    FeatureSet featureSet_;
 };
 
 /* --------------------------------------- Implementation --------------------------------------- */
@@ -141,9 +147,7 @@ namespace detail {
 template <typename T, size_t MaxOutputCount = 32>
 consteval bool isPlugin() {
     return []<std::size_t... Ns>(std::index_sequence<Ns...>) {
-        return std::disjunction<
-            std::is_base_of<Plugin<Ns>, T>...
-        >::value;
+        return std::disjunction_v<std::is_base_of<Plugin<Ns>, T>...>;
     }(std::make_index_sequence<MaxOutputCount>{});
 }
 

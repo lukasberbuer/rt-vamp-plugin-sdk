@@ -8,15 +8,13 @@
 #include "config.hpp"
 #include "helper.hpp"
 
-using Catch::Matchers::Equals;
 using Catch::Matchers::StartsWith;
 using Catch::Matchers::Contains;
 using rtvamp::hostsdk::PluginKey;
 
 TEST_CASE("getVampPaths") {
     const auto paths = rtvamp::hostsdk::getVampPaths();
-
-    REQUIRE(paths.size() >= 1);
+    REQUIRE_FALSE(paths.empty());
 
     namespace fs = std::filesystem;
 
@@ -67,12 +65,12 @@ TEST_CASE("listLibraries") {
 
     SECTION("Invalid path") {
         const auto libraries = rtvamp::hostsdk::listLibraries("thisshouldbeaninvalidpath");
-        REQUIRE(libraries.size() == 0);
+        REQUIRE(libraries.empty());
     }
 
     SECTION("Custom paths with example plugins") {
         const auto libraries = rtvamp::hostsdk::listLibraries(searchPath);
-        REQUIRE(libraries.size() >= 1);
+        REQUIRE_FALSE(libraries.empty());
 
         const auto stems = getLibraryStems(libraries);
         CHECK_THAT(stems, Contains("example-plugin"));
@@ -95,18 +93,18 @@ TEST_CASE("loadLibrary") {
 TEST_CASE("listPlugins") {
     SECTION("Invalid path") {
         const auto plugins = rtvamp::hostsdk::listPlugins("thisshouldbeaninvalidpath");
-        REQUIRE(plugins.size() == 0);
+        REQUIRE(plugins.empty());
     }
 
     SECTION("Library path") {
         const auto plugins = rtvamp::hostsdk::listPlugins(getLibraryPath("example-plugin"));
-        REQUIRE(plugins.size() >= 1);
+        REQUIRE_FALSE(plugins.empty());
         REQUIRE_THAT(plugins, Contains(PluginKey("example-plugin:rms")));
     }
 
     SECTION("Custom paths") {
         const auto plugins = rtvamp::hostsdk::listPlugins(searchPath);
-        REQUIRE(plugins.size() >= 1);
+        REQUIRE_FALSE(plugins.empty());
         REQUIRE_THAT(plugins, Contains(PluginKey("example-plugin:rms")));
     }
 }

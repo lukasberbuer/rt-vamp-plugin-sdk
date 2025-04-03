@@ -46,13 +46,15 @@ private:
     }
 
     static consteval const VampParameterDescriptor** getParameters() {
-        if (vampParametersPtr.empty()) return nullptr;
-        return const_cast<const VampParameterDescriptor**>(vampParametersPtr.data());
+        return vampParametersPtr.empty()
+            ? nullptr
+            : const_cast<const VampParameterDescriptor **>(vampParametersPtr.data());
     }
 
     static consteval const char** getPrograms() {
-        if (TPlugin::programs.empty()) return nullptr;
-        return const_cast<const char**>(TPlugin::programs.data());
+        return TPlugin::programs.empty()
+            ? nullptr
+            : const_cast<const char**>(TPlugin::programs.data());
     }
 
     static constexpr auto parameterCount = TPlugin::parameters.size();
@@ -71,7 +73,7 @@ private:
             vp.minValue     = p.minValue;
             vp.maxValue     = p.maxValue;
             vp.isQuantized  = static_cast<int>(p.quantizeStep.has_value());
-            vp.quantizeStep = p.quantizeStep.value_or(0.0f);
+            vp.quantizeStep = p.quantizeStep.value_or(0.0F);
         }
         return result;
     }();
@@ -113,9 +115,9 @@ struct VampOutputDescriptorWrapper{
         descriptor_.minValue         = d.minValue;
         descriptor_.maxValue         = d.maxValue;
         descriptor_.isQuantized      = static_cast<int>(d.quantizeStep.has_value());
-        descriptor_.quantizeStep     = d.quantizeStep.value_or(0.0f);
+        descriptor_.quantizeStep     = d.quantizeStep.value_or(0.0F);
         descriptor_.sampleType       = vampOneSamplePerStep;
-        descriptor_.sampleRate       = 0.0f;
+        descriptor_.sampleRate       = 0.0F;
         descriptor_.hasDuration      = 0;
     }
 
@@ -140,11 +142,11 @@ private:
         descriptor_.binNames    = binNames_.empty() ? nullptr : binNamesConstChar_.data();
     }
 
-    VampOutputDescriptor     descriptor_;
-    const std::string        identifier_;
-    const std::string        name_;
-    const std::string        description_;
-    const std::string        unit_;
+    VampOutputDescriptor     descriptor_{};
+    std::string              identifier_;
+    std::string              name_;
+    std::string              description_;
+    std::string              unit_;
     std::vector<std::string> binNames_;
     std::vector<const char*> binNamesConstChar_;
 };
@@ -166,6 +168,8 @@ public:
         v2.durationSec  = 0;
         v2.durationNsec = 0;
     }
+
+    ~VampFeatureUnionWrapper() = default;
 
     // prevent copy/move (invalides pointer v1.values)
     VampFeatureUnionWrapper(const VampFeatureUnionWrapper&) = delete;
@@ -205,13 +209,15 @@ template <size_t NOutputs>
 class VampFeatureListsWrapper {
 public:
     constexpr VampFeatureListsWrapper() {
-        for (size_t i = 0; i < NOutputs; ++i) {
-            featureLists_[i] = {
-                .featureCount = 1,
-                .features     = featureUnionWrappers_[i].get(),
-            };
-        }
+        std::transform(
+            featureUnionWrappers_.begin(),
+            featureUnionWrappers_.end(),
+            featureLists_.begin(),
+            [](auto& wrapper) { return VampFeatureList{1, wrapper.get()}; }
+        );
     }
+
+    ~VampFeatureListsWrapper() = default;
 
     // prevent copy/move (invalides pointer .features)
     VampFeatureListsWrapper(const VampFeatureListsWrapper&) = delete;

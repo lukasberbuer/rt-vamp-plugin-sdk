@@ -1,5 +1,6 @@
 #include "rtvamp/hostsdk/PluginLibrary.hpp"
 
+#include <cassert>
 #include <stdexcept>
 
 #include "vamp/vamp.h"
@@ -24,7 +25,7 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath) {
 
     constexpr const char* symbol = "vampGetPluginDescriptor";
     const auto func = dl_->getFunction<VampGetPluginDescriptorFunction>(symbol);
-    if (!func) {
+    if (func == nullptr) {
         throw std::runtime_error(
             helper::concat("Undefined symbol in dynamic library: ", symbol)
         );
@@ -37,6 +38,7 @@ PluginLibrary::PluginLibrary(const std::filesystem::path& libraryPath) {
 }
 
 std::filesystem::path PluginLibrary::getLibraryPath() const noexcept {
+    assert(dl_ != nullptr);
     return dl_->path().value();
 }
 
@@ -62,7 +64,9 @@ std::vector<PluginKey> PluginLibrary::listPlugins() const {
 std::unique_ptr<Plugin> PluginLibrary::loadPlugin(const PluginKey& key, float inputSampleRate) const {
     const auto* descriptor = [&] {
         for (const auto* d : descriptors_) {
-            if (d->identifier == key.getIdentifier()) return d;
+            if (d->identifier == key.getIdentifier()) {
+                return d;
+            }
         }
         throw std::invalid_argument(
             helper::concat("Plugin not found: ", key.get())

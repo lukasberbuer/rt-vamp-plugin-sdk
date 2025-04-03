@@ -25,11 +25,11 @@ template <detail::IsPlugin... Plugins>
 class EntryPoint {
 public:
     static constexpr const VampPluginDescriptor* getDescriptor(
-        unsigned int version,
-        unsigned int index
+        unsigned int version, unsigned int index  // NOLINT(*easily-swapped-parameters)
     ) {
-        if (version < 1 || version > VAMP_API_VERSION) return {};
-        if (index >= pluginCount) return {};
+        if (version < 1 || version > VAMP_API_VERSION || index >= pluginCount) {
+            return nullptr;
+        }
         return descriptors[index];
     }
 
@@ -44,6 +44,8 @@ private:
 }  // namespace rtvamp::pluginsdk
 
 /* -------------------------------------------- Macro ------------------------------------------- */
+
+// NOLINTBEGIN(*macro-usage)
 
 /**
  * Export entry point symbol with pragma for MSVC.
@@ -71,3 +73,5 @@ private:
         RTVAMP_EXPORT_FUNCTION                                                                     \
         return ::rtvamp::pluginsdk::EntryPoint<__VA_ARGS__>::getDescriptor(hostApiVersion, index); \
     }
+
+// NOLINTEND(*macro-usage)

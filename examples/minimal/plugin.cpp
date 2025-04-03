@@ -32,17 +32,17 @@ public:
     }
 
     void reset() override {
-        previousSample_ = 0.0f;
+        previousSample_ = 0.0F;
     }
 
     const FeatureSet& process(InputBuffer buffer, uint64_t nsec) override {
         const auto signal = std::get<TimeDomainBuffer>(buffer);
 
         size_t crossings   = 0;
-        bool   wasPositive = (previousSample_ >= 0.0f);
+        bool   wasPositive = (previousSample_ >= 0.0F);
 
         for (const auto& sample : signal) {
-            const bool isPositive = (sample >= 0.0f);
+            const bool isPositive = (sample >= 0.0F);
             crossings += int(isPositive != wasPositive);
             wasPositive = isPositive;
         }
@@ -50,12 +50,12 @@ public:
         previousSample_ = signal.back();
 
         auto& result = getFeatureSet();
-        result[0][0] = crossings;  // first and only output, first and only bin
-        return result;             // return span/view of the results
+        result[0][0] = static_cast<float>(crossings);  // first and only output, first and only bin
+        return result;                                 // return span/view of the results
     }
 
 private:
-    float previousSample_ = 0.0f;
+    float previousSample_ = 0.0F;
 };
 
 RTVAMP_ENTRY_POINT(ZeroCrossing)

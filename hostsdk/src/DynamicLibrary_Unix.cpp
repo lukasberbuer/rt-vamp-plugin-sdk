@@ -11,13 +11,17 @@ bool DynamicLibrary::loadImpl(const std::filesystem::path& path) {
 }
 
 void DynamicLibrary::unloadImpl() {
-    if (handle_ == nullptr) return;
+    if (handle_ == nullptr) {
+        return;
+    }
     dlclose(handle_);
     handle_ = nullptr;
 }
 
 void* DynamicLibrary::symbolImpl(const char* name) noexcept {
-    if (handle_ == nullptr) return nullptr;
+    if (handle_ == nullptr) {
+        return nullptr;
+    }
     return dlsym(handle_, name);
 }
 
