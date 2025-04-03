@@ -1,3 +1,5 @@
+find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+
 if(SKBUILD)
     # scikit-build does not add your site-packages to the search path automatically,
     # so we need to add it _or_ the pybind11 specific directory here
