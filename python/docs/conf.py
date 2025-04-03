@@ -3,17 +3,16 @@
 # For the full list of built-in configuration values, see the documentation:
 # https://www.sphinx-doc.org/en/master/usage/configuration.html
 
-from datetime import date
-
-import pkg_resources
+from datetime import datetime, timezone
+from importlib import metadata
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "rtvamp"
-copyright = f"{date.today().year}, Lukas Berbuer"
+copyright = f"{datetime.now(tz=timezone.utc).date().year}, Lukas Berbuer"
 author = "Lukas Berbuer"
-release = pkg_resources.get_distribution("rtvamp").version
+release = metadata.version("rtvamp")
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -40,14 +39,13 @@ intersphinx_mapping = {
     "numpy": ("https://numpy.org/doc/stable/", None),
 }
 
-from sphinx_gallery.sorting import FileNameSortKey
 sphinx_gallery_conf = {
-     "examples_dirs": "../examples",  # path to your example scripts
-     "gallery_dirs": "_examples",  # path to where to save gallery generated output
-     "filename_pattern": "",
-     "ignore_pattern": r"[\\,/]_",  # files starting with an underscore
-     "within_subsection_order": FileNameSortKey,
-     "download_all_examples": False,
+    "examples_dirs": "../examples",  # path to your example scripts
+    "gallery_dirs": "examples",  # path to where to save gallery generated output
+    "filename_pattern": "",
+    "ignore_pattern": r"[\\,/]_",  # files starting with an underscore
+    "within_subsection_order": "FileNameSortKey",
+    "download_all_examples": False,
 }
 
 # -- Options for HTML output -------------------------------------------------

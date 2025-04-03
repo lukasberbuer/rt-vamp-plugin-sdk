@@ -8,7 +8,7 @@ configure_file(
 )
 
 add_custom_target(
-    rtvamp-doc
+    rtvamp_doc
     ALL  # build by default
     COMMAND ${DOXYGEN_EXECUTABLE}
     COMMENT "Build Doxygen documentation to ${doxygen_output_dir}"

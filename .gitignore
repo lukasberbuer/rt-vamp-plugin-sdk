@@ -14,9 +14,6 @@ dist/
 pip-wheel-metadata/
 wheelhouse/
 _skbuild/
-_build/
-_examples/
-_generated/
 __pycache__/
 .pytest_cache/
 *.egg-info/

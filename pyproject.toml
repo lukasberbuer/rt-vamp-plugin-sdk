@@ -1,20 +1,75 @@
 [build-system]
-requires = [
-    "setuptools>=42",
-    "pybind11~=2.10",
-    "cmake>=3.22",
-    "scikit-build>=0.15.0",
+requires = ["scikit-build-core>=0.11", "pybind11>=2.10"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "rtvamp"
+dynamic = ["version"]
+description = "Vamp plugin host for real-time audio feature analysis"
+authors = [{ name = "Lukas Berbuer", email = "lukas.berbuer@gmail.com" }]
+readme = "python/README.md"
+license = { text = "MIT License" }
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Multimedia :: Sound/Audio :: Analysis",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
 ]
-build-backend = "setuptools.build_meta"
+keywords = [
+    "Vamp",
+    "plugin",
+    "audio",
+    "sound",
+    "music",
+    "analysis",
+    "feature extraction",
+    "real-time",
+]
+dependencies = ["numpy>=1.20"]
 
-[tool.black]
-line-length = 100
+[project.optional-dependencies]
+docs = [
+    "sphinx>=5",
+    "sphinx-gallery",
+    "myst-parser",
+    "furo",
+    # for examples
+    "librosa",
+    "matplotlib",
+]
+tests = [
+    "pytest>=6", # pyproject.toml support
+]
+tools = [
+    "mypy>=0.9", # pyproject.toml support
+    "ruff>=0.9",
+]
+dev = ["rtvamp[docs,tests,tools]"]
 
-[tool.isort]
-line_length = 100
-multi_line_output = 3
-include_trailing_comma = true
-use_parentheses = true
+[project.urls]
+Source = "https://github.com/lukasberbuer/rt-vamp-plugin-sdk"
+Issues = "https://github.com/lukasberbuer/rt-vamp-plugin-sdk/issues"
+Changelog = "https://github.com/lukasberbuer/rt-vamp-plugin-sdk/blob/master/CHANGELOG.md"
+
+[tool.coverage.run]
+branch = true
+parallel = true
+source = ["rtvamp"]
+
+[tool.coverage.paths]
+source = ["python/src", "*/site-packages"]
 
 [tool.mypy]
 ignore_missing_imports = true
@@ -23,6 +78,43 @@ ignore_missing_imports = true
 minversion = "6.0"
 addopts = "-ra -v"
 testpaths = ["python/tests"]
+
+[tool.ruff]
+include = ["pyproject.toml", "python/**/*.py"]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "ANN", # flake8-annotations
+    "COM812", # Trailing comma missing, conflicts with ruff format
+    "D", # pydocstyle
+]
+
+[tool.ruff.lint.per-file-ignores]
+"test_*" = [
+    "INP001", # File is part of an implicit namespace package. Add an __init__.py.
+    "S101", # Use of `assert` detected
+    "PLR2004", # Magic value used in comparison
+]
+
+[tool.scikit-build]
+cmake.build-type = "Release"
+wheel.packages = ["rtvamp"]
+build.verbose = true
+build-dir = "build/python/{wheel_tag}"
+install.components = ["python"]
+minimum-version = "build-system.requires"
+
+[tool.scikit-build.cmake.define]
+RTVAMP_BUILD_EXAMPLES = "ON"
+RTVAMP_BUILD_PYTHON_BINDINGS = "ON"
+RTVAMP_VALIDATE = "ON"
+
+[tool.scikit-build.metadata.version]
+provider = "scikit_build_core.metadata.regex"
+input = "CMakeLists.txt"
+regex = '''(?is)^\s*project\s*\(\s*\w+\s*VERSION\s+(?P<value>[\d\.]+)'''
 
 [tool.cibuildwheel]
 build = [
@@ -37,3 +129,5 @@ skip = [
     "cp38-macosx_arm64", # https://cibuildwheel.pypa.io/en/stable/faq/#macos-building-cpython-38-wheels-on-arm64
 ]
 build-verbosity = 1
+test-command = "pytest {project}/python/tests"
+test-requires = ["pytest"]
