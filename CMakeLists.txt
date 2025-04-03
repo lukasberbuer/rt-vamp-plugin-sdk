@@ -54,11 +54,10 @@ if(RTVAMP_ENABLE_COVERAGE)
     endif()
 endif()
 
-include(cmake/Conan.cmake)
 include(cmake/Sanitizers.cmake)
 include(cmake/StaticAnalyzers.cmake)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)  # for find_package if Conan disabled
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
 option(RTVAMP_BUILD_TESTS "Build and run tests" OFF)
 if(RTVAMP_BUILD_TESTS)
