@@ -10,11 +10,11 @@ def get_library_extension():
     system = platform.system()
     if system == "Linux":
         return ".so"
-    elif system == "Windows":
+    if system == "Windows":
         return ".dll"
-    elif system == "Darwin":
+    if system == "Darwin":
         return ".dylib"
-    raise RuntimeError("Unknown platform")
+    raise RuntimeError("Unknown platform")  # noqa: EM101
 
 
 def get_test_library_folder() -> Path:

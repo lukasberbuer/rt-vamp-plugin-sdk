@@ -2,9 +2,7 @@ import os
 
 import numpy as np
 import pytest
-
 import rtvamp
-
 from _helper import fixture_vamp_path, get_test_library_path
 
 
@@ -19,7 +17,7 @@ def test_get_vamp_paths():
 
 def test_list_libraries(fixture_vamp_path):
     libs = rtvamp.list_libraries()
-    stems = [l.stem for l in libs]
+    stems = [lib.stem for lib in libs]
     assert "example-plugin" in stems
 
 
@@ -64,38 +62,38 @@ def test_plugin(fixture_vamp_path):
     assert plugin.get_input_samplerate() == 48000
     assert plugin.get_parameter_descriptors() == []
     assert plugin.get_programs() == []
-    assert plugin.get_current_program() == None
+    assert plugin.get_current_program() is None
     assert plugin.get_preferred_stepsize() == 0
     assert plugin.get_preferred_blocksize() == 0
     assert plugin.get_output_count() == 1
     outputs = plugin.get_output_descriptors()
     assert len(outputs) == 1
-    assert outputs[0] == dict(
-        identifier="rms",
-        name="RMS",
-        description="Root mean square of signal",
-        unit="V",
-        bin_count=1,
-        bin_names=[],
-        has_known_extents=False,
-        min_value=0,
-        max_value=0,
-        quantize_step=None,
-    )
+    assert outputs[0] == {
+        "identifier": "rms",
+        "name": "RMS",
+        "description": "Root mean square of signal",
+        "unit": "V",
+        "bin_count": 1,
+        "bin_names": [],
+        "has_known_extents": False,
+        "min_value": 0,
+        "max_value": 0,
+        "quantize_step": None,
+    }
 
     # process before init should raise exception (with RTVAMP_VALIDATE compile flag)
-    with pytest.raises(Exception):
+    with pytest.raises(RuntimeError):
         plugin.process(np.zeros(16), nsec=0)
 
     plugin.initialise(stepsize=16, blocksize=16)
 
     # process with wrong buffer size should raise exception (with RTVAMP_VALIDATE compile flag)
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError):
         plugin.process(np.zeros(4), nsec=0)
 
     # process with wrong input domain should raise exception
+    input_freqdomain = np.zeros(18).astype(np.complex64)
     with pytest.raises(ValueError):
-        input_freqdomain = np.zeros(18).astype(np.complex64)
         plugin.process(input_freqdomain, nsec=0)
 
     input_timedomain = np.zeros(16).astype(np.float32)

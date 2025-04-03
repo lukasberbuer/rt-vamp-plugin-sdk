@@ -10,7 +10,7 @@ from importlib import metadata
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
 project = "rtvamp"
-copyright = f"{datetime.now(tz=timezone.utc).date().year}, Lukas Berbuer"
+copyright = f"{datetime.now(tz=timezone.utc).date().year}, Lukas Berbuer"  # noqa: A001
 author = "Lukas Berbuer"
 release = metadata.version("rtvamp")
 
@@ -41,7 +41,7 @@ intersphinx_mapping = {
 
 sphinx_gallery_conf = {
     "examples_dirs": "../examples",  # path to your example scripts
-    "gallery_dirs": "examples",  # path to where to save gallery generated output
+    "gallery_dirs": "_examples",  # path to where to save gallery generated output
     "filename_pattern": "",
     "ignore_pattern": r"[\\,/]_",  # files starting with an underscore
     "within_subsection_order": "FileNameSortKey",
@@ -52,4 +52,4 @@ sphinx_gallery_conf = {
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
 html_theme = "furo"
-# html_static_path = ["_static"]
+html_static_path = ["_static"]

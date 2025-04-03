@@ -89,13 +89,26 @@ ignore = [
     "ANN", # flake8-annotations
     "COM812", # Trailing comma missing, conflicts with ruff format
     "D", # pydocstyle
+    "INP001", # File is part of an implicit namespace package
+    "PLR0913", # Too many arguments
+    "S101", # Use of assert detected
+    "TRY003", # Avoid specifying long messages outside the exception class
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"*/examples/*" = [
+    "E722", # do not use bare except
+    "PERF203", # try-except within a loop
+    "PTH120", # os.path.dirname
+    "T201", # print
+    "T203", # pprint
+]
 "test_*" = [
-    "INP001", # File is part of an implicit namespace package. Add an __init__.py.
-    "S101", # Use of `assert` detected
+    "ARG001", # Unused function argument
+    "F401", # Unused import
+    "F811", # Redefining unused variable
     "PLR2004", # Magic value used in comparison
+    "PT011", # pytest raises too broad
 ]
 
 [tool.scikit-build]

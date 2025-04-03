@@ -1,6 +1,12 @@
+# ruff: noqa: F401
+
+from __future__ import annotations
+
 from dataclasses import dataclass
-from os import PathLike
-from typing import Any, Dict, List, Optional, Tuple, Union
+from typing import TYPE_CHECKING, Any, List
+
+if TYPE_CHECKING:
+    from os import PathLike
 
 import numpy as np
 from numpy.lib.stride_tricks import as_strided
@@ -27,8 +33,8 @@ class PluginMetadata:
     copyright: str
     plugin_version: int
     input_domain: str
-    parameter_descriptors: List[Dict[str, Any]]
-    output_descriptors: List[Dict[str, Any]]
+    parameter_descriptors: list[dict[str, Any]]
+    output_descriptors: list[dict[str, Any]]
 
 
 def get_plugin_metadata(key: str, samplerate: float = 48000) -> PluginMetadata:
@@ -36,7 +42,7 @@ def get_plugin_metadata(key: str, samplerate: float = 48000) -> PluginMetadata:
     Get all the plugin metadata and descriptors.
 
     Note:
-        The output descriptors may depend on parameter values and the initialised step- and block sizes.
+        The output descriptors may depend on parameters and the initialised step- and block sizes.
 
     Args:
         key: Plugin key/identifer as returned by e.g. :func:`list_plugins`
@@ -83,16 +89,20 @@ def _frame(x: np.ndarray, blocksize: int, stepsize: int):
     """Slice a array into (overlapping) frames."""
     x = np.array(x, copy=False)
     blocksize = int(blocksize)
-    stepsize =int(stepsize)
+    stepsize = int(stepsize)
 
     if x.ndim != 1:
-        raise ValueError(f"Invalid array dimension: {x.ndim}")
+        msg = f"Invalid array dimension: {x.ndim}"
+        raise ValueError(msg)
     if blocksize < 1:
-        raise ValueError(f"Invalid blocksize: {blocksize}")
+        msg = f"Invalid blocksize: {blocksize}"
+        raise ValueError(msg)
     if stepsize < 1:
-        raise ValueError(f"Invalid stepsize: {stepsize}")
+        msg = f"Invalid stepsize: {stepsize}"
+        raise ValueError(msg)
     if blocksize > x.shape[0]:
-        raise ValueError(f"Input too short ({x.shape[0]}) for blocksize={blocksize}")
+        msg = f"Input too short ({x.shape[0]}) for blocksize={blocksize}"
+        raise ValueError(msg)
 
     nsamples = x.shape[0]
     nframes = _frame_count(nsamples, blocksize, stepsize)
@@ -122,20 +132,20 @@ class FeatureComputation:
         self._window = np.empty(0, dtype=np.float32)
 
     @property
-    def plugins(self) -> List[Plugin]:
+    def plugins(self) -> list[Plugin]:
         """List of added plugins."""
         return self._plugins
 
     @property
-    def outputs(self) -> List[str]:
+    def outputs(self) -> list[str]:
         """List of all plugin outputs."""
         return self._outputs
 
     def add_plugin(
         self,
         key: str,
-        parameter: Optional[Dict[str, float]] = None,
-        paths: Optional[List[PathLike]] = None,
+        parameter: dict[str, float] | None = None,
+        paths: list[PathLike] | None = None,
     ):
         """
         Add plugin for processing.
@@ -148,14 +158,15 @@ class FeatureComputation:
             paths: Custom paths, either search paths or plugin library paths
         """
         plugin = load_plugin(key=key, samplerate=self._samplerate, paths=paths)
-        for key, value in (parameter or {}).items():
-            success = plugin.set_parameter(key, value)
+        for parameter_key, parameter_value in (parameter or {}).items():
+            success = plugin.set_parameter(parameter_key, parameter_value)
             if not success:
-                raise ValueError(f"Invalid parameter {key}")
+                msg = f"Invalid parameter {parameter_key}"
+                raise ValueError(msg)
         self._plugins.append(plugin)
         self._outputs.append(*_get_plugin_output_identifier(plugin))
 
-    def initialise(self, blocksize: int, stepsize: Optional[int] = None):
+    def initialise(self, blocksize: int, stepsize: int | None = None):
         """
         Initialise all added plugins.
 
@@ -172,7 +183,8 @@ class FeatureComputation:
                 blocksize=self._blocksize,
             )
             if not success:
-                raise RuntimeError(f"Failed to initialise plugin {plugin.get_identifier()}")
+                msg = f"Failed to initialise plugin {plugin.get_identifier()}"
+                raise RuntimeError(msg)
 
     def reset(self):
         """Reset all added plugins."""
@@ -184,7 +196,7 @@ class FeatureComputation:
         return [output for plugin in self._plugins for output in plugin.get_output_descriptors()]
 
     def _is_frequency_domain_required(self):
-        return any((plugin.get_input_domain() == "frequency" for plugin in self._plugins))
+        return any(plugin.get_input_domain() == "frequency" for plugin in self._plugins)
 
     def process_block(self, timedata_block: np.ndarray, timestamp: float) -> FeatureList:
         """
@@ -194,11 +206,12 @@ class FeatureComputation:
             timedata_block: Single block/frame of time series data
                 (length equal to initialised `blocksize`)
             timestamp: Timestamp of block in seconds
-        
+
         Returns:
             List of computed features (same length as :attr:`~outputs`).
 
-            The feature itself is list of floats (check `bin_count` with :func:`get_output_descriptors`).
+            The feature itself is list of floats.
+            Check `bin_count` with :func:`get_output_descriptors`.
         """
         timedata_block = timedata_block.astype(np.float32, copy=False)
         fft_block = (
@@ -218,13 +231,13 @@ class FeatureComputation:
         self,
         timedata: np.ndarray,
         timestamp_start: float = 0,
-    ) -> Tuple[np.ndarray, List[np.ndarray]]:
+    ) -> tuple[np.ndarray, list[np.ndarray]]:
         """
         Process data of arbitrary length.
 
         Args:
             timedata: Time series data of arbitrary length.
-                Signal will be cropped to blocks/frames accoring to initialised `stepsize` and `blocksize`.
+                Signal will be cropped to blocks accoring to initialised `stepsize` and `blocksize`.
             timestamp_start: Timestamp of signal start in seconds
 
         Returns:
@@ -258,10 +271,10 @@ def compute_features(
     samplerate: float,
     plugin: str,
     *,
-    blocksize: Optional[int] = None,
-    stepsize: Optional[int] = None,
-    parameter: Optional[Dict[str, float]] = None,
-) -> Tuple[np.ndarray, List[np.ndarray]]:
+    blocksize: int | None = None,
+    stepsize: int | None = None,
+    parameter: dict[str, float] | None = None,
+) -> tuple[np.ndarray, list[np.ndarray]]:
     """
     Compute features with plugin.
 
@@ -269,8 +282,10 @@ def compute_features(
         timedata: Time series data of arbitrary length
         samplerate: Sampling rate in Hz
         plugin: Plugin key/identifer as returned by e.g. :func:`list_plugins`
-        blocksize: Block size in samples (default: preferred block size of plugin, otherwise 1024)
-        stepsize: Step size in samples (default: preferred step size of plugin, otherwise = `blocksize`)
+        blocksize: Block size in samples.
+            Default: preferred block size of plugin, otherwise 1024.
+        stepsize: Step size in samples.
+            Default: preferred step size of plugin, otherwise = `blocksize`.
         parameter: Dict with parameter identifiers and values.
             Use :func:`get_plugin_metadata` or :func:`Plugin.get_parameter_descriptors` to list
             available parameters and their constraints.
@@ -284,16 +299,8 @@ def compute_features(
 
     assert len(proc.plugins) == 1
     plugin = proc.plugins[0]
-    blocksize = (
-        blocksize or
-        plugin.get_preferred_blocksize() or
-        1024
-    )
-    stepsize = (
-        stepsize or
-        plugin.get_preferred_stepsize() or
-        blocksize
-    )
+    blocksize = blocksize or plugin.get_preferred_blocksize() or 1024
+    stepsize = stepsize or plugin.get_preferred_stepsize() or blocksize
 
     proc.initialise(stepsize=stepsize, blocksize=blocksize)
     timestamps, outputs = proc.process_signal(timedata)

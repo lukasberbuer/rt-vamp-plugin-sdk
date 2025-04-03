@@ -12,21 +12,21 @@ import rtvamp
 # set VAMP_PATH to rtvamp package dir to find example plugins
 os.environ["VAMP_PATH"] = os.path.dirname(rtvamp.__file__)
 
-#%%
+# %%
 # Browse available libraries and plugins
 # --------------------------------------
 # List libraries:
 rtvamp.list_libraries()
 
-#%%
+# %%
 # List plugins:
 rtvamp.list_plugins()
 
-#%%
+# %%
 # List plugins in current working directory:
 rtvamp.list_plugins(paths=[Path.cwd()])
 
-#%%
+# %%
 # Get metadata and descriptors from plugin
 for plugin in rtvamp.list_plugins():
     try:
