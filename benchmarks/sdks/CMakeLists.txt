@@ -5,9 +5,9 @@ if(vamp-plugin-sdk_FOUND)
     target_link_libraries(
         benchmark_hostsdks
         PRIVATE
-            ${project_options}
+            rtvamp_project_options
+            rtvamp::hostsdk
             benchmark::benchmark
-            rtvamp-hostsdk
             vamp-plugin-sdk::vamp-hostsdk
     )
 
@@ -15,9 +15,9 @@ if(vamp-plugin-sdk_FOUND)
     target_link_libraries(
         benchmark_pluginsdks
         PRIVATE
-            ${project_options}
+            rtvamp_project_options
+            rtvamp::pluginsdk
             benchmark::benchmark
-            rtvamp-pluginsdk
             vamp-plugin-sdk::vamp-sdk
     )
 
@@ -25,10 +25,10 @@ if(vamp-plugin-sdk_FOUND)
     target_link_libraries(
         benchmark_sdks
         PRIVATE
-            ${project_options}
+            rtvamp_project_options
+            rtvamp::pluginsdk
+            rtvamp::hostsdk
             benchmark::benchmark
-            rtvamp-pluginsdk
-            rtvamp-hostsdk
             vamp-plugin-sdk::vamp-sdk
             vamp-plugin-sdk::vamp-hostsdk
     )

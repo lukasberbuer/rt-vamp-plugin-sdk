@@ -8,23 +8,22 @@ project(
     LANGUAGES CXX
 )
 
-include(cmake/StandardProjectSettings.cmake)
-
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
-set(project_options "${PROJECT_NAME}_project_options")
-add_library(${project_options} INTERFACE)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-target_compile_features(${project_options} INTERFACE cxx_std_20)
-target_include_directories(${project_options} INTERFACE 3rdparty)
+add_library(rtvamp_project_options INTERFACE)
+target_compile_features(rtvamp_project_options INTERFACE cxx_std_20)
+target_include_directories(rtvamp_project_options INTERFACE 3rdparty)
 
 if(MSVC)
     target_compile_options(
-        ${project_options}
+        rtvamp_project_options
         INTERFACE
             /W4
             /permissive-
@@ -34,7 +33,7 @@ if(MSVC)
     )
 else()
     target_compile_options(
-        ${project_options}
+        rtvamp_project_options
         INTERFACE
             -Wall
             -Wextra
@@ -49,15 +48,47 @@ endif()
 option(RTVAMP_ENABLE_COVERAGE "Enable coverage reporting for GCC/Clang" OFF)
 if(RTVAMP_ENABLE_COVERAGE)
     if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
-        target_compile_options(${project_options} INTERFACE --coverage -O0 -g)
-        target_link_libraries(${project_options} INTERFACE --coverage)
+        target_compile_options(rtvamp_project_options INTERFACE --coverage -O0 -g)
+        target_link_libraries(rtvamp_project_options INTERFACE --coverage)
     endif()
 endif()
 
-include(cmake/Sanitizers.cmake)
-include(cmake/StaticAnalyzers.cmake)
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
+    set(sanitizers "")
+    foreach(san IN ITEMS address leak undefined thread)
+        string(TOUPPER ${san} san_upper)
+        option(RTVAMP_ENABLE_SANITIZER_${san_upper} "Enable ${san} sanitizer" OFF)
+        if(RTVAMP_ENABLE_SANITIZER_${san_upper})
+            list(APPEND sanitizers ${san})
+        endif()
+    endforeach()
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+    list(JOIN sanitizers "," sanitizers_joined)
+    if(sanitizers_joined)
+        target_compile_options(rtvamp_project_options INTERFACE -fsanitize=${sanitizers_joined})
+        target_link_options(rtvamp_project_options INTERFACE -fsanitize=${sanitizers_joined})
+    endif()
+endif()
+
+option(RTVAMP_ENABLE_CLANG_TIDY "Enable static analysis with clang-tidy" OFF)
+if(RTVAMP_ENABLE_CLANG_TIDY)
+    find_program(CLANGTIDY clang-tidy)
+    if(CLANGTIDY)
+        set(CMAKE_CXX_CLANG_TIDY ${CLANGTIDY})
+    else()
+        message(WARNING "clang-tidy requested but executable not found")
+    endif()
+endif()
+
+option(RTVAMP_ENABLE_INCLUDE_WHAT_YOU_USE "Enable static analysis with include-what-you-use" OFF)
+if(RTVAMP_ENABLE_INCLUDE_WHAT_YOU_USE)
+    find_program(INCLUDE_WHAT_YOU_USE include-what-you-use)
+    if(INCLUDE_WHAT_YOU_USE)
+        set(CMAKE_CXX_INCLUDE_WHAT_YOU_USE ${INCLUDE_WHAT_YOU_USE})
+    else()
+        message(WARNING "include-what-you-use requested but executable not found")
+    endif()
+endif()
 
 option(RTVAMP_BUILD_TESTS "Build and run tests" OFF)
 if(RTVAMP_BUILD_TESTS)

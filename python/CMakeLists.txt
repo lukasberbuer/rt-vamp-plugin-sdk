@@ -23,20 +23,20 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(pybind11)
 
 pybind11_add_module(
-    rtvamp-python-bindings
+    rtvamp_python_bindings
     src/bindings.cpp
 )
 
-target_link_libraries(rtvamp-python-bindings
+target_link_libraries(rtvamp_python_bindings
     PRIVATE
-        ${project_options}
-        rtvamp-hostsdk
+        rtvamp_project_options
+        rtvamp::hostsdk
 )
 
-target_compile_definitions(rtvamp-python-bindings PRIVATE VERSION_INFO=${PROJECT_VERSION})
-set_target_properties(rtvamp-python-bindings PROPERTIES OUTPUT_NAME "_bindings")
+target_compile_definitions(rtvamp_python_bindings PRIVATE VERSION_INFO=${PROJECT_VERSION})
+set_target_properties(rtvamp_python_bindings PROPERTIES OUTPUT_NAME "_bindings")
 
 if(SKBUILD)
-    install(TARGETS rtvamp-python-bindings DESTINATION .)
+    install(TARGETS rtvamp_python_bindings DESTINATION .)
     install(TARGETS example-plugin DESTINATION .)  # for tests
 endif()

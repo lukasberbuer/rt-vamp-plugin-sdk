@@ -6,9 +6,9 @@ foreach(source ${sources})
     target_link_libraries(
         ${name}
         PRIVATE
-            ${project_options}
+            rtvamp_project_options
+            rtvamp::pluginsdk
+            rtvamp::hostsdk
             benchmark::benchmark
-            rtvamp-pluginsdk
-            rtvamp-hostsdk
     )
 endforeach()

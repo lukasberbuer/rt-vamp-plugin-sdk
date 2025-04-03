@@ -50,7 +50,7 @@ jobs:
           - name: UBSan
             os: ubuntu-24.04
             compiler: clang++
-            flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED_BEHAVIOR=ON"
+            flags: "-DRTVAMP_ENABLE_SANITIZER_UNDEFINED=ON"
 
         build-type:
           - Debug
