@@ -11,7 +11,6 @@ LONG_DESCRIPTION = (HERE / "python" / "README.md").read_text(encoding="utf-8")
 
 INSTALL_REQUIRES = [
     "numpy",
-    "dataclasses>=0.6; python_version<'3.7'",
 ]
 
 EXTRAS_REQUIRE = {
@@ -36,7 +35,9 @@ EXTRAS_REQUIRE = {
     ],
 }
 
-EXTRAS_REQUIRE["dev"] = EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + EXTRAS_REQUIRE["tools"]
+EXTRAS_REQUIRE["dev"] = (
+    EXTRAS_REQUIRE["docs"] + EXTRAS_REQUIRE["tests"] + EXTRAS_REQUIRE["tools"]
+)
 
 
 def get_variable_from_cmake(variable: str) -> str:
@@ -73,13 +74,12 @@ setup(
         "Topic :: Multimedia :: Sound/Audio :: Analysis",
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3.11",
         "Programming Language :: Python :: 3.12",
+        "Programming Language :: Python :: 3.13",
         "Operating System :: OS Independent",
     ],
     keywords=[
@@ -94,7 +94,7 @@ setup(
     ],
     packages=find_packages(where="python/src"),
     package_dir={"": "python/src"},
-    python_requires=">=3.6",
+    python_requires=">=3.8",
     install_requires=INSTALL_REQUIRES,
     extras_require=EXTRAS_REQUIRE,
     cmake_args=[
