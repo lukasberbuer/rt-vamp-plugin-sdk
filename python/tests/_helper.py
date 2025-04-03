@@ -18,8 +18,8 @@ def get_library_extension():
 
 
 def get_test_library_folder() -> Path:
-    """Example plugins for testing are located in the package root directory."""
-    return Path(rtvamp.__file__).parent.resolve()
+    """Example plugins for testing are located in the package's plugins directory."""
+    return Path(rtvamp.__file__).parent / "plugins"
 
 
 def get_test_library_path(filename: str) -> Path:
@@ -28,4 +28,4 @@ def get_test_library_path(filename: str) -> Path:
 
 @pytest.fixture
 def fixture_vamp_path():
-    os.environ["VAMP_PATH"] = str(get_test_library_folder())
+    os.environ["VAMP_PATH"] = str(get_test_library_folder().resolve())

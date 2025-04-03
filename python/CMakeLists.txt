@@ -27,15 +27,18 @@ set_target_properties(rtvamp_python_bindings PROPERTIES OUTPUT_NAME "_bindings")
 
 if(SKBUILD)
     install(
-        TARGETS
-            rtvamp_python_bindings
-            example-plugin # for tests
+        DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/rtvamp"
+        DESTINATION .
+        COMPONENT python
+    )
+    install(
+        TARGETS rtvamp_python_bindings
         DESTINATION rtvamp
         COMPONENT python
     )
     install(
-        DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src/rtvamp"
-        DESTINATION .
+        TARGETS example-plugin
+        DESTINATION rtvamp/plugins
         COMPONENT python
     )
 endif()
