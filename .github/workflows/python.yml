@@ -3,10 +3,12 @@ name: "Python"
 on:
   push:
     branches:
-     - master
+      - master
+  pull_request:
   release:
     types:
       - published
+  workflow_dispatch:
 
 jobs:
   tests:
