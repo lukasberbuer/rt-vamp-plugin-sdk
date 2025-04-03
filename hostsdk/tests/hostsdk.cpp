@@ -71,7 +71,7 @@ TEST_CASE("listLibraries") {
     }
 
     SECTION("Custom paths with example plugins") {
-        const auto libraries = rtvamp::hostsdk::listLibraries(searchPaths);
+        const auto libraries = rtvamp::hostsdk::listLibraries(searchPath);
         REQUIRE(libraries.size() >= 1);
 
         const auto stems = getLibraryStems(libraries);
@@ -105,7 +105,7 @@ TEST_CASE("listPlugins") {
     }
 
     SECTION("Custom paths") {
-        const auto plugins = rtvamp::hostsdk::listPlugins(searchPaths);
+        const auto plugins = rtvamp::hostsdk::listPlugins(searchPath);
         REQUIRE(plugins.size() >= 1);
         REQUIRE_THAT(plugins, Contains(PluginKey("example-plugin:rms")));
     }

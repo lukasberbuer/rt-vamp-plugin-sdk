@@ -82,7 +82,7 @@ PathList listLibraries(const std::filesystem::path& path) {
         return {};
     }
     std::vector<std::filesystem::path> result;
-    for (auto&& entry : std::filesystem::directory_iterator(path, ec)) {
+    for (auto&& entry : std::filesystem::recursive_directory_iterator(path, ec)) {
         if (isVampLibrary(entry)) {
             result.push_back(entry.path());
         }
@@ -109,7 +109,6 @@ std::vector<PluginKey> listPlugins() {
 }
 
 static std::vector<PluginKey> listPluginsInLibrary(const std::filesystem::path& path) {
-    assert(std::filesystem::is_regular_file(path));
     try {
         const auto library = loadLibrary(path);
         return library.listPlugins();
@@ -119,7 +118,6 @@ static std::vector<PluginKey> listPluginsInLibrary(const std::filesystem::path& 
 }
 
 static std::vector<PluginKey> listPluginsInDirectory(const std::filesystem::path& path) {
-    assert(std::filesystem::is_directory(path));
     std::vector<PluginKey> result;
     for (auto&& libraryPath : listLibraries(path)) {
         const auto plugins = listPluginsInLibrary(libraryPath);
@@ -151,7 +149,7 @@ std::vector<PluginKey> listPlugins(std::span<const std::filesystem::path> paths)
 static std::optional<std::filesystem::path> findLibrary(std::string_view stem) {
     std::error_code ec;
     for (auto&& path : getVampPaths()) {
-        for (auto&& entry : std::filesystem::directory_iterator(path, ec)) {
+        for (auto&& entry : std::filesystem::recursive_directory_iterator(path, ec)) {
             if (isVampLibrary(entry) && entry.path().stem() == stem) {
                 return entry.path();
             }
