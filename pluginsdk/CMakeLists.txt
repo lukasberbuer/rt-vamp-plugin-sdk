@@ -1,13 +1,10 @@
-set(library_name rtvamp-pluginsdk)
-set(alias_name "${PROJECT_NAME}::pluginsdk")
-
-add_library(${library_name} INTERFACE)  # header-only
-add_library(${alias_name} ALIAS ${library_name})
+add_library(rtvamp_pluginsdk INTERFACE)  # header-only
+add_library(rtvamp::pluginsdk ALIAS rtvamp_pluginsdk)
 
 target_link_libraries(
-    ${library_name}
+    rtvamp_pluginsdk
     INTERFACE
-        ${project_options}
+        rtvamp_project_options
 )
 
 if(RTVAMP_ENABLE_AMALGAMATION)
@@ -17,7 +14,7 @@ if(RTVAMP_ENABLE_AMALGAMATION)
     file(MAKE_DIRECTORY ${amalgamation_include_dir}/rtvamp)
 
     add_custom_target(
-        rtvamp-pluginsdk-amalgamation
+        rtvamp_pluginsdk_amalgamation
         COMMAND
             ${QUOM_EXE}
             ${CMAKE_CURRENT_SOURCE_DIR}/include/rtvamp/pluginsdk.hpp
@@ -27,10 +24,10 @@ if(RTVAMP_ENABLE_AMALGAMATION)
         COMMENT "Generate single header pluginsdk.hpp"
     )
 
-    add_dependencies(${library_name} rtvamp-pluginsdk-amalgamation)
-    target_include_directories(${library_name} INTERFACE ${amalgamation_include_dir})
+    add_dependencies(rtvamp_pluginsdk rtvamp_pluginsdk_amalgamation)
+    target_include_directories(rtvamp_pluginsdk INTERFACE ${amalgamation_include_dir})
 else()
-    target_include_directories(${library_name} INTERFACE include)
+    target_include_directories(rtvamp_pluginsdk INTERFACE include)
 endif()
 
 if(RTVAMP_BUILD_TESTS)

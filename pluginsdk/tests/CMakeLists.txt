@@ -11,8 +11,8 @@ add_executable(
 target_link_libraries(
     tests_pluginsdk
     PRIVATE
-        ${project_options}
-        ${library_name}
+        rtvamp_project_options
+        rtvamp::pluginsdk
         Catch2::Catch2WithMain
         Threads::Threads
 )

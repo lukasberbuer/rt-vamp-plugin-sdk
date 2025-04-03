@@ -15,7 +15,7 @@ jobs:
           mkdir build
           cd build
           cmake -DRTVAMP_ENABLE_AMALGAMATION=ON ..
-          cmake --build . --target rtvamp-pluginsdk-amalgamation
+          cmake --build . --target rtvamp_pluginsdk_amalgamation
       - uses: actions/upload-artifact@v4
         with:
           name: pluginsdk_amalgamated

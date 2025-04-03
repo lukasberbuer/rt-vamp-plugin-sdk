@@ -18,8 +18,8 @@ add_executable(
 target_link_libraries(
     tests_hostsdk
     PRIVATE
-        ${project_options}
-        ${library_name}
+        rtvamp_project_options
+        rtvamp::hostsdk
         Catch2::Catch2WithMain
 )
 target_include_directories(
