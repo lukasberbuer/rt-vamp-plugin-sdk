@@ -1,10 +1,8 @@
 import numpy as np
 import pytest
-from numpy.testing import assert_allclose
-
-from rtvamp import FeatureComputation, _frame, compute_features
-
 from _helper import fixture_vamp_path
+from numpy.testing import assert_allclose
+from rtvamp import FeatureComputation, _frame, compute_features
 
 
 def test_feature_computation(fixture_vamp_path):
@@ -31,7 +29,7 @@ def test_feature_computation(fixture_vamp_path):
 
 
 def rms(x: np.ndarray):
-    return np.sqrt(np.mean(x ** 2))
+    return np.sqrt(np.mean(x**2))
 
 
 def rms_blockwise(x: np.ndarray, blocksize: int, stepsize):
@@ -43,21 +41,21 @@ def rms_blockwise(x: np.ndarray, blocksize: int, stepsize):
 
 
 @pytest.mark.parametrize(
-    ("blocksize, stepsize"),
-    (
+    ("blocksize", "stepsize"),
+    [
         (10, None),
         (10, 10),
         (10, 5),
         (10, 2),
         (1, 1),
-    )
+    ],
 )
 def test_feature_computation_rms(fixture_vamp_path, blocksize, stepsize):
     proc = FeatureComputation(samplerate=1)
     proc.add_plugin("example-plugin:rms")
     proc.initialise(blocksize=blocksize, stepsize=stepsize)
 
-    x = np.random.randn(111)
+    x = np.random.randn(111)  # noqa: NPY002
     timestamps, outputs = proc.process_signal(x)
     output_rms = outputs[0][0]  # first output, first bin#
 
@@ -68,17 +66,17 @@ def test_feature_computation_rms(fixture_vamp_path, blocksize, stepsize):
 
 
 @pytest.mark.parametrize(
-    ("blocksize, stepsize"),
-    (
+    ("blocksize", "stepsize"),
+    [
         (10, None),
         (10, 10),
         (10, 5),
         (10, 2),
         (1, 1),
-    )
+    ],
 )
 def test_compute_features_rms(fixture_vamp_path, blocksize, stepsize):
-    x = np.random.randn(111)
+    x = np.random.randn(111)  # noqa: NPY002
     timestamps, output = compute_features(
         x,
         samplerate=1,
