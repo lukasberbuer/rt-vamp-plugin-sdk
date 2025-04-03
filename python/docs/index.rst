@@ -6,7 +6,7 @@
     :hidden:
 
     api
-    _examples/index
+    examples/index
 
 .. toctree::
     :caption: Links
