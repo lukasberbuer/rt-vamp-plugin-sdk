@@ -16,8 +16,12 @@ using rtvamp::hostsdk::Plugin;
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const std::optional<T>& opt) {
-    if (!opt) return os << "null";
-    return os << opt.value();
+    if (opt) {
+        os << opt.value();
+    } else {
+        os << "null";
+    }
+    return os;
 }
 
 std::ostream& operator<<(std::ostream& os, const Plugin::InputDomain& d) {
@@ -84,13 +88,13 @@ void listPlugins() {
 
 void listPaths() {
     for (auto&& path : rtvamp::hostsdk::getVampPaths()) {
-        std::cout << path.string() << std::endl;
+        std::cout << path.string() << '\n';
     }
 }
 
 void listPluginIds() {
     for (auto&& key : rtvamp::hostsdk::listPlugins()) {
-        std::cout << key.get() << std::endl;
+        std::cout << key.get() << '\n';
     }
 }
 
@@ -99,9 +103,9 @@ void listPluginOutputs() {
         try {
             auto plugin = rtvamp::hostsdk::loadPlugin(key, 48000);
             for (auto&& output : plugin->getOutputDescriptors()) {
-                std::cout << key.get() << ':' << output.identifier << std::endl;
+                std::cout << key.get() << ':' << output.identifier << '\n';
             }
-        } catch (...) {}
+        } catch (...) {}  // NOLINT(*empty-catch)
     }
 }
 
@@ -113,7 +117,7 @@ void process(
 ) {
     // load audio file
     auto file = SndfileHandle(std::string(audiofile));
-    if (file.error()) {
+    if (file.error() != 0) {
         throw std::runtime_error(
             concat("Failed to open audio file: ", audiofile, " (", file.strError(), ")")
         );
@@ -123,7 +127,7 @@ void process(
     const auto channels   = file.channels();
 
     // load plugin
-    auto plugin = rtvamp::hostsdk::loadPlugin(pluginKey, sampleRate);
+    auto plugin = rtvamp::hostsdk::loadPlugin(pluginKey, static_cast<float>(sampleRate));
 
     const auto getBlockSize = [&]() -> uint32_t {
         if (optionalBlockSize) {
@@ -139,7 +143,9 @@ void process(
     const uint32_t stepSize  = blockSize;
 
     const bool success = plugin->initialise(stepSize, blockSize);
-    if (!success) throw std::runtime_error("Initialisation failed");
+    if (!success) {
+        throw std::runtime_error("Initialisation failed");
+    }
 
     const auto outputIndex = optionalOutputIndex.value_or(0);
     const auto output = [&] {
@@ -174,7 +180,7 @@ void process(
     }
 
     // initialise buffer
-    const sf_count_t   readSize = blockSize * channels;
+    const auto         readSize = static_cast<sf_count_t>(blockSize) * channels;
     std::vector<float> bufferInterleavedChannels(readSize);
     std::vector<float> bufferChannel(blockSize);
     std::vector<float> window(hanning(blockSize));
@@ -199,14 +205,13 @@ void process(
                     bufferChannel[i] *= window[i];
                 }
                 return fft->compute(bufferChannel);
-            } else {
-                return bufferChannel;
             }
+            return bufferChannel;
         };
 
         auto featureSet = plugin->process(getInputBuffer(), nsec);
 
-        std::cout << std::fixed << nsec / 1e9 << '\t';
+        std::cout << std::fixed << static_cast<double>(nsec) / 1e9 << '\t';
         for (auto&& feature : featureSet[outputIndex]) {
             std::cout << feature << '\t';
         }
@@ -215,7 +220,7 @@ void process(
         nsec += nsecIncrement;
     }
 
-    if (file.error()) {
+    if (file.error() != 0) {
         throw std::runtime_error(concat("Error while reading file: ", file.strError()));
     }
 
@@ -244,7 +249,7 @@ void usage(std::string_view program) {
 }
 
 int main(int argc, char* argv[]) {
-    CliParser parser(argc, argv);
+    const CliParser parser(argc, argv);
 
     if (parser.nargs() < 2 || parser.hasFlag("-h") || parser.hasFlag("--help")) {
         usage(parser.program());
@@ -280,7 +285,7 @@ int main(int argc, char* argv[]) {
         try {
             process(plugin, audiofile, outputIndex, blockSize);
         } catch (const std::exception& e) {
-            std::cerr << Escape::Red << "[ERROR] " << e.what() << Escape::Reset << std::endl;
+            std::cerr << Escape::Red << "[ERROR] " << e.what() << Escape::Reset << '\n';
             return 1;
         }
         return 0;

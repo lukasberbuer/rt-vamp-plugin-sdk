@@ -10,9 +10,9 @@
 #include "rtvamp/hostsdk/Plugin.hpp"
 
 // forward declarations
-struct _VampPluginDescriptor;
-typedef _VampPluginDescriptor VampPluginDescriptor;
-typedef void* VampPluginHandle;
+struct _VampPluginDescriptor;  // NOLINT
+typedef _VampPluginDescriptor VampPluginDescriptor;  // NOLINT
+typedef void* VampPluginHandle;  // NOLINT
 
 namespace rtvamp::hostsdk {
 
@@ -25,7 +25,12 @@ public:
         float                           inputSampleRate,
         std::shared_ptr<DynamicLibrary> library = nullptr  // extend lifetime of dl handle
     );
-    ~PluginHostAdapter();
+    ~PluginHostAdapter() override;
+
+    PluginHostAdapter(const PluginHostAdapter&) = delete;
+    PluginHostAdapter(PluginHostAdapter&&) = delete;
+    PluginHostAdapter& operator=(const PluginHostAdapter&) = delete;
+    PluginHostAdapter& operator=(PluginHostAdapter&&) = delete;
 
     std::filesystem::path getLibraryPath() const noexcept override;
 

@@ -47,10 +47,10 @@ TEST_CASE("PluginAdapter instantiation") {
     d->reset(h);
 
     SECTION("Parameter") {
-        REQUIRE(d->getParameter(h, 0) == 1.0f);
-        REQUIRE(d->getParameter(h, 1) == 0.0f);  // does not exist
-        d->setParameter(h, 0, 2.0f);
-        REQUIRE(d->getParameter(h, 0) == 2.0f);
+        REQUIRE(d->getParameter(h, 0) == 1.0F);
+        REQUIRE(d->getParameter(h, 1) == 0.0F);  // does not exist
+        d->setParameter(h, 0, 2.0F);
+        REQUIRE(d->getParameter(h, 0) == 2.0F);
     }
 
     SECTION("Program") {
@@ -85,10 +85,10 @@ TEST_CASE("PluginAdapter instantiation") {
         CHECK_THAT(o->binNames[2], Equals("c"));
 
         CHECK(o->hasKnownExtents == 1);
-        CHECK(o->minValue == 0.0f);
-        CHECK(o->maxValue == 10.0f);
+        CHECK(o->minValue == 0.0F);
+        CHECK(o->maxValue == 10.0F);
         CHECK(o->isQuantized == 0);
-        CHECK(o->quantizeStep == 0.0f);
+        CHECK(o->quantizeStep == 0.0F);
         CHECK(o->sampleType == vampOneSamplePerStep);
         CHECK(o->sampleRate == 0);
         CHECK(o->hasDuration == 0);
@@ -112,7 +112,7 @@ TEST_CASE("PluginAdapter instantiation") {
         const unsigned int              inputChannels = 1;
         const unsigned int              blockSize = 5;
         const unsigned int              stepSize = 5;
-        const std::vector<float>        signal{1.1f, 2.2f, 3.3f, 4.4f, 5.5f};
+        const std::vector<float>        signal{1.1F, 2.2F, 3.3F, 4.4F, 5.5F};
         const std::vector<const float*> inputBuffer{signal.data()};
 
         d->initialise(h, inputChannels, stepSize, blockSize);
@@ -122,9 +122,9 @@ TEST_CASE("PluginAdapter instantiation") {
         CHECK(result != nullptr);
         CHECK(result[0].featureCount == 1);
         CHECK(result[0].features[0].v1.valueCount == 3);
-        CHECK(result[0].features[0].v1.values[0] == 1.1f);
-        CHECK(result[0].features[0].v1.values[1] == 2.2f);
-        CHECK(result[0].features[0].v1.values[2] == 3.3f);
+        CHECK(result[0].features[0].v1.values[0] == 1.1F);
+        CHECK(result[0].features[0].v1.values[1] == 2.2F);
+        CHECK(result[0].features[0].v1.values[2] == 3.3F);
 
         d->releaseFeatureSet(result); 
 
@@ -147,7 +147,7 @@ TEST_CASE("PluginAdapter thread-safety (with thread sanitizer)") {
     const uint32_t blockSize = 1024;
     const size_t   loops     = 100;
 
-    const std::vector<float> inputBuffer(blockSize, 1.0f);
+    const std::vector<float> inputBuffer(blockSize, 1.0F);
     const float*             inputBufferPtr = inputBuffer.data();
     const float* const*      inputBuffers   = &inputBufferPtr;
 

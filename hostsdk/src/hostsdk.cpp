@@ -56,7 +56,7 @@ bool isVampLibrary(const std::filesystem::path& libraryPath) {
     if (!dl.load(libraryPath)) {
         return false;
     }
-    if (!dl.getFunction<VampGetPluginDescriptorFunction>("vampGetPluginDescriptor")) {
+    if (dl.getFunction<VampGetPluginDescriptorFunction>("vampGetPluginDescriptor") == nullptr) {
         return false;
     }
     return true;

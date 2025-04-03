@@ -15,7 +15,6 @@ add_executable(
     PluginKey.cpp
     PluginLibrary.cpp
 )
-
 target_link_libraries(
     tests_hostsdk
     PRIVATE
@@ -29,6 +28,7 @@ target_include_directories(
         ../src
         "${PROJECT_BINARY_DIR}/hostsdk/tests"
 )
+set_target_properties(tests_hostsdk PROPERTIES CXX_CLANG_TIDY "")
 
 if(NOT RTVAMP_BUILD_EXAMPLES)
     message(

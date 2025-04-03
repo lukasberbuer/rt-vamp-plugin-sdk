@@ -1,3 +1,4 @@
+#include <algorithm>  // transform
 #include <cassert>
 #include <complex>
 #include <filesystem>
@@ -33,6 +34,7 @@ class PyPlugin : public Plugin {
 public:
     using Plugin::Plugin;
 
+    // NOLINTBEGIN(bugprone-exception-escape)
     std::filesystem::path getLibraryPath() const noexcept override {
         PYBIND11_OVERRIDE_PURE(std::filesystem::path, Plugin, getLibraryPath);
     }
@@ -99,13 +101,17 @@ public:
     FeatureSet process(InputBuffer buffer, uint64_t nsec) override {
         PYBIND11_OVERRIDE_PURE(FeatureSet, Plugin, process, buffer, nsec);
     }
+    // NOLINTEND(bugprone-exception-escape)
 };
 
 static auto convertPluginKeys(const std::vector<PluginKey>& pluginKeys) {
-    std::vector<std::string> result;
-    for (auto&& key : pluginKeys) {
-        result.emplace_back(key.get());
-    }
+    std::vector<std::string> result(pluginKeys.size());
+    std::transform(
+        pluginKeys.begin(),
+        pluginKeys.end(),
+        result.begin(),
+        [](const auto& key) { return key.get(); }
+    );
     return result;
 }
 
@@ -137,11 +143,9 @@ PYBIND11_MODULE(_bindings, m) {
     m.def(
         "list_libraries",
         [](std::optional<std::vector<std::filesystem::path>> paths) {
-            if (paths) {
-                return rtvamp::hostsdk::listLibraries(paths.value());
-            } else {
-                return rtvamp::hostsdk::listLibraries();
-            }
+            return paths ? 
+                rtvamp::hostsdk::listLibraries(paths.value()) :
+                rtvamp::hostsdk::listLibraries();
         },
         R"pbdoc(
             List all plugin libraries.
@@ -158,11 +162,9 @@ PYBIND11_MODULE(_bindings, m) {
     m.def(
         "list_plugins",
         [](std::optional<std::vector<std::filesystem::path>> paths) {
-            if (paths) {
-                return convertPluginKeys(rtvamp::hostsdk::listPlugins(paths.value()));
-            } else {
-                return convertPluginKeys(rtvamp::hostsdk::listPlugins());
-            }
+            return paths
+                ? convertPluginKeys(rtvamp::hostsdk::listPlugins(paths.value()))
+                : convertPluginKeys(rtvamp::hostsdk::listPlugins());
         },
         R"pbdoc(
             List all plugins.
@@ -195,11 +197,9 @@ PYBIND11_MODULE(_bindings, m) {
     m.def(
         "load_plugin",
         [](std::string_view key, float samplerate, std::optional<std::vector<std::filesystem::path>> paths) {
-            if (paths) {
-                return rtvamp::hostsdk::loadPlugin(key, samplerate, paths.value());
-            } else {
-                return rtvamp::hostsdk::loadPlugin(key, samplerate);
-            }
+            return paths
+                ? rtvamp::hostsdk::loadPlugin(key, samplerate, paths.value())
+                : rtvamp::hostsdk::loadPlugin(key, samplerate);
         },
         R"pbdoc(
             Load plugin.

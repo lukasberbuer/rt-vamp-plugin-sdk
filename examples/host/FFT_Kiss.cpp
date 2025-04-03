@@ -6,8 +6,13 @@
 
 struct FFT::Impl {
     explicit Impl(size_t blockSizeTimeDomain)
-        : config(kiss_fftr_alloc(blockSizeTimeDomain, 0, nullptr, nullptr)),
+        : config(kiss_fftr_alloc(static_cast<int>(blockSizeTimeDomain), 0, nullptr, nullptr)),
           outputComplex(blockSizeTimeDomain / 2 + 1) {}
+
+    Impl(const Impl&) = delete;
+    Impl(Impl&&) = delete;
+    Impl& operator=(const Impl&) = delete;
+    Impl& operator=(Impl&&) = delete;
 
     ~Impl() {
         kiss_fftr_free(config);
@@ -41,8 +46,8 @@ std::span<const std::complex<float>> FFT::compute(std::span<const float> buffer)
     // check if total size is equal (no padding)
     static_assert(sizeof(kiss_fft_cpx) == sizeof(std::complex<float>));
 
-    return std::span(
-        reinterpret_cast<const std::complex<float>*>(outputComplex.data()),
+    return {
+        reinterpret_cast<const std::complex<float>*>(outputComplex.data()),  // NOLINT(*reinterpret-cast)
         outputComplex.size()
-    );
+    };
 }

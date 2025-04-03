@@ -7,13 +7,14 @@ namespace rtvamp::pluginsdk::detail {
 
 template <typename Arg, typename... Args>
 void print(std::ostream& out, Arg&& arg, Args&&... args) {
-    out << std::forward<Arg>(arg);
-    ((out << std::forward<Args>(args)), ...);
-    out << std::endl;
+    out << std::forward<Arg>(arg);  // NOLINT
+    ((out << std::forward<Args>(args)), ...);  // NOLINT
+    out << '\n';
 }
 
 }  // namespace rtvamp::pluginsdk::detail
 
+// NOLINTBEGIN(*macro-usage)
 #ifdef NDEBUG
 #define RTVAMP_DEBUG(...)
 #else
@@ -21,3 +22,4 @@ void print(std::ostream& out, Arg&& arg, Args&&... args) {
 #endif
 
 #define RTVAMP_ERROR(...) ::rtvamp::pluginsdk::detail::print(std::cerr, "[ERROR] ", __VA_ARGS__);
+// NOLINTEND(*macro-usage)

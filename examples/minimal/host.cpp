@@ -6,18 +6,18 @@
 #include "rtvamp/hostsdk.hpp"
 
 void randomize(std::vector<float>& vec) {
-    std::default_random_engine       engine;
-    std::uniform_real_distribution<> dist(-1.0f, 1.0f);
+    std::default_random_engine       engine;  // NOLINT(cert*)
+    std::uniform_real_distribution<> dist(-1.0F, 1.0F);
     std::generate(vec.begin(), vec.end(), [&] { return dist(engine); });
 }
 
 int main() {
     // list all plugins keys (library:plugin)
     for (auto&& key : rtvamp::hostsdk::listPlugins()) {
-        std::cout << key.get() << std::endl;
+        std::cout << key.get() << '\n';
     }
 
-    const float  sampleRate = 48000.0f;
+    const float  sampleRate = 48000.0F;
     const size_t blockSize  = 4096;
     const size_t stepSize   = 4096;
 
@@ -25,14 +25,14 @@ int main() {
 
     plugin->initialise(stepSize, blockSize);
 
-    uint64_t           timestampNanoseconds = 0;
+    const uint64_t     timestampNanoseconds = 0;
     std::vector<float> buffer(blockSize);
 
     randomize(buffer);
 
     auto features = plugin->process(buffer, timestampNanoseconds);
 
-    std::cout << "Zero crossings: " << features[0][0] << std::endl;
+    std::cout << "Zero crossings: " << features[0][0] << '\n';
 
     return 0;
 }

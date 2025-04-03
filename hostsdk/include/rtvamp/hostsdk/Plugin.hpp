@@ -16,6 +16,11 @@ public:
     explicit Plugin(float inputSampleRate) : inputSampleRate_(inputSampleRate) {}
     virtual ~Plugin() = default;
 
+    Plugin(const Plugin&) = default;
+    Plugin(Plugin&&) = default;
+    Plugin& operator=(const Plugin&) = default;
+    Plugin& operator=(Plugin&&) = default;
+
     /** Input domain of the plugin. */
     enum class InputDomain { Time, Frequency };
 
@@ -24,9 +29,9 @@ public:
         std::string_view         name;
         std::string_view         description;
         std::string_view         unit;
-        float                    defaultValue;
-        float                    minValue;
-        float                    maxValue;
+        float                    defaultValue{};
+        float                    minValue{};
+        float                    maxValue{};
         std::optional<float>     quantizeStep;
         std::vector<std::string_view> valueNames;
     };
@@ -36,11 +41,11 @@ public:
         std::string              name;
         std::string              description;
         std::string              unit;
-        uint32_t                 binCount;
+        uint32_t                 binCount{};
         std::vector<std::string> binNames;
-        bool                     hasKnownExtents;
-        float                    minValue;
-        float                    maxValue;
+        bool                     hasKnownExtents{};
+        float                    minValue{};
+        float                    maxValue{};
         std::optional<float>     quantizeStep;
     };
 
@@ -87,7 +92,7 @@ public:
     float                         getInputSampleRate() const noexcept { return inputSampleRate_; };
 
 private:
-    const float inputSampleRate_;
+    float inputSampleRate_;
 };
 
 }  // namespace rtvamp::hostsdk

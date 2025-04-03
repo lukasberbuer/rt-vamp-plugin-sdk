@@ -9,8 +9,8 @@
 #include "rtvamp/hostsdk/PluginKey.hpp"
 
 // forward declarations
-struct _VampPluginDescriptor;
-typedef _VampPluginDescriptor VampPluginDescriptor;
+struct _VampPluginDescriptor;  // NOLINT
+typedef _VampPluginDescriptor VampPluginDescriptor;  // NOLINT
 
 namespace rtvamp::hostsdk {
 

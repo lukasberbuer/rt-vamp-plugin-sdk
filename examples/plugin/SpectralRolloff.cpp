@@ -19,17 +19,18 @@ static void computeMagnitude(const auto& fft, auto& magnitude) {
 }
 
 static size_t getRolloffIndex(const auto& magnitude, float sumLimit) {
-    float sum = 0.0f;
+    float sum = 0.0F;
     for (size_t i = 0; i < magnitude.size(); ++i) {
         sum += magnitude[i];
-        if (sum > sumLimit)
+        if (sum > sumLimit) {
             return i;
+        }
     }
     return magnitude.size() - 1;
 }
 
 inline static float binToFrequency(float sampleRate, size_t nfft, size_t index) {
-    return 0.5f * sampleRate * index / (nfft - 1);
+    return 0.5F * sampleRate * static_cast<float>(index) / static_cast<float>(nfft - 1);
 }
 
 const SpectralRolloff::FeatureSet& SpectralRolloff::process(
@@ -38,7 +39,7 @@ const SpectralRolloff::FeatureSet& SpectralRolloff::process(
     auto fft = std::get<FrequencyDomainBuffer>(inputBuffer);
     computeMagnitude(fft, magnitude_);
 
-    const float  sum          = std::accumulate(magnitude_.begin(), magnitude_.end(), 0.0f);
+    const float  sum          = std::accumulate(magnitude_.begin(), magnitude_.end(), 0.0F);
     const float  sumLimit     = getParameter("rolloff").value() * sum;
     const size_t indexRolloff = getRolloffIndex(magnitude_, sumLimit);
     const float  frequency    = binToFrequency(getInputSampleRate(), magnitude_.size(), indexRolloff);

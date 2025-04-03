@@ -48,7 +48,9 @@ private:
     ) {
         // should the host create plugins with others descriptors? -> shared state
         // possible solution: overwrite function pointer in entry point and dispatch to adapters there
-        if (desc != &descriptor) return nullptr;
+        if (desc != &descriptor) {
+            return nullptr;
+        }
 
         const auto lock = getWriterLock();
         auto& adapter = plugins.emplace_back(
@@ -88,60 +90,64 @@ private:
         ) -> int {
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            if (!adapter) return 0;
-            return adapter->initialise(inputChannels, stepSize, blockSize);
+            return adapter != nullptr ? adapter->initialise(inputChannels, stepSize, blockSize) : 0;
         };
 
         d.reset = [](VampPluginHandle handle) {
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            if (!adapter) return;
-            adapter->reset();
+            if (adapter != nullptr) {
+                adapter->reset();
+            }
         };
 
         d.getParameter = [](VampPluginHandle handle, int index) {
-            // check index before dispatching
-            if (!isValidParameterIndex(index)) return 0.0f;
+            if (!isValidParameterIndex(index)) {
+                return 0.0F;
+            }
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            if (!adapter) return 0.0f;
-            return adapter->getParameter(index);
+            return adapter != nullptr ? adapter->getParameter(index) : 0.0F;
         };
 
         d.setParameter = [](VampPluginHandle handle, int index, float value) {
-            // check index before dispatching
-            if (!isValidParameterIndex(index)) return;
+            if (!isValidParameterIndex(index)) {
+                return;
+            }
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            if (!adapter) return;
-            return adapter->setParameter(index, value);
+            if (adapter != nullptr) {
+                adapter->setParameter(index, value);
+            }
         };
 
         d.getCurrentProgram = [](VampPluginHandle handle) {
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            return adapter ? adapter->getCurrentProgram() : 0;
+            return adapter != nullptr ? adapter->getCurrentProgram() : 0;
         };
 
         d.selectProgram = [](VampPluginHandle handle, unsigned int index) {
-            // check index before dispatching
-            if (!isValidProgramIndex(index)) return;
+            if (!isValidProgramIndex(index)) {
+                return;
+            }
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            if (!adapter) return;
-            adapter->selectProgram(index);
+            if (adapter != nullptr) {
+                adapter->selectProgram(index);
+            }
         };
 
         d.getPreferredStepSize = [](VampPluginHandle handle) {
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            return adapter ? adapter->get().getPreferredStepSize() : 0;
+            return adapter != nullptr ? adapter->get().getPreferredStepSize() : 0;
         };
 
         d.getPreferredBlockSize = [](VampPluginHandle handle) {
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            return adapter ? adapter->get().getPreferredBlockSize() : 0;
+            return adapter != nullptr ? adapter->get().getPreferredBlockSize() : 0;
         };
 
         d.getMinChannelCount = [](VampPluginHandle) -> unsigned int {
@@ -157,10 +163,12 @@ private:
         };
 
         d.getOutputDescriptor = [](VampPluginHandle handle, unsigned int index) -> VampOutputDescriptor* {
-            if (!isValidOutputIndex(index)) return nullptr;
+            if (!isValidOutputIndex(index)) {
+                return nullptr;
+            }
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            return adapter ? adapter->getOutputDescriptor(index) : nullptr;
+            return adapter != nullptr ? adapter->getOutputDescriptor(index) : nullptr;
         };
 
         d.releaseOutputDescriptor = [](VampOutputDescriptor*) {};  // memory owned and released by plugin
@@ -170,13 +178,13 @@ private:
         ) {
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            return adapter ? adapter->process(inputBuffers, sec, nsec) : nullptr;
+            return adapter != nullptr ? adapter->process(inputBuffers, sec, nsec) : nullptr;
         };
 
         d.getRemainingFeatures = [](VampPluginHandle handle) {
             const auto lock    = getReaderLock();
             auto*      adapter = findPlugin(handle);
-            return adapter ? adapter->getRemainingFeatures() : nullptr;
+            return adapter != nullptr ? adapter->getRemainingFeatures() : nullptr;
         };
 
         d.releaseFeatureSet = [](VampFeatureList*) {};  // memory owned and released by plugin
@@ -218,10 +226,10 @@ public:
     float getParameter(int index) const {
         // bounds checking in descriptor lambda
         try {
-            return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0f); 
+            return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0F); 
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::getParameter: ", e.what());
-            return 0.0f;
+            return 0.0F;
         }
     }
 
@@ -240,7 +248,9 @@ public:
             const auto& programs = TPlugin::programs;
             const auto  program  = plugin_.getCurrentProgram();
             for (unsigned int i = 0; i < static_cast<unsigned int>(programs.size()); ++i) {
-                if (programs[i] == program) return i;
+                if (programs[i] == program) {
+                    return i;
+                }
             }
             return 0;
         } catch (const std::exception& e) {
@@ -261,14 +271,14 @@ public:
 
     VampOutputDescriptor* getOutputDescriptor(unsigned int index) {
         updateOutputDescriptors();
-        std::shared_lock readerLock(mutex_);
+        const std::shared_lock readerLock(mutex_);
         // bounds checking in descriptor lambda
         return outputDescriptorWrappers_[index].get();
     }
 
     VampFeatureList* process(const float* const* inputBuffers, int sec, int nsec) {
-        const auto*   buffer    = inputBuffers[0];  // only first channel
-        const int64_t timestamp = static_cast<uint64_t>(1'000'000'000) * sec + nsec;
+        const auto*   buffer    = *inputBuffers;  // only first channel
+        const int64_t timestamp = static_cast<int64_t>(1'000'000'000) * sec + nsec;
 
         const auto getInputBuffer = [&]() -> typename TPlugin::InputBuffer {
             if constexpr (TPlugin::meta.inputDomain == TPlugin::InputDomain::Time) {
@@ -276,6 +286,7 @@ public:
             } else {
                 // casts between interleaved arrays and std::complex are guaranteed to be valid
                 // https://en.cppreference.com/w/cpp/numeric/complex
+                // NOLINTNEXTLINE(*reinterpret-cast)
                 return std::span(reinterpret_cast<const std::complex<float>*>(buffer), blockSize_ / 2 + 1);
             }
         };
@@ -302,7 +313,7 @@ private:
     void updateOutputDescriptors() {
         if (outputsNeedUpdate_) {
             try {
-                std::unique_lock writerLock(mutex_);
+                const std::unique_lock writerLock(mutex_);
                 const auto descriptors = plugin_.getOutputDescriptors();
 
                 // (re)generate vamp output descriptors

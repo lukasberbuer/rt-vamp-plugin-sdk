@@ -1,5 +1,6 @@
 #include "rtvamp/hostsdk/PluginHostAdapter.hpp"
 
+#include <algorithm>  // copy_n
 #include <cassert>
 #include <optional>
 #include <stdexcept>
@@ -14,13 +15,12 @@
 namespace rtvamp::hostsdk {
 
 inline static const char* notNull(const char* str) {
-    return str ? str : "";
+    return str != nullptr ? str : "";
 }
 
 template <typename T>
 inline static std::optional<T> createOptional(T value, bool hasValue) {
-    if (hasValue) return value;
-    return {};
+    return hasValue ? std::make_optional(value) : std::nullopt;
 }
 
 static std::vector<Plugin::ParameterDescriptor> convertParameterDescriptors(
@@ -29,7 +29,7 @@ static std::vector<Plugin::ParameterDescriptor> convertParameterDescriptors(
     std::vector<Plugin::ParameterDescriptor> result(descriptor.parameterCount);
 
     for (size_t i = 0 ; i < descriptor.parameterCount; ++i) {
-        auto* vampParameter = descriptor.parameters[i];
+        const auto* vampParameter = descriptor.parameters[i];  // NOLINT(*pointer-arithmetic)
         auto& parameter     = result[i];
 
         parameter.identifier   = notNull(vampParameter->identifier);
@@ -57,8 +57,9 @@ inline static std::optional<int> findParameterIndex(
     const VampPluginDescriptor& descriptor, std::string_view identifier
 ) {
     for (int i = 0; i < static_cast<int>(descriptor.parameterCount); ++i) {
-        if (std::string_view(descriptor.parameters[i]->identifier) == identifier)
+        if (std::string_view(descriptor.parameters[i]->identifier) == identifier) {  // NOLINT(*pointer-arithmetic)
             return i;
+        }
     }
     return {};
 }
@@ -67,7 +68,7 @@ static std::vector<std::string_view> convertPrograms(const VampPluginDescriptor&
     std::vector<std::string_view> result;
     result.reserve(descriptor.programCount);
     for (size_t i = 0; i < descriptor.programCount; ++i) {
-        result.emplace_back(descriptor.programs[i]);
+        result.emplace_back(descriptor.programs[i]);  // NOLINT(*pointer-arithmetic)
     }
     return result;
 }
@@ -76,8 +77,9 @@ inline static std::optional<int> findProgramIndex(
     const VampPluginDescriptor& descriptor, std::string_view program
 ) {
     for (int i = 0; i < static_cast<int>(descriptor.programCount); ++i) {
-        if (std::string_view(descriptor.programs[i]) == program)
+        if (std::string_view(descriptor.programs[i]) == program) {  // NOLINT(*pointer-arithmetic)
             return i;
+        }
     }
     return {};
 }
@@ -85,42 +87,60 @@ inline static std::optional<int> findProgramIndex(
 static void checkPluginDescriptor(const VampPluginDescriptor& d) {
     using Error = std::runtime_error;
 
-    if (!d.instantiate)
+    if (d.instantiate == nullptr) {
         throw Error("Missing function pointer to instantiate");
-    if (!d.cleanup)
+    }
+    if (d.cleanup == nullptr) {
         throw Error("Missing function pointer to clean");
-    if (!d.initialise)
+    }
+    if (d.initialise == nullptr) {
         throw Error("Missing function pointer to initialise");
-    if (!d.reset)
+    }
+    if (d.reset == nullptr) {
         throw Error("Missing function pointer to reset");
-    if (!d.getParameter)
+    }
+    if (d.getParameter == nullptr) {
         throw Error("Missing function pointer to getParameter");
-    if (!d.setParameter)
+    }
+    if (d.setParameter == nullptr) {
         throw Error("Missing function pointer to setParameter");
-    if (!d.getCurrentProgram)
+    }
+    if (d.getCurrentProgram == nullptr) {
         throw Error("Missing function pointer to getCurrentProgram");
-    if (!d.selectProgram)
+    }
+    if (d.selectProgram == nullptr) {
         throw Error("Missing function pointer to selectProgram");
-    if (!d.getPreferredStepSize)
+    }
+    if (d.getPreferredStepSize == nullptr) {
         throw Error("Missing function pointer to getPreferredStepSize");
-    if (!d.getPreferredBlockSize)
+    }
+    if (d.getPreferredBlockSize == nullptr) {
         throw Error("Missing function pointer to getPreferredBlockSize");
-    if (!d.getMinChannelCount)
+    }
+    if (d.getMinChannelCount == nullptr) {
         throw Error("Missing function pointer to getMinChannelCount");
-    if (!d.getMaxChannelCount)
+    }
+    if (d.getMaxChannelCount == nullptr) {
         throw Error("Missing function pointer to getMaxChannelCount");
-    if (!d.getOutputCount)
+    }
+    if (d.getOutputCount == nullptr) {
         throw Error("Missing function pointer to getOutputCount");
-    if (!d.getOutputDescriptor)
+    }
+    if (d.getOutputDescriptor == nullptr) {
         throw Error("Missing function pointer to getOutputDescriptor");
-    if (!d.releaseOutputDescriptor)
+    }
+    if (d.releaseOutputDescriptor == nullptr) {
         throw Error("Missing function pointer to releaseOutputDescriptor");
-    if (!d.process)
+    }
+    if (d.process == nullptr) {
         throw Error("Missing function pointer to process");
-    if (!d.getRemainingFeatures)
+    }
+    if (d.getRemainingFeatures == nullptr) {
         throw Error("Missing function pointer to getRemainingFeatures");
-    if (!d.releaseFeatureSet)
+    }
+    if (d.releaseFeatureSet == nullptr) {
         throw Error("Missing function pointer to releaseFeatureSet");
+    }
 }
 
 PluginHostAdapter::PluginHostAdapter(
@@ -130,8 +150,9 @@ PluginHostAdapter::PluginHostAdapter(
 ) : Plugin(inputSampleRate), descriptor_(descriptor), library_(std::move(library)) {
     checkPluginDescriptor(descriptor_);
 
+    // NOLINTNEXTLINE(*prefer-member-initializer)
     handle_ = descriptor_.instantiate(&descriptor_, inputSampleRate);
-    if (!handle_) {
+    if (handle_ == nullptr) {
         throw std::runtime_error("Plugin instantiation failed");
     }
 
@@ -196,13 +217,17 @@ Plugin::ParameterList PluginHostAdapter::getParameterDescriptors() const noexcep
 
 std::optional<float> PluginHostAdapter::getParameter(std::string_view id) const {
     const auto optionalIndex = findParameterIndex(descriptor_, id);
-    if (!optionalIndex) return {};
+    if (!optionalIndex) {
+        return {};
+    }
     return descriptor_.getParameter(handle_, optionalIndex.value());
 }
 
 bool PluginHostAdapter::setParameter(std::string_view id, float value) {
     const auto optionalIndex = findParameterIndex(descriptor_, id);
-    if (!optionalIndex) return false;
+    if (!optionalIndex) {
+        return false;
+    }
     descriptor_.setParameter(handle_, optionalIndex.value(), value);
     return true;
 }
@@ -212,7 +237,9 @@ Plugin::ProgramList PluginHostAdapter::getPrograms() const noexcept {
 }
 
 Plugin::CurrentProgram PluginHostAdapter::getCurrentProgram() const {
-    if (descriptor_.programCount == 0) return {};
+    if (descriptor_.programCount == 0) {
+        return {};
+    }
     const auto index = descriptor_.getCurrentProgram(handle_);
     assert(index < descriptor_.programCount);
     return programs_[index];
@@ -220,7 +247,9 @@ Plugin::CurrentProgram PluginHostAdapter::getCurrentProgram() const {
 
 bool PluginHostAdapter::selectProgram(std::string_view name) {
     const auto optionalIndex = findProgramIndex(descriptor_, name);
-    if (!optionalIndex) return false;
+    if (!optionalIndex) {
+        return false;
+    }
     descriptor_.selectProgram(handle_, optionalIndex.value());
     return true;
 }
@@ -245,7 +274,7 @@ Plugin::OutputList PluginHostAdapter::getOutputDescriptors() const {
         auto& output     = outputs[i];
         auto* vampOutput = descriptor_.getOutputDescriptor(handle_, static_cast<int>(i));
 
-        if (!vampOutput) {
+        if (vampOutput == nullptr) {
             throw std::runtime_error(helper::concat("Output descriptor ", i, " is null"));
         }
 
@@ -255,16 +284,18 @@ Plugin::OutputList PluginHostAdapter::getOutputDescriptors() const {
         output.unit        = vampOutput->unit;
 
         output.binCount = vampOutput->binCount;
-        if (vampOutput->hasFixedBinCount && vampOutput->binNames) {
+        if (vampOutput->hasFixedBinCount != 0 && vampOutput->binNames != nullptr) {
             bool validBinNames = false;
             output.binNames.resize(output.binCount);
             for (unsigned int j = 0; j < output.binCount; ++j) {
-                if (const char* binName = vampOutput->binNames[j]) {
+                if (const char* binName = vampOutput->binNames[j]) {  // NOLINT(*pointer-arithmetic)
                     output.binNames[j] = binName;
                     validBinNames = true;
                 }
             }
-            if (!validBinNames) output.binNames.clear();
+            if (!validBinNames) {
+                output.binNames.clear();
+            }
         }
 
         output.hasKnownExtents = vampOutput->hasKnownExtents == 1;
@@ -283,7 +314,7 @@ bool PluginHostAdapter::initialise(uint32_t stepSize, uint32_t blockSize) {
     if (featureSet_.size() != outputCount_) {
         featureSet_.resize(outputCount_);
     }
-    initialised_ = descriptor_.initialise(handle_, 1, stepSize, blockSize);
+    initialised_ = descriptor_.initialise(handle_, 1, stepSize, blockSize) != 0;
     initialisedBlockSize_ = blockSize;
     checkRequirements();  // output definitions might change dynamically
     return initialised_;
@@ -328,13 +359,12 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
 #endif
 
     const auto getInputBuffer = [&] {
-        if (isTimeDomain) {
-            return std::get<TimeDomainBuffer>(buffer).data();
-        } else {
+        return isTimeDomain ?
+            std::get<TimeDomainBuffer>(buffer).data() :
             // casts between interleaved arrays and std::complex are guaranteed to be valid
             // https://en.cppreference.com/w/cpp/numeric/complex
-            return reinterpret_cast<const float*>(std::get<FrequencyDomainBuffer>(buffer).data());
-        }
+            // NOLINTNEXTLINE(*reinterpret-cast)
+            reinterpret_cast<const float*>(std::get<FrequencyDomainBuffer>(buffer).data());
     };
 
     const float* const  inputBuffer  = getInputBuffer();
@@ -347,25 +377,23 @@ Plugin::FeatureSet PluginHostAdapter::process(InputBuffer buffer, uint64_t nsec)
         static_cast<int>(nsec % 1'000'000'000)
     );
 
-    if (!vampFeatureLists) {
+    if (vampFeatureLists == nullptr) {
         throw std::runtime_error("Returned feature list is null");
     }
 
     for (size_t i = 0; i < outputCount_; ++i) {
+        // NOLINTBEGIN(*pointer-arithmetic)
         const auto& vampFeatureList = vampFeatureLists[i];
         const auto& vampFeatureV1   = vampFeatureList.features[0].v1;
         auto&       feature         = featureSet_[i];
+        // NOLINTEND(*pointer-arithmetic)
 
         assert(vampFeatureList.featureCount == 1);
 
         if (feature.size() != vampFeatureV1.valueCount) {
             feature.resize(vampFeatureV1.valueCount);
         }
-        std::copy(
-            vampFeatureV1.values,
-            vampFeatureV1.values + vampFeatureV1.valueCount,
-            feature.begin()
-        );
+        std::copy_n(vampFeatureV1.values, vampFeatureV1.valueCount, feature.begin());
     }
 
     descriptor_.releaseFeatureSet(vampFeatureLists);
@@ -387,7 +415,7 @@ void PluginHostAdapter::checkRequirements() {
     for (uint32_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
         const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
 
-        if (!outputDescriptor) {
+        if (outputDescriptor == nullptr) {
             throw Error(helper::concat("Output descriptor ", outputIndex, " is null"));
         }
 
