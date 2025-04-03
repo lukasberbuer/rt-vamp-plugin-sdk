@@ -5,27 +5,38 @@ Compute features
 
 import os
 
-import matplotlib.pyplot as plt
-import numpy as np
 import librosa
 import librosa.display
+import matplotlib.pyplot as plt
+import numpy as np
 import rtvamp
 
 # set VAMP_PATH to rtvamp package dir to find example plugins
 os.environ["VAMP_PATH"] = os.path.dirname(rtvamp.__file__)
 
-#%%
+# %%
 # Load sample audio data
 # ----------------------
 y, sr = librosa.load(librosa.ex("trumpet"))
 
-#%%
+# %%
 # Compute features with rtvamp
 # ----------------------------
-t_rms, y_rms = rtvamp.compute_features(y, sr, plugin="example-plugin:rms", blocksize=256)
-t_sro, y_sro = rtvamp.compute_features(y, sr, plugin="example-plugin:spectralrolloff", parameter={"rolloff": 0.5})
+t_rms, y_rms = rtvamp.compute_features(
+    y,
+    sr,
+    plugin="example-plugin:rms",
+    blocksize=256,
+)
+t_sro, y_sro = rtvamp.compute_features(
+    y,
+    sr,
+    plugin="example-plugin:spectralrolloff",
+    blocksize=256,
+    parameter={"rolloff": 0.5},
+)
 
-#%%
+# %%
 # Plot features with spectrogram
 # ------------------------------
 fig, ax = plt.subplots(nrows=3, ncols=1, sharex=True, tight_layout=True)

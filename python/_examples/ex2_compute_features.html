@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="prev" title="Plugin discovery and browsing" href="ex1_discovery.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
         <title>Compute features - rtvamp 0.3.1 documentation</title>
@@ -203,7 +203,7 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Content</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.get_vamp_paths.html">rtvamp.get_vamp_paths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.list_libraries.html">rtvamp.list_libraries</a></li>
@@ -216,11 +216,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.load_plugin.html">rtvamp.load_plugin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.PluginLibrary.html">rtvamp.PluginLibrary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.Plugin.html">rtvamp.Plugin</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2"><a class="reference internal" href="ex1_discovery.html">Plugin discovery and browsing</a></li>
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Compute features</a></li>
 </ul>
 </li>
 </ul>
@@ -247,7 +242,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/examples/ex2_compute_features.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/_examples/ex2_compute_features.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -276,10 +271,10 @@ to download the full example code.</p>
 <span id="sphx-glr-examples-ex2-compute-features-py"></span><h1>Compute features<a class="headerlink" href="#compute-features" title="Link to this heading">¶</a></h1>
 <div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">librosa</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">librosa.display</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">rtvamp</span>
 
 <span class="c1"># set VAMP_PATH to rtvamp package dir to find example plugins</span>
@@ -297,8 +292,19 @@ to download the full example code.</p>
 </section>
 <section id="compute-features-with-rtvamp">
 <h2>Compute features with rtvamp<a class="headerlink" href="#compute-features-with-rtvamp" title="Link to this heading">¶</a></h2>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_rms</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_rms</span></a> <span class="o">=</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">compute_features</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sr</span></a><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="s2">&quot;example-plugin:rms&quot;</span><span class="p">,</span> <span class="n">blocksize</span><span class="o">=</span><span class="mi">256</span><span class="p">)</span>
-<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_sro</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_sro</span></a> <span class="o">=</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">compute_features</span><span class="p">(</span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span> <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sr</span></a><span class="p">,</span> <span class="n">plugin</span><span class="o">=</span><span class="s2">&quot;example-plugin:spectralrolloff&quot;</span><span class="p">,</span> <span class="n">parameter</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;rolloff&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">})</span>
+<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_rms</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_rms</span></a> <span class="o">=</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">compute_features</span><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sr</span></a><span class="p">,</span>
+    <span class="n">plugin</span><span class="o">=</span><span class="s2">&quot;example-plugin:rms&quot;</span><span class="p">,</span>
+    <span class="n">blocksize</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+<span class="p">)</span>
+<a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">t_sro</span></a><span class="p">,</span> <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y_sro</span></a> <span class="o">=</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">compute_features</span><span class="p">(</span>
+    <a href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="numpy.ndarray" class="sphx-glr-backref-module-numpy sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">y</span></a><span class="p">,</span>
+    <a href="https://docs.python.org/3/library/functions.html#int" title="builtins.int" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">sr</span></a><span class="p">,</span>
+    <span class="n">plugin</span><span class="o">=</span><span class="s2">&quot;example-plugin:spectralrolloff&quot;</span><span class="p">,</span>
+    <span class="n">blocksize</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span>
+    <span class="n">parameter</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;rolloff&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -318,16 +324,16 @@ to download the full example code.</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-<img src="../_images/sphx_glr_ex2_compute_features_001.png" srcset="../_images/sphx_glr_ex2_compute_features_001.png" alt="STFT, RMS, Spectral Rolloff" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.353 seconds)</p>
+<img src="../_images/sphx_glr_ex2_compute_features_001.png" srcset="../_images/sphx_glr_ex2_compute_features_001.png" alt="STFT, RMS, Spectral Rolloff" class = "sphx-glr-single-img"/><p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 34.510 seconds)</p>
 <div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-ex2-compute-features-py">
 <div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/f024f01b619a4ffca4bd620509a6a18e/ex2_compute_features.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex2_compute_features.ipynb</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/d33a6a51e525809f2cc76579ec800962/ex2_compute_features.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex2_compute_features.ipynb</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/eca336b99961daa335b7dedd5c528da7/ex2_compute_features.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex2_compute_features.py</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/f3fae75f8ce86967133ae0926d853ed1/ex2_compute_features.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex2_compute_features.py</span></code></a></p>
 </div>
 <div class="sphx-glr-download sphx-glr-download-zip docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/c0c07af23560aeb2bea28181dfe4812d/ex2_compute_features.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">ex2_compute_features.zip</span></code></a></p>
+<p><a class="reference download internal" download="" href="../_downloads/039d5fd806c119dd5cc15ceb62b52f9d/ex2_compute_features.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">ex2_compute_features.zip</span></code></a></p>
 </div>
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
@@ -340,17 +346,7 @@ to download the full example code.</p>
         
         <div class="related-pages">
           
-          <a class="prev-page" href="ex1_discovery.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Plugin discovery and browsing</div>
-                
-              </div>
-            </a>
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">

@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Compute features" href="ex2_compute_features.html" /><link rel="prev" title="Examples" href="index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>Plugin discovery and browsing - rtvamp 0.3.1 documentation</title>
+        <title>Examples - rtvamp 0.3.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
@@ -182,7 +182,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <div class="visually-hidden">Toggle table of contents sidebar</div>
         <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
       </label>
@@ -203,7 +203,7 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Content</span></p>
-<ul class="current">
+<ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.get_vamp_paths.html">rtvamp.get_vamp_paths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.list_libraries.html">rtvamp.list_libraries</a></li>
@@ -216,11 +216,6 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.load_plugin.html">rtvamp.load_plugin</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.PluginLibrary.html">rtvamp.PluginLibrary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/rtvamp.Plugin.html">rtvamp.Plugin</a></li>
-</ul>
-</li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Plugin discovery and browsing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ex2_compute_features.html">Compute features</a></li>
 </ul>
 </li>
 </ul>
@@ -247,7 +242,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/examples/ex1_discovery.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/_examples/index.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -261,123 +256,24 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <div class="visually-hidden">Toggle table of contents sidebar</div>
             <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-examples-ex1-discovery-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code.</p>
-</div>
-<section class="sphx-glr-example-title" id="plugin-discovery-and-browsing">
-<span id="sphx-glr-examples-ex1-discovery-py"></span><h1>Plugin discovery and browsing<a class="headerlink" href="#plugin-discovery-and-browsing" title="Link to this heading">¶</a></h1>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">rtvamp</span>
-
-<span class="c1"># set VAMP_PATH to rtvamp package dir to find example plugins</span>
-<a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="p">[</span><span class="s2">&quot;VAMP_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.dirname" title="os.path.dirname" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span></a><span class="p">(</span><span class="n">rtvamp</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
-</pre></div>
-</div>
-<section id="browse-available-libraries-and-plugins">
-<h2>Browse available libraries and plugins<a class="headerlink" href="#browse-available-libraries-and-plugins" title="Link to this heading">¶</a></h2>
-<p>List libraries:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rtvamp</span><span class="o">.</span><span class="n">list_libraries</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[PosixPath(&#39;/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rtvamp/plugins/example-plugin.so&#39;)]
-</pre></div>
-</div>
-<p>List plugins:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rtvamp</span><span class="o">.</span><span class="n">list_plugins</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;example-plugin:rms&#39;, &#39;example-plugin:spectralrolloff&#39;]
-</pre></div>
-</div>
-<p>List plugins in current working directory:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rtvamp</span><span class="o">.</span><span class="n">list_plugins</span><span class="p">(</span><span class="n">paths</span><span class="o">=</span><span class="p">[</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.cwd" title="pathlib.Path.cwd" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span></a><span class="p">()])</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[]
-</pre></div>
-</div>
-<p>Get metadata and descriptors from plugin</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plugin</span></a> <span class="ow">in</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">list_plugins</span><span class="p">():</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">metadata</span> <span class="o">=</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">get_plugin_metadata</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plugin</span></a><span class="p">)</span>
-        <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get metadata from plugin </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plugin</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>PluginMetadata(identifier=&#39;rms&#39;,
-               name=&#39;RMS&#39;,
-               description=&#39;Root mean square&#39;,
-               maker=&#39;LB&#39;,
-               copyright=&#39;MIT&#39;,
-               plugin_version=1,
-               input_domain=&#39;time&#39;,
-               parameter_descriptors=[],
-               output_descriptors=[{&#39;bin_count&#39;: 1,
-                                    &#39;bin_names&#39;: [],
-                                    &#39;description&#39;: &#39;Root mean square of signal&#39;,
-                                    &#39;has_known_extents&#39;: False,
-                                    &#39;identifier&#39;: &#39;rms&#39;,
-                                    &#39;max_value&#39;: 0.0,
-                                    &#39;min_value&#39;: 0.0,
-                                    &#39;name&#39;: &#39;RMS&#39;,
-                                    &#39;quantize_step&#39;: None,
-                                    &#39;unit&#39;: &#39;V&#39;}])
-PluginMetadata(identifier=&#39;spectralrolloff&#39;,
-               name=&#39;Spectral roll-off&#39;,
-               description=&#39;&#39;,
-               maker=&#39;LB&#39;,
-               copyright=&#39;MIT&#39;,
-               plugin_version=1,
-               input_domain=&#39;frequency&#39;,
-               parameter_descriptors=[{&#39;default_value&#39;: 0.8999999761581421,
-                                       &#39;description&#39;: &#39;Some random parameter&#39;,
-                                       &#39;identifier&#39;: &#39;rolloff&#39;,
-                                       &#39;max_value&#39;: 1.0,
-                                       &#39;min_value&#39;: 0.0,
-                                       &#39;name&#39;: &#39;Roll-off factor&#39;,
-                                       &#39;quantize_step&#39;: None,
-                                       &#39;unit&#39;: &#39;&#39;,
-                                       &#39;value_names&#39;: []}],
-               output_descriptors=[{&#39;bin_count&#39;: 1,
-                                    &#39;bin_names&#39;: [],
-                                    &#39;description&#39;: &#39;Frequency below which n% &#39;
-                                                   &#39;of the total energy is &#39;
-                                                   &#39;concentrated&#39;,
-                                    &#39;has_known_extents&#39;: False,
-                                    &#39;identifier&#39;: &#39;frequency&#39;,
-                                    &#39;max_value&#39;: 0.0,
-                                    &#39;min_value&#39;: 0.0,
-                                    &#39;name&#39;: &#39;Roll-off frequency&#39;,
-                                    &#39;quantize_step&#39;: None,
-                                    &#39;unit&#39;: &#39;Hz&#39;}])
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.011 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-ex1-discovery-py">
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/ec8cddc9faa694d183991257d5ad5d4d/ex1_discovery.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex1_discovery.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/fae4e1d97304f74de093e9661c5f3714/ex1_discovery.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex1_discovery.py</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-zip docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/f69ffe4434d9713136e135dc157460a5/ex1_discovery.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">ex1_discovery.zip</span></code></a></p>
-</div>
+          <section id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h1>
+<p>A collection of examples how to use <cite>rtvamp</cite> to analyze audio data.</p>
+<div class="sphx-glr-thumbnails"><div class="sphx-glr-thumbcontainer" tooltip="Plugin discovery and browsing"><img alt="" src="../_images/sphx_glr_ex1_discovery_thumb.png" />
+<p><a class="reference internal" href="ex1_discovery.html#sphx-glr-examples-ex1-discovery-py"><span class="std std-ref">Plugin discovery and browsing</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Plugin discovery and browsing</div>
+</div><div class="sphx-glr-thumbcontainer" tooltip="Compute features"><img alt="" src="../_images/sphx_glr_ex2_compute_features_thumb.png" />
+<p><a class="reference internal" href="ex2_compute_features.html#sphx-glr-examples-ex2-compute-features-py"><span class="std std-ref">Compute features</span></a></p>
+  <div class="sphx-glr-thumbnail-title">Compute features</div>
+</div></div><div class="toctree-wrapper compound">
 </div>
 <p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</section>
 </section>
 
         </article>
@@ -385,26 +281,8 @@ PluginMetadata(identifier=&#39;spectralrolloff&#39;,
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="ex2_compute_features.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title">Compute features</div>
-              </div>
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="index.html">
-              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Examples</div>
-                
-              </div>
-            </a>
+          
+          
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -423,27 +301,8 @@ PluginMetadata(identifier=&#39;spectralrolloff&#39;,
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Plugin discovery and browsing</a><ul>
-<li><a class="reference internal" href="#browse-available-libraries-and-plugins">Browse available libraries and plugins</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

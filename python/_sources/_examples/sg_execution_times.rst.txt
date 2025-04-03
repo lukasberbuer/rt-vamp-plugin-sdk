@@ -1,12 +1,12 @@
 
 :orphan:
 
-.. _sphx_glr_examples_sg_execution_times:
+.. _sphx_glr__examples_sg_execution_times:
 
 
 Computation times
 =================
-**00:34.363** total execution time for 2 files **from examples**:
+**00:34.515** total execution time for 2 files **from _examples**:
 
 .. container::
 
@@ -32,9 +32,9 @@ Computation times
    * - Example
      - Time
      - Mem (MB)
-   * - :ref:`sphx_glr_examples_ex2_compute_features.py` (``ex2_compute_features.py``)
-     - 00:34.353
+   * - :ref:`sphx_glr__examples_ex2_compute_features.py` (``ex2_compute_features.py``)
+     - 00:34.510
      - 0.0
-   * - :ref:`sphx_glr_examples_ex1_discovery.py` (``ex1_discovery.py``)
-     - 00:00.011
+   * - :ref:`sphx_glr__examples_ex1_discovery.py` (``ex1_discovery.py``)
+     - 00:00.006
      - 0.0
