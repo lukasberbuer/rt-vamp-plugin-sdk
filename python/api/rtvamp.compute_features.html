@@ -3,10 +3,10 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="Compute features" href="ex2_compute_features.html" /><link rel="prev" title="Examples" href="index.html" />
+<link rel="index" title="Index" href="../genindex.html" /><link rel="search" title="Search" href="../search.html" /><link rel="next" title="rtvamp.FeatureComputation" href="rtvamp.FeatureComputation.html" /><link rel="prev" title="rtvamp.PluginMetadata" href="rtvamp.PluginMetadata.html" />
 
     <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
-        <title>Plugin discovery and browsing - rtvamp 0.3.1 documentation</title>
+        <title>rtvamp.compute_features - rtvamp 0.3.1 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../_static/sg_gallery.css?v=d2d258e8" />
@@ -204,23 +204,23 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <p class="caption" role="heading"><span class="caption-text">Content</span></p>
 <ul class="current">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api.html">API</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.get_vamp_paths.html">rtvamp.get_vamp_paths</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.list_libraries.html">rtvamp.list_libraries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.list_plugins.html">rtvamp.list_plugins</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.get_plugin_metadata.html">rtvamp.get_plugin_metadata</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.PluginMetadata.html">rtvamp.PluginMetadata</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.compute_features.html">rtvamp.compute_features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.FeatureComputation.html">rtvamp.FeatureComputation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.load_library.html">rtvamp.load_library</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.load_plugin.html">rtvamp.load_plugin</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.PluginLibrary.html">rtvamp.PluginLibrary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../_generated/rtvamp.Plugin.html">rtvamp.Plugin</a></li>
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../api.html">API</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.get_vamp_paths.html">rtvamp.get_vamp_paths</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.list_libraries.html">rtvamp.list_libraries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.list_plugins.html">rtvamp.list_plugins</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.get_plugin_metadata.html">rtvamp.get_plugin_metadata</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.PluginMetadata.html">rtvamp.PluginMetadata</a></li>
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">rtvamp.compute_features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.FeatureComputation.html">rtvamp.FeatureComputation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.load_library.html">rtvamp.load_library</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.load_plugin.html">rtvamp.load_plugin</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.PluginLibrary.html">rtvamp.PluginLibrary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="rtvamp.Plugin.html">rtvamp.Plugin</a></li>
 </ul>
 </li>
-<li class="toctree-l1 current has-children"><a class="reference internal" href="index.html">Examples</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
-<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">Plugin discovery and browsing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ex2_compute_features.html">Compute features</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of Examples</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../examples/ex1_discovery.html">Plugin discovery and browsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../examples/ex2_compute_features.html">Compute features</a></li>
 </ul>
 </li>
 </ul>
@@ -247,7 +247,7 @@
         </a>
         <div class="content-icon-container">
           <div class="view-this-page">
-  <a class="muted-link" href="../_sources/_examples/ex1_discovery.rst.txt" title="View this page">
+  <a class="muted-link" href="../_sources/api/rtvamp.compute_features.rst.txt" title="View this page">
     <svg><use href="#svg-eye"></use></svg>
     <span class="visually-hidden">View this page</span>
   </a>
@@ -267,117 +267,35 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <div class="sphx-glr-download-link-note admonition note">
-<p class="admonition-title">Note</p>
-<p><a class="reference internal" href="#sphx-glr-download-examples-ex1-discovery-py"><span class="std std-ref">Go to the end</span></a>
-to download the full example code.</p>
-</div>
-<section class="sphx-glr-example-title" id="plugin-discovery-and-browsing">
-<span id="sphx-glr-examples-ex1-discovery-py"></span><h1>Plugin discovery and browsing<a class="headerlink" href="#plugin-discovery-and-browsing" title="Link to this heading">¶</a></h1>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a>
+          <section id="rtvamp-compute-features">
+<h1>rtvamp.compute_features<a class="headerlink" href="#rtvamp-compute-features" title="Link to this heading">¶</a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="rtvamp.compute_features">
+<span class="sig-prename descclassname"><span class="pre">rtvamp.</span></span><span class="sig-name descname"><span class="pre">compute_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timedata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">samplerate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">plugin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocksize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stepsize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Dict" title="(in Python v3.13)"><span class="pre">Dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><span class="pre">float</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Tuple" title="(in Python v3.13)"><span class="pre">Tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.List" title="(in Python v3.13)"><span class="pre">List</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html#numpy.ndarray" title="(in NumPy v2.2)"><span class="pre">ndarray</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#rtvamp.compute_features" title="Link to this definition">¶</a></dt>
+<dd><p>Compute features with plugin.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>timedata</strong> – Time series data of arbitrary length</p></li>
+<li><p><strong>samplerate</strong> – Sampling rate in Hz</p></li>
+<li><p><strong>plugin</strong> – Plugin key/identifer as returned by e.g. <a class="reference internal" href="rtvamp.list_plugins.html#rtvamp.list_plugins" title="rtvamp.list_plugins"><code class="xref py py-func docutils literal notranslate"><span class="pre">list_plugins()</span></code></a></p></li>
+<li><p><strong>blocksize</strong> – Block size in samples (default: preferred block size of plugin, otherwise 1024)</p></li>
+<li><p><strong>stepsize</strong> – Step size in samples (default: preferred step size of plugin, otherwise = <cite>blocksize</cite>)</p></li>
+<li><p><strong>parameter</strong> – Dict with parameter identifiers and values.
+Use <a class="reference internal" href="rtvamp.get_plugin_metadata.html#rtvamp.get_plugin_metadata" title="rtvamp.get_plugin_metadata"><code class="xref py py-func docutils literal notranslate"><span class="pre">get_plugin_metadata()</span></code></a> or <a class="reference internal" href="rtvamp.Plugin.html#rtvamp.Plugin.get_parameter_descriptors" title="rtvamp.Plugin.get_parameter_descriptors"><code class="xref py py-func docutils literal notranslate"><span class="pre">Plugin.get_parameter_descriptors()</span></code></a> to list
+available parameters and their constraints.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>Array of timestamps in seconds</p></li>
+<li><p>Array of computed features</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">rtvamp</span>
-
-<span class="c1"># set VAMP_PATH to rtvamp package dir to find example plugins</span>
-<a href="https://docs.python.org/3/library/os.html#os.environ" title="os.environ" class="sphx-glr-backref-module-os sphx-glr-backref-type-py-data"><span class="n">os</span><span class="o">.</span><span class="n">environ</span></a><span class="p">[</span><span class="s2">&quot;VAMP_PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <a href="https://docs.python.org/3/library/os.path.html#os.path.dirname" title="os.path.dirname" class="sphx-glr-backref-module-os-path sphx-glr-backref-type-py-function"><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span></a><span class="p">(</span><span class="n">rtvamp</span><span class="o">.</span><span class="vm">__file__</span><span class="p">)</span>
-</pre></div>
-</div>
-<section id="browse-available-libraries-and-plugins">
-<h2>Browse available libraries and plugins<a class="headerlink" href="#browse-available-libraries-and-plugins" title="Link to this heading">¶</a></h2>
-<p>List libraries:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rtvamp</span><span class="o">.</span><span class="n">list_libraries</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[PosixPath(&#39;/opt/hostedtoolcache/Python/3.10.16/x64/lib/python3.10/site-packages/rtvamp/example-plugin.so&#39;)]
-</pre></div>
-</div>
-<p>List plugins:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rtvamp</span><span class="o">.</span><span class="n">list_plugins</span><span class="p">()</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[&#39;example-plugin:rms&#39;, &#39;example-plugin:spectralrolloff&#39;]
-</pre></div>
-</div>
-<p>List plugins in current working directory:</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="n">rtvamp</span><span class="o">.</span><span class="n">list_plugins</span><span class="p">(</span><span class="n">paths</span><span class="o">=</span><span class="p">[</span><a href="https://docs.python.org/3/library/pathlib.html#pathlib.Path.cwd" title="pathlib.Path.cwd" class="sphx-glr-backref-module-pathlib sphx-glr-backref-type-py-method"><span class="n">Path</span><span class="o">.</span><span class="n">cwd</span></a><span class="p">()])</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[]
-</pre></div>
-</div>
-<p>Get metadata and descriptors from plugin</p>
-<div class="highlight-Python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plugin</span></a> <span class="ow">in</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">list_plugins</span><span class="p">():</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">metadata</span> <span class="o">=</span> <span class="n">rtvamp</span><span class="o">.</span><span class="n">get_plugin_metadata</span><span class="p">(</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plugin</span></a><span class="p">)</span>
-        <a href="https://docs.python.org/3/library/pprint.html#pprint.pprint" title="pprint.pprint" class="sphx-glr-backref-module-pprint sphx-glr-backref-type-py-function"><span class="n">pprint</span></a><span class="p">(</span><span class="n">metadata</span><span class="p">)</span>
-    <span class="k">except</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not get metadata from plugin </span><span class="si">{</span><a href="https://docs.python.org/3/library/stdtypes.html#str" title="builtins.str" class="sphx-glr-backref-module-builtins sphx-glr-backref-type-py-class sphx-glr-backref-instance"><span class="n">plugin</span></a><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>PluginMetadata(identifier=&#39;rms&#39;,
-               name=&#39;RMS&#39;,
-               description=&#39;Root mean square&#39;,
-               maker=&#39;LB&#39;,
-               copyright=&#39;MIT&#39;,
-               plugin_version=1,
-               input_domain=&#39;time&#39;,
-               parameter_descriptors=[],
-               output_descriptors=[{&#39;bin_count&#39;: 1,
-                                    &#39;bin_names&#39;: [],
-                                    &#39;description&#39;: &#39;Root mean square of signal&#39;,
-                                    &#39;has_known_extents&#39;: False,
-                                    &#39;identifier&#39;: &#39;rms&#39;,
-                                    &#39;max_value&#39;: 0.0,
-                                    &#39;min_value&#39;: 0.0,
-                                    &#39;name&#39;: &#39;RMS&#39;,
-                                    &#39;quantize_step&#39;: None,
-                                    &#39;unit&#39;: &#39;V&#39;}])
-PluginMetadata(identifier=&#39;spectralrolloff&#39;,
-               name=&#39;Spectral roll-off&#39;,
-               description=&#39;&#39;,
-               maker=&#39;LB&#39;,
-               copyright=&#39;MIT&#39;,
-               plugin_version=1,
-               input_domain=&#39;frequency&#39;,
-               parameter_descriptors=[{&#39;default_value&#39;: 0.8999999761581421,
-                                       &#39;description&#39;: &#39;Some random parameter&#39;,
-                                       &#39;identifier&#39;: &#39;rolloff&#39;,
-                                       &#39;max_value&#39;: 1.0,
-                                       &#39;min_value&#39;: 0.0,
-                                       &#39;name&#39;: &#39;Roll-off factor&#39;,
-                                       &#39;quantize_step&#39;: None,
-                                       &#39;unit&#39;: &#39;&#39;,
-                                       &#39;value_names&#39;: []}],
-               output_descriptors=[{&#39;bin_count&#39;: 1,
-                                    &#39;bin_names&#39;: [],
-                                    &#39;description&#39;: &#39;Frequency below which n% &#39;
-                                                   &#39;of the total energy is &#39;
-                                                   &#39;concentrated&#39;,
-                                    &#39;has_known_extents&#39;: False,
-                                    &#39;identifier&#39;: &#39;frequency&#39;,
-                                    &#39;max_value&#39;: 0.0,
-                                    &#39;min_value&#39;: 0.0,
-                                    &#39;name&#39;: &#39;Roll-off frequency&#39;,
-                                    &#39;quantize_step&#39;: None,
-                                    &#39;unit&#39;: &#39;Hz&#39;}])
-</pre></div>
-</div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> (0 minutes 0.011 seconds)</p>
-<div class="sphx-glr-footer sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-ex1-discovery-py">
-<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/05315b8d3346f953716e476d04926b47/ex1_discovery.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">ex1_discovery.ipynb</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-python docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/827b4e9b290a36a1d4b5ca6fca44514a/ex1_discovery.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">ex1_discovery.py</span></code></a></p>
-</div>
-<div class="sphx-glr-download sphx-glr-download-zip docutils container">
-<p><a class="reference download internal" download="" href="../_downloads/2cc8f4335fec2db7ffd81ebfef220679/ex1_discovery.zip"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">zipped:</span> <span class="pre">ex1_discovery.zip</span></code></a></p>
-</div>
-</div>
-<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
-</section>
 </section>
 
         </article>
@@ -385,23 +303,23 @@ PluginMetadata(identifier=&#39;spectralrolloff&#39;,
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="ex2_compute_features.html">
+          <a class="next-page" href="rtvamp.FeatureComputation.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">Compute features</div>
+                <div class="title">rtvamp.FeatureComputation</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
-          <a class="prev-page" href="index.html">
+          <a class="prev-page" href="rtvamp.PluginMetadata.html">
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
               <div class="page-info">
                 <div class="context">
                   <span>Previous</span>
                 </div>
                 
-                <div class="title">Examples</div>
+                <div class="title">rtvamp.PluginMetadata</div>
                 
               </div>
             </a>
@@ -435,8 +353,8 @@ PluginMetadata(identifier=&#39;spectralrolloff&#39;,
         <div class="toc-tree-container">
           <div class="toc-tree">
             <ul>
-<li><a class="reference internal" href="#">Plugin discovery and browsing</a><ul>
-<li><a class="reference internal" href="#browse-available-libraries-and-plugins">Browse available libraries and plugins</a></li>
+<li><a class="reference internal" href="#">rtvamp.compute_features</a><ul>
+<li><a class="reference internal" href="#rtvamp.compute_features"><code class="docutils literal notranslate"><span class="pre">compute_features()</span></code></a></li>
 </ul>
 </li>
 </ul>

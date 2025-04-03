@@ -6,7 +6,7 @@ High-level
 
 .. autosummary::
     :caption: API high-level
-    :toctree: _generated
+    :toctree: api
     :nosignatures:
     :recursive:
 
@@ -26,7 +26,7 @@ Direct bindings to the C++ hostsdk (`GitHub <https://github.com/lukasberbuer/rt-
 
 .. autosummary::
     :caption: API low-level
-    :toctree: _generated
+    :toctree: api
     :nosignatures:
     :recursive:
 
