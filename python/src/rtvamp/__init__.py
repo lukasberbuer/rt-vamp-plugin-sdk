@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, List
 
 if TYPE_CHECKING:
     from os import PathLike
@@ -77,8 +77,8 @@ def _get_plugin_output_identifier(plugin):
         yield f"{plugin_key}:{output_id}"
 
 
-Feature = list[float]
-FeatureList = list[Feature]
+Feature = List[float]
+FeatureList = List[Feature]
 
 
 def _frame_count(nsamples: int, blocksize: int, stepsize: int):
