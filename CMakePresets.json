@@ -1,0 +1,84 @@
+{
+  "version": 3,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 21,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "binaryDir": "${sourceDir}/build/${presetName}"
+    },
+    {
+      "name": "dev",
+      "inherits": [
+        "base"
+      ],
+      "installDir": "${sourceDir}/install/${presetName}",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "RTVAMP_BUILD_EXAMPLES": "ON",
+        "RTVAMP_BUILD_PYTHON_BINDINGS": "ON",
+        "RTVAMP_BUILD_TESTS": "ON",
+        "RTVAMP_ENABLE_SANITIZER_UNDEFINED": "ON",
+        "RTVAMP_VALIDATE": "ON"
+      }
+    },
+    {
+      "name": "dev-asan",
+      "inherits": [
+        "dev"
+      ],
+      "cacheVariables": {
+        "RTVAMP_ENABLE_SANITIZER_ADDRESS": "ON"
+      }
+    },
+    {
+      "name": "dev-tsan",
+      "inherits": [
+        "dev"
+      ],
+      "cacheVariables": {
+        "RTVAMP_ENABLE_SANITIZER_THREAD": "ON"
+      }
+    },
+    {
+      "name": "dev-lint",
+      "inherits": [
+        "dev"
+      ],
+      "cacheVariables": {
+        "RTVAMP_ENABLE_CLANG_TIDY": "ON"
+      }
+    },
+    {
+      "name": "doc",
+      "inherits": [
+        "base"
+      ],
+      "cacheVariables": {
+        "RTVAMP_BUILD_DOCUMENTATION": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "inherits": [
+        "base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "benchmarks",
+      "inherits": [
+        "release"
+      ],
+      "cacheVariables": {
+        "RTVAMP_BUILD_BENCHMARKS": "ON"
+      }
+    }
+  ]
+}
