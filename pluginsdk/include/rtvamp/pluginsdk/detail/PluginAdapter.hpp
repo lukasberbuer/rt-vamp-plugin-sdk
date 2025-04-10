@@ -4,7 +4,6 @@
 #include <atomic>
 #include <memory>
 #include <mutex>
-#include <shared_mutex>
 #include <utility>  // cmp_less
 
 #include "rtvamp/pluginsdk/Plugin.hpp"
@@ -22,48 +21,38 @@ private:
     class Instance;
     class InstanceMap;
 
-    inline static std::shared_mutex mutex;
-    inline static std::vector<std::unique_ptr<Instance>> plugins;
+    inline static std::mutex mutex;
+    inline static std::vector<std::unique_ptr<Instance>> instances;
 
-    [[nodiscard]] static auto getWriterLock() { return std::unique_lock(mutex); }
-    [[nodiscard]] static auto getReaderLock() { return std::shared_lock(mutex); }
-
-    // not thread-safe -> acquire lock outside
-    static auto findPluginIterator(VampPluginHandle handle) {
-        return std::find_if(
-            plugins.begin(),
-            plugins.end(),
-            [&](const auto& adapter) { return adapter.get() == handle; }
-        );
-    }
-
-    // not thread-safe -> acquire lock outside
-    static Instance* findPlugin(VampPluginHandle handle) {
-        auto it = findPluginIterator(handle);
-        return it == plugins.end() ? nullptr : (*it).get();
+    static Instance* getInstance(VampPluginHandle handle) {
+        return reinterpret_cast<Instance*>(handle);  // NOLINT
     }
 
     static VampPluginHandle vampInstantiate(
         const VampPluginDescriptor* desc, float inputSampleRate
     ) {
-        // should the host create plugins with others descriptors? -> shared state
+        // should the host create instances with others descriptors? -> shared state
         // possible solution: overwrite function pointer in entry point and dispatch to adapters there
         if (desc != &descriptor) {
             return nullptr;
         }
 
-        const auto lock = getWriterLock();
-        auto& adapter = plugins.emplace_back(
+        const std::unique_lock lock{mutex};
+        auto& adapter = instances.emplace_back(
             std::make_unique<Instance>(inputSampleRate)
         );
         return adapter.get();
     }
 
     static void vampCleanup(VampPluginHandle handle) {
-        const auto lock = getWriterLock();
-        auto it = findPluginIterator(handle);
-        if (it != plugins.end()) {
-            plugins.erase(it);
+        const std::unique_lock lock{mutex};
+        auto it = std::find_if(
+            instances.begin(),
+            instances.end(),
+            [&](const auto& adapter) { return adapter.get() == handle; }
+        );
+        if (it != instances.end()) {
+            instances.erase(it);
         }
     }
 
@@ -88,16 +77,12 @@ private:
         d.initialise = [](
             VampPluginHandle handle, unsigned int inputChannels, unsigned int stepSize, unsigned int blockSize
         ) -> int {
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->initialise(inputChannels, stepSize, blockSize) : 0;
+            return handle != nullptr ? getInstance(handle)->initialise(inputChannels, stepSize, blockSize) : 0;
         };
 
         d.reset = [](VampPluginHandle handle) {
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            if (adapter != nullptr) {
-                adapter->reset();
+            if (handle != nullptr) {
+                getInstance(handle)->reset();
             }
         };
 
@@ -105,49 +90,37 @@ private:
             if (!isValidParameterIndex(index)) {
                 return 0.0F;
             }
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->getParameter(index) : 0.0F;
+            return handle != nullptr ? getInstance(handle)->getParameter(index) : 0.0F;
         };
 
         d.setParameter = [](VampPluginHandle handle, int index, float value) {
             if (!isValidParameterIndex(index)) {
                 return;
             }
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            if (adapter != nullptr) {
-                adapter->setParameter(index, value);
+            if (handle != nullptr) {
+                getInstance(handle)->setParameter(index, value);
             }
         };
 
         d.getCurrentProgram = [](VampPluginHandle handle) {
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->getCurrentProgram() : 0;
+            return handle != nullptr ? getInstance(handle)->getCurrentProgram() : 0;
         };
 
         d.selectProgram = [](VampPluginHandle handle, unsigned int index) {
             if (!isValidProgramIndex(index)) {
                 return;
             }
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            if (adapter != nullptr) {
-                adapter->selectProgram(index);
+            if (handle != nullptr) {
+                getInstance(handle)->selectProgram(index);
             }
         };
 
         d.getPreferredStepSize = [](VampPluginHandle handle) {
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->get().getPreferredStepSize() : 0;
+            return handle != nullptr ? getInstance(handle)->get().getPreferredStepSize() : 0;
         };
 
         d.getPreferredBlockSize = [](VampPluginHandle handle) {
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->get().getPreferredBlockSize() : 0;
+            return handle != nullptr ? getInstance(handle)->get().getPreferredBlockSize() : 0;
         };
 
         d.getMinChannelCount = [](VampPluginHandle) -> unsigned int {
@@ -166,9 +139,7 @@ private:
             if (!isValidOutputIndex(index)) {
                 return nullptr;
             }
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->getOutputDescriptor(index) : nullptr;
+            return handle != nullptr ? getInstance(handle)->getOutputDescriptor(index) : nullptr;
         };
 
         d.releaseOutputDescriptor = [](VampOutputDescriptor*) {};  // memory owned and released by plugin
@@ -176,15 +147,11 @@ private:
         d.process = [](
             VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec
         ) {
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->process(inputBuffers, sec, nsec) : nullptr;
+            return handle != nullptr ? getInstance(handle)->process(inputBuffers, sec, nsec) : nullptr;
         };
 
         d.getRemainingFeatures = [](VampPluginHandle handle) {
-            const auto lock    = getReaderLock();
-            auto*      adapter = findPlugin(handle);
-            return adapter != nullptr ? adapter->getRemainingFeatures() : nullptr;
+            return handle != nullptr ? getInstance(handle)->getRemainingFeatures() : nullptr;
         };
 
         d.releaseFeatureSet = [](VampFeatureList*) {};  // memory owned and released by plugin
@@ -271,7 +238,7 @@ public:
 
     VampOutputDescriptor* getOutputDescriptor(unsigned int index) {
         updateOutputDescriptors();
-        const std::shared_lock readerLock(mutex_);
+        const std::unique_lock lock{mutex_};
         // bounds checking in descriptor lambda
         return outputDescriptorWrappers_[index].get();
     }
@@ -313,7 +280,7 @@ private:
     void updateOutputDescriptors() {
         if (outputsNeedUpdate_) {
             try {
-                const std::unique_lock writerLock(mutex_);
+                const std::unique_lock lock{mutex_};
                 const auto descriptors = plugin_.getOutputDescriptors();
 
                 // (re)generate vamp output descriptors
@@ -334,7 +301,7 @@ private:
 
     TPlugin                                  plugin_;
     size_t                                   blockSize_{0};
-    std::shared_mutex                        mutex_;
+    std::mutex                               mutex_;
     std::atomic<bool>                        outputsNeedUpdate_{true};
     std::vector<VampOutputDescriptorWrapper> outputDescriptorWrappers_;
     VampFeatureListsWrapper<outputCount>     featureListsWrapper_;
