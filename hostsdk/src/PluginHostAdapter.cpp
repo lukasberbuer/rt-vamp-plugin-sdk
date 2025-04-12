@@ -413,7 +413,10 @@ void PluginHostAdapter::checkRequirements() {
     }
 
     for (uint32_t outputIndex = 0; outputIndex < getOutputCount(); ++outputIndex) {
-        const auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
+        auto* outputDescriptor = descriptor_.getOutputDescriptor(handle_, outputIndex);
+        const helper::ScopeExit deleter([&] {
+            descriptor_.releaseOutputDescriptor(outputDescriptor);
+        });
 
         if (outputDescriptor == nullptr) {
             throw Error(helper::concat("Output descriptor ", outputIndex, " is null"));
