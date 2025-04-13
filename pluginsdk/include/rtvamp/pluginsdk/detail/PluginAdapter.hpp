@@ -91,19 +91,19 @@ private:
         return result;
     }();
 
-    static consteval const VampParameterDescriptor** getParameters() {
+    static constexpr const VampParameterDescriptor** getParameters() {
         return vampParametersPtr.empty()
             ? nullptr
             : const_cast<const VampParameterDescriptor**>(vampParametersPtr.data());
     }
 
-    static consteval const char** getPrograms() {
+    static constexpr const char** getPrograms() {
         return TPlugin::programs.empty()
             ? nullptr
             : const_cast<const char**>(TPlugin::programs.data());
     }
 
-    static consteval auto getVampInputDomain() {
+    static constexpr auto getVampInputDomain() {
         return TPlugin::meta.inputDomain == TPlugin::InputDomain::Frequency
             ? vampFrequencyDomain
             : vampTimeDomain;
