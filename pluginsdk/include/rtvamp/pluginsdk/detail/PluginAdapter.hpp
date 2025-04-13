@@ -85,18 +85,6 @@ private:
         return result;
     }();
 
-    static constexpr bool isValidParameterIndex(auto index) {
-        return index >= 0 && std::cmp_less(index, TPlugin::parameters.size());
-    }
-
-    static constexpr bool isValidProgramIndex(auto index) {
-        return index >= 0 && std::cmp_less(index, TPlugin::programs.size());
-    }
-
-    static constexpr bool isValidOutputIndex(auto index) {
-        return index >= 0 && std::cmp_less(index, TPlugin::outputCount);
-    }
-
     static constexpr VampPluginDescriptor descriptor = [] {
         VampPluginDescriptor d{};
         d.vampApiVersion = 2;
@@ -128,13 +116,13 @@ private:
         };
 
         d.getParameter = [](VampPluginHandle handle, int index) {
-            return handle != nullptr && isValidParameterIndex(index)
+            return handle != nullptr
                 ? getInstance(handle)->getParameter(index)
                 : 0.0F;
         };
 
         d.setParameter = [](VampPluginHandle handle, int index, float value) {
-            if (handle != nullptr && isValidParameterIndex(index)) {
+            if (handle != nullptr) {
                 getInstance(handle)->setParameter(index, value);
             }
         };
@@ -146,7 +134,7 @@ private:
         };
 
         d.selectProgram = [](VampPluginHandle handle, unsigned int index) {
-            if (handle != nullptr && isValidProgramIndex(index)) {
+            if (handle != nullptr) {
                 getInstance(handle)->selectProgram(index);
             }
         };
@@ -176,8 +164,8 @@ private:
         };
 
         d.getOutputDescriptor = [](VampPluginHandle handle, unsigned int index) -> VampOutputDescriptor* {
-            return handle != nullptr && isValidOutputIndex(index)
-                ? getInstance(handle)->getOutputDescriptor(index)
+            return handle != nullptr ?
+                getInstance(handle)->getOutputDescriptor(index)
                 : nullptr;
         };
 
@@ -252,7 +240,10 @@ public:
     }
 
     float getParameter(int index) const {
-        // bounds checking in descriptor lambda
+        if (!isValidParameterIndex(index)) {
+            RTVAMP_ERROR("rtvamp::Plugin::getParameter: index out of bounds");
+            return 0.0F;
+        }
         try {
             return plugin_.getParameter(TPlugin::parameters[index].identifier).value_or(0.0F); 
         } catch (const std::exception& e) {
@@ -262,7 +253,10 @@ public:
     }
 
     void setParameter(int index, float value) {
-        // bounds checking in descriptor lambda
+        if (!isValidParameterIndex(index)) {
+            RTVAMP_ERROR("rtvamp::Plugin::setParameter: index out of bounds");
+            return;
+        }
         try {
             plugin_.setParameter(TPlugin::parameters[index].identifier, value);
         } catch (const std::exception& e) {
@@ -288,7 +282,10 @@ public:
     }
 
     void selectProgram(unsigned int index) {
-        // bounds checking in descriptor lambda
+        if (!isValidProgramIndex(index)) {
+            RTVAMP_ERROR("rtvamp::Plugin::selectProgram: index out of bounds");
+            return;
+        }
         try {
             plugin_.selectProgram(TPlugin::programs[index]);
         } catch (const std::exception& e) {
@@ -297,11 +294,11 @@ public:
     }
 
     VampOutputDescriptor* getOutputDescriptor(unsigned int index) {
-        const auto outputs = plugin_.getOutputDescriptors();
-        if (index >= outputs.size()) {
+        if (index >= TPlugin::outputCount) {
             RTVAMP_ERROR("rtvamp::Plugin::getOutputDescriptor: index out of bounds");
             return nullptr;
         }
+        const auto outputs = plugin_.getOutputDescriptors();
         return new VampOutputDescriptor{makeVampOutputDescriptor(outputs[index])};
     }
 
@@ -322,8 +319,8 @@ public:
 
         try {
             const auto& result = plugin_.process(getInputBuffer(), timestamp);
-            assert(result.size() == outputCount);
-            for (size_t i = 0; i < outputCount; ++i) {
+            assert(result.size() == TPlugin::outputCount);
+            for (size_t i = 0; i < TPlugin::outputCount; ++i) {
                 auto& featureList = featureLists_[i];
                 assert(featureList.featureCount == 1);
                 assert(featureList.features != nullptr);
@@ -332,23 +329,33 @@ public:
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::process: ", e.what());
         }
-
         return featureLists_.data();  // return last feature list if exception is thrown - better return nans?
     }
 
     VampFeatureList* getRemainingFeatures() {
-        static std::array<VampFeatureList, outputCount> empty{};  // aggregate initialization to set to {0, nullptr}
-        return empty.data();
+        return featureListsEmpty_.data();
     }
 
     const TPlugin& get() const noexcept { return plugin_; }
 
 private:
-    static constexpr auto outputCount = TPlugin::outputCount;
+    static constexpr bool isValidParameterIndex(auto index) {
+        return index >= 0 && std::cmp_less(index, TPlugin::parameters.size());
+    }
 
-    TPlugin                                  plugin_;
-    size_t                                   blockSize_{0};
-    std::array<VampFeatureList, outputCount> featureLists_{};
+    static constexpr bool isValidProgramIndex(auto index) {
+        return index >= 0 && std::cmp_less(index, TPlugin::programs.size());
+    }
+
+    static constexpr bool isValidOutputIndex(auto index) {
+        return index >= 0 && std::cmp_less(index, TPlugin::outputCount);
+    }
+
+    TPlugin plugin_;
+    size_t blockSize_{0};
+    std::array<VampFeatureList, TPlugin::outputCount> featureLists_{};
+    std::array<VampFeatureList, TPlugin::outputCount> featureListsEmpty_{};
+    
 };
 
 }  // namespace rtvamp::pluginsdk::detail
