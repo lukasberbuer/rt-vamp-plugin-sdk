@@ -118,23 +118,19 @@ public:
 protected:
     float       getInputSampleRate() const noexcept { return inputSampleRate_; };
     FeatureSet& getFeatureSet() noexcept { return featureSet_; }
-    void        initialiseFeatureSet();
+
+    void initialiseFeatureSet() {
+        const auto outputs     = getOutputDescriptors();
+        auto&      featureSet  = getFeatureSet();
+        for (size_t i = 0; i < outputCount; ++i) {
+            featureSet[i].resize(outputs[i].binCount);
+        }
+    }
 
 private:
     float      inputSampleRate_;
     FeatureSet featureSet_;
 };
-
-/* --------------------------------------- Implementation --------------------------------------- */
-
-template <uint32_t NOutputs>
-void Plugin<NOutputs>::initialiseFeatureSet() {
-    const auto outputs     = getOutputDescriptors();
-    auto&      featureSet  = getFeatureSet();
-    for (size_t i = 0; i < outputCount; ++i) {
-        featureSet[i].resize(outputs[i].binCount);
-    }
-}
 
 /* ------------------------------------------- Concept ------------------------------------------ */
 
