@@ -126,7 +126,9 @@ private:
         d.cleanup     = cleanup;
 
         d.initialise = [](VampPluginHandle handle, unsigned int inputChannels, unsigned int stepSize, unsigned int blockSize) -> int {
-            return handle != nullptr ? getInstance(handle)->initialise(inputChannels, stepSize, blockSize) : 0;
+            return handle != nullptr
+                ? getInstance(handle)->initialise(inputChannels, stepSize, blockSize)
+                : 0;
         };
 
         d.reset = [](VampPluginHandle handle) {
@@ -136,40 +138,39 @@ private:
         };
 
         d.getParameter = [](VampPluginHandle handle, int index) {
-            if (!isValidParameterIndex(index)) {
-                return 0.0F;
-            }
-            return handle != nullptr ? getInstance(handle)->getParameter(index) : 0.0F;
+            return handle != nullptr && isValidParameterIndex(index)
+                ? getInstance(handle)->getParameter(index)
+                : 0.0F;
         };
 
         d.setParameter = [](VampPluginHandle handle, int index, float value) {
-            if (!isValidParameterIndex(index)) {
-                return;
-            }
-            if (handle != nullptr) {
+            if (handle != nullptr && isValidParameterIndex(index)) {
                 getInstance(handle)->setParameter(index, value);
             }
         };
 
         d.getCurrentProgram = [](VampPluginHandle handle) {
-            return handle != nullptr ? getInstance(handle)->getCurrentProgram() : 0;
+            return handle != nullptr
+                ? getInstance(handle)->getCurrentProgram()
+                : 0;
         };
 
         d.selectProgram = [](VampPluginHandle handle, unsigned int index) {
-            if (!isValidProgramIndex(index)) {
-                return;
-            }
-            if (handle != nullptr) {
+            if (handle != nullptr && isValidProgramIndex(index)) {
                 getInstance(handle)->selectProgram(index);
             }
         };
 
         d.getPreferredStepSize = [](VampPluginHandle handle) {
-            return handle != nullptr ? getInstance(handle)->get().getPreferredStepSize() : 0;
+            return handle != nullptr
+                ? getInstance(handle)->get().getPreferredStepSize()
+                : 0;
         };
 
         d.getPreferredBlockSize = [](VampPluginHandle handle) {
-            return handle != nullptr ? getInstance(handle)->get().getPreferredBlockSize() : 0;
+            return handle != nullptr
+                ? getInstance(handle)->get().getPreferredBlockSize()
+                : 0;
         };
 
         d.getMinChannelCount = [](VampPluginHandle) -> unsigned int {
@@ -185,10 +186,9 @@ private:
         };
 
         d.getOutputDescriptor = [](VampPluginHandle handle, unsigned int index) -> VampOutputDescriptor* {
-            if (!isValidOutputIndex(index)) {
-                return nullptr;
-            }
-            return handle != nullptr ? getInstance(handle)->getOutputDescriptor(index) : nullptr;
+            return handle != nullptr && isValidOutputIndex(index)
+                ? getInstance(handle)->getOutputDescriptor(index)
+                : nullptr;
         };
 
         d.releaseOutputDescriptor = [](VampOutputDescriptor* descriptor) {
@@ -199,11 +199,15 @@ private:
         };
 
         d.process = [](VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec) {
-            return handle != nullptr ? getInstance(handle)->process(inputBuffers, sec, nsec) : nullptr;
+            return handle != nullptr
+                ? getInstance(handle)->process(inputBuffers, sec, nsec)
+                : nullptr;
         };
 
         d.getRemainingFeatures = [](VampPluginHandle handle) {
-            return handle != nullptr ? getInstance(handle)->getRemainingFeatures() : nullptr;
+            return handle != nullptr
+                ? getInstance(handle)->getRemainingFeatures()
+                : nullptr;
         };
 
         d.releaseFeatureSet = [](VampFeatureList*) {};  // memory owned and released by plugin
