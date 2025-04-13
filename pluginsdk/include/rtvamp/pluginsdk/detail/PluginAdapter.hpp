@@ -117,9 +117,9 @@ private:
         d.pluginVersion  = TPlugin::meta.pluginVersion;
         d.copyright      = TPlugin::meta.copyright;
         d.parameterCount = static_cast<unsigned int>(TPlugin::parameters.size());
-        d.parameters     = const_cast<const VampParameterDescriptor**>(parametersPtr.data());
+        d.parameters     = TPlugin::parameters.empty() ? nullptr : const_cast<const VampParameterDescriptor**>(parametersPtr.data());
         d.programCount   = static_cast<unsigned int>(TPlugin::programs.size());
-        d.programs       = const_cast<const char**>(TPlugin::programs.data());
+        d.programs       = TPlugin::programs.empty() ? nullptr : const_cast<const char**>(TPlugin::programs.data());
         d.inputDomain    = TPlugin::meta.inputDomain == TPlugin::InputDomain::Frequency ? vampFrequencyDomain : vampTimeDomain;
 
         d.instantiate = instantiate;
