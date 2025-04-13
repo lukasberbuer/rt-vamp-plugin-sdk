@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <atomic>
 #include <cassert>
@@ -50,10 +51,8 @@ private:
         std::erase_if(instances, [&](const auto& adapter) { return adapter.get() == handle; });
     }
 
-    static constexpr auto parameterCount = TPlugin::parameters.size();
-
     static constexpr auto parameters = [] {
-        std::array<VampParameterDescriptor, parameterCount> result{};
+        std::array<VampParameterDescriptor, TPlugin::parameters.size()> result{};
         std::transform(
             TPlugin::parameters.begin(),
             TPlugin::parameters.end(),
@@ -76,7 +75,7 @@ private:
     }();
 
     static constexpr auto parametersPtr = [] {
-        std::array<const VampParameterDescriptor*, parameterCount> result{};
+        std::array<const VampParameterDescriptor*, TPlugin::parameters.size()> result{};
         std::transform(
             parameters.begin(),
             parameters.end(),
@@ -273,14 +272,15 @@ public:
 
     unsigned int getCurrentProgram() const {
         try {
-            const auto& programs = TPlugin::programs;
-            const auto  program  = plugin_.getCurrentProgram();
-            for (unsigned int i = 0; i < static_cast<unsigned int>(programs.size()); ++i) {
-                if (programs[i] == program) {
-                    return i;
-                }
-            }
-            return 0;
+            const auto currentProgram = plugin_.getCurrentProgram();
+            const auto it = std::find_if(
+                TPlugin::programs.begin(),
+                TPlugin::programs.end(),
+                [&](const auto& program) { return program == currentProgram; }
+            );
+            return it != TPlugin::programs.end()
+                ? static_cast<unsigned int>(std::distance(TPlugin::programs.begin(), it))
+                : 0U;
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::getCurrentProgram: ", e.what());
             return 0;
