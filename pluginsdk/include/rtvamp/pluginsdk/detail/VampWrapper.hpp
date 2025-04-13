@@ -65,70 +65,6 @@ inline void clear(VampFeatureList& featureList) {
     featureList = {};
 }
 
-template <typename T>
-class Wrapper {
-public:
-    constexpr Wrapper() noexcept = default;
-    constexpr Wrapper(T&& native) noexcept : native_(std::exchange(native, {})) {}  // NOLINT
-
-    constexpr Wrapper(const Wrapper&) = delete;
-    constexpr Wrapper(Wrapper&& other) noexcept
-        : native_(std::exchange(other.native(), {})) {};
-
-    constexpr Wrapper& operator=(const Wrapper&) = delete;
-    constexpr Wrapper& operator=(Wrapper&& other) noexcept {
-        if (this != &other) {
-            clear(native_);
-            native_ = std::exchange(other.get(), {});
-        }
-        return *this;
-    }
-
-    constexpr ~Wrapper() {
-        clear(native_);
-    }
-
-    constexpr T& get() noexcept { return native_; }
-    constexpr const T& get() const noexcept { return native_; }
-
-private:
-    T native_{};
-};
-
-template <typename T>
-constexpr T* asNative(Wrapper<T>* wrapper) noexcept {
-    return static_cast<T*>(static_cast<void*>(wrapper));
-}
-
-template <typename T>
-constexpr const T* asNative(const Wrapper<T>* wrapper) noexcept {
-    return static_cast<T*>(static_cast<void*>(wrapper));
-}
-
-template <typename T>
-constexpr T& asNative(Wrapper<T>& wrapper) noexcept {
-    return *asNative(&wrapper);
-}
-
-template <typename T>
-constexpr const T& asNative(const Wrapper<T>& wrapper) noexcept {
-    return *asNative(&wrapper);
-}
-
-[[nodiscard]] inline VampFeatureUnion makeVampFeatureUnion(size_t valueCount) {
-    VampFeatureUnion featureUnion{};
-    featureUnion.v1.valueCount = static_cast<unsigned int>(valueCount);
-    featureUnion.v1.values     = new float[valueCount]{};  // NOLINT
-    return featureUnion;
-}
-
-[[nodiscard]] inline VampFeatureList makeVampFeatureList(size_t featureCount) {
-    VampFeatureList featureList{};
-    featureList.featureCount = static_cast<unsigned int>(featureCount);
-    featureList.features     = new VampFeatureUnion[featureCount]{};  // NOLINT
-    return featureList;
-}
-
 inline void assignValues(VampFeatureUnion& featureUnion, std::span<const float> values) {
     auto& v1 = featureUnion.v1;
     if (v1.valueCount != values.size()) {
@@ -137,6 +73,13 @@ inline void assignValues(VampFeatureUnion& featureUnion, std::span<const float> 
     }
     v1.valueCount = static_cast<unsigned int>(values.size());
     std::copy_n(values.data(), v1.valueCount, v1.values);
+}
+
+[[nodiscard]] inline VampFeatureList makeVampFeatureList(size_t featureCount) {
+    VampFeatureList featureList{};
+    featureList.featureCount = static_cast<unsigned int>(featureCount);
+    featureList.features     = new VampFeatureUnion[featureCount]{};  // NOLINT
+    return featureList;
 }
 
 [[nodiscard]] inline VampOutputDescriptor makeVampOutputDescriptor(

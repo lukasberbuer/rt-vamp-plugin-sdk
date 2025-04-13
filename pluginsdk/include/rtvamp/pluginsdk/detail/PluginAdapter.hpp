@@ -213,12 +213,25 @@ template <IsPlugin TPlugin>
 class PluginAdapter<TPlugin>::Instance {
 public:
     explicit Instance(float inputSampleRate) : plugin_(inputSampleRate) {
-        std::generate_n(
+        std::generate(
             featureLists_.begin(),
-            outputCount,
-            []() { return makeVampFeatureList(1); }
+            featureLists_.end(),
+            [] { return makeVampFeatureList(1); }
         );
     }
+
+    ~Instance() {
+        std::for_each(
+            featureLists_.begin(),
+            featureLists_.end(),
+            [](auto& featureList) { clear(featureList); }
+        );
+    }
+
+    Instance(const Instance&)            = delete;
+    Instance(Instance&&)                 = delete;
+    Instance& operator=(const Instance&) = delete;
+    Instance& operator=(Instance&&)      = delete;
 
     int initialise(unsigned int /* inputChannels */, unsigned int stepSize, unsigned int blockSize) {
         blockSize_ = blockSize;
@@ -311,7 +324,7 @@ public:
             const auto& result = plugin_.process(getInputBuffer(), timestamp);
             assert(result.size() == outputCount);
             for (size_t i = 0; i < outputCount; ++i) {
-                auto& featureList = featureLists_[i].get();
+                auto& featureList = featureLists_[i];
                 assert(featureList.featureCount == 1);
                 assert(featureList.features != nullptr);
                 assignValues(*featureList.features, result[i]);
@@ -320,7 +333,7 @@ public:
             RTVAMP_ERROR("rtvamp::Plugin::process: ", e.what());
         }
 
-        return asNative(featureLists_.data());  // return last feature list if exception is thrown - better return nans?
+        return featureLists_.data();  // return last feature list if exception is thrown - better return nans?
     }
 
     VampFeatureList* getRemainingFeatures() {
@@ -333,9 +346,9 @@ public:
 private:
     static constexpr auto outputCount = TPlugin::outputCount;
 
-    TPlugin                                           plugin_;
-    size_t                                            blockSize_{0};
-    std::array<Wrapper<VampFeatureList>, outputCount> featureLists_{};
+    TPlugin                                  plugin_;
+    size_t                                   blockSize_{0};
+    std::array<VampFeatureList, outputCount> featureLists_{};
 };
 
 }  // namespace rtvamp::pluginsdk::detail

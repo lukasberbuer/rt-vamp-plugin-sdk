@@ -58,13 +58,6 @@ TEST_CASE("VampOutputDescriptor") {
 }
 
 TEST_CASE("VampFeatureUnion") {
-    SECTION("Construct and clear") {
-        auto featureUnion = detail::makeVampFeatureUnion(5);
-        CHECK(featureUnion.v1.valueCount == 5);
-        CHECK(featureUnion.v1.values != nullptr);
-        detail::clear(featureUnion);
-    }
-
     SECTION("assignValues") {
         VampFeatureUnion featureUnion{};
         const std::vector<float> values{1.0F, 2.0F, 3.0F};
