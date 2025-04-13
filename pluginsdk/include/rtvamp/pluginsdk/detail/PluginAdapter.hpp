@@ -31,7 +31,7 @@ private:
         return reinterpret_cast<Instance*>(handle);  // NOLINT
     }
 
-    static VampPluginHandle vampInstantiate(
+    static VampPluginHandle instantiate(
         const VampPluginDescriptor* desc, float inputSampleRate
     ) {
         // should the host create instances with others descriptors? -> shared state
@@ -47,7 +47,7 @@ private:
         return adapter.get();
     }
 
-    static void vampCleanup(VampPluginHandle handle) {
+    static void cleanup(VampPluginHandle handle) {
         const std::unique_lock lock{mutex};
         auto it = std::find_if(
             instances.begin(),
@@ -61,53 +61,39 @@ private:
 
     static constexpr auto parameterCount = TPlugin::parameters.size();
 
-    static constexpr auto vampParameters = [] {
+    static constexpr auto parameters = [] {
         std::array<VampParameterDescriptor, parameterCount> result{};
-        for (size_t i = 0; i < parameterCount; ++i) {
-            const auto& p = TPlugin::parameters[i];
-            auto& vp      = result[i];
-
-            vp.identifier   = p.identifier;
-            vp.name         = p.name;
-            vp.description  = p.description;
-            vp.unit         = p.unit;
-            vp.defaultValue = p.defaultValue;
-            vp.minValue     = p.minValue;
-            vp.maxValue     = p.maxValue;
-            vp.isQuantized  = static_cast<int>(p.quantizeStep.has_value());
-            vp.quantizeStep = p.quantizeStep.value_or(0.0F);
-        }
+        std::transform(
+            TPlugin::parameters.begin(),
+            TPlugin::parameters.end(),
+            result.begin(),
+            [](const auto& p) {
+                VampParameterDescriptor native{};
+                native.identifier   = p.identifier;
+                native.name         = p.name;
+                native.description  = p.description;
+                native.unit         = p.unit;
+                native.defaultValue = p.defaultValue;
+                native.minValue     = p.minValue;
+                native.maxValue     = p.maxValue;
+                native.isQuantized  = static_cast<int>(p.quantizeStep.has_value());
+                native.quantizeStep = p.quantizeStep.value_or(0.0F);
+                return native;
+            }
+        );
         return result;
     }();
 
-    static constexpr auto vampParametersPtr = [] {
+    static constexpr auto parametersPtr = [] {
         std::array<const VampParameterDescriptor*, parameterCount> result{};
         std::transform(
-            vampParameters.begin(),
-            vampParameters.end(),
+            parameters.begin(),
+            parameters.end(),
             result.begin(),
             [](auto&& e) { return &e; }
         );
         return result;
     }();
-
-    static constexpr const VampParameterDescriptor** getParameters() {
-        return vampParametersPtr.empty()
-            ? nullptr
-            : const_cast<const VampParameterDescriptor**>(vampParametersPtr.data());
-    }
-
-    static constexpr const char** getPrograms() {
-        return TPlugin::programs.empty()
-            ? nullptr
-            : const_cast<const char**>(TPlugin::programs.data());
-    }
-
-    static constexpr auto getVampInputDomain() {
-        return TPlugin::meta.inputDomain == TPlugin::InputDomain::Frequency
-            ? vampFrequencyDomain
-            : vampTimeDomain;
-    }
 
     static constexpr bool isValidParameterIndex(auto index) {
         return index >= 0 && std::cmp_less(index, TPlugin::parameters.size());
@@ -131,17 +117,15 @@ private:
         d.pluginVersion  = TPlugin::meta.pluginVersion;
         d.copyright      = TPlugin::meta.copyright;
         d.parameterCount = static_cast<unsigned int>(TPlugin::parameters.size());
-        d.parameters     = getParameters();
+        d.parameters     = const_cast<const VampParameterDescriptor**>(parametersPtr.data());
         d.programCount   = static_cast<unsigned int>(TPlugin::programs.size());
-        d.programs       = getPrograms();
-        d.inputDomain    = getVampInputDomain();
+        d.programs       = const_cast<const char**>(TPlugin::programs.data());
+        d.inputDomain    = TPlugin::meta.inputDomain == TPlugin::InputDomain::Frequency ? vampFrequencyDomain : vampTimeDomain;
 
-        d.instantiate = vampInstantiate;
-        d.cleanup     = vampCleanup;
+        d.instantiate = instantiate;
+        d.cleanup     = cleanup;
 
-        d.initialise = [](
-            VampPluginHandle handle, unsigned int inputChannels, unsigned int stepSize, unsigned int blockSize
-        ) -> int {
+        d.initialise = [](VampPluginHandle handle, unsigned int inputChannels, unsigned int stepSize, unsigned int blockSize) -> int {
             return handle != nullptr ? getInstance(handle)->initialise(inputChannels, stepSize, blockSize) : 0;
         };
 
@@ -214,9 +198,7 @@ private:
             }
         };
 
-        d.process = [](
-            VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec
-        ) {
+        d.process = [](VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec) {
             return handle != nullptr ? getInstance(handle)->process(inputBuffers, sec, nsec) : nullptr;
         };
 
