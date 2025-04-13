@@ -326,10 +326,11 @@ public:
                 assert(featureList.features != nullptr);
                 assignValues(*featureList.features, result[i]);
             }
+            return featureLists_.data();
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::process: ", e.what());
         }
-        return featureLists_.data();  // return last feature list if exception is thrown - better return nans?
+        return featureListsEmpty_.data();
     }
 
     VampFeatureList* getRemainingFeatures() {
