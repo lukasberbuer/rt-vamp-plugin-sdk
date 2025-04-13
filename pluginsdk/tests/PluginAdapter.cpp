@@ -1,3 +1,4 @@
+#include <string_view>
 #include <thread>
 #include <vector>
 
@@ -12,11 +13,38 @@
 using Catch::Matchers::Equals;
 using rtvamp::pluginsdk::detail::PluginAdapter;
 
-TEST_CASE("PluginAdapter descriptor") {
-    const VampPluginDescriptor* d = PluginAdapter<TestPlugin>::getDescriptor();
+template <typename U, typename V>
+static consteval bool strEqual(U&& u, V&& v) {
+    return std::string_view(std::forward<U>(u)) == std::string_view(std::forward<V>(v));
+}
 
-    // static descriptor data already checked in PluginDescriptor test
-    // now the function pointers should be assigned
+TEST_CASE("PluginAdapter descriptor") {
+    constexpr const VampPluginDescriptor* d = PluginAdapter<TestPlugin>::getDescriptor();
+    REQUIRE(d != nullptr);
+
+    CHECK(d->vampApiVersion == 2);
+    CHECK(strEqual(d->identifier, "test"));
+    CHECK(strEqual(d->name, "Test plugin"));
+    CHECK(strEqual(d->description, "Some random test plugin"));
+    CHECK(strEqual(d->maker, "LB"));
+    CHECK(d->pluginVersion == 1);
+    CHECK(strEqual(d->copyright , "MIT"));
+    CHECK(d->parameterCount == 1);
+
+    constexpr auto* p = d->parameters[0];
+    CHECK(strEqual(p->identifier, "param"));
+    CHECK(strEqual(p->name, "Parameter"));
+    CHECK(strEqual(p->description, "Some random parameter"));
+    CHECK(strEqual(p->unit, ""));
+    CHECK(p->defaultValue == 1.0f);
+    CHECK(p->minValue == 0.0f);
+    CHECK(p->maxValue == 2.0f);
+    CHECK(p->isQuantized == 1);
+    CHECK(p->quantizeStep == 1.0f);
+
+    CHECK(d->programCount == 2);
+    CHECK(strEqual(d->programs[0], "default"));
+    CHECK(strEqual(d->programs[1], "new"));
 
     CHECK(d->instantiate != nullptr);
     CHECK(d->cleanup != nullptr);
@@ -94,18 +122,6 @@ TEST_CASE("PluginAdapter instantiation") {
         CHECK(o->hasDuration == 0);
 
         d->releaseOutputDescriptor(o);
-    }
-
-    SECTION("Shared resource of VampOutputDescriptor -> problem?") {
-        VampOutputDescriptor* o1 = d->getOutputDescriptor(h, 0);
-        VampOutputDescriptor *o2 = d->getOutputDescriptor(h, 0);
-
-        REQUIRE(o1 == o2);
-        o1->binCount = 99;
-        REQUIRE(o2->binCount == 99);
-
-        d->releaseOutputDescriptor(o1);
-        d->releaseOutputDescriptor(o2);
     }
 
     SECTION("Initialise, process and getRemainingFeatures") {

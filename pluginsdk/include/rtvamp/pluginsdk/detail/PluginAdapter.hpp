@@ -2,9 +2,12 @@
 
 #include <array>
 #include <atomic>
+#include <cassert>
+#include <complex>
 #include <memory>
 #include <mutex>
 #include <utility>  // cmp_less
+#include <vector>
 
 #include "rtvamp/pluginsdk/Plugin.hpp"
 #include "rtvamp/pluginsdk/detail/macros.hpp"
@@ -12,7 +15,7 @@
 
 namespace rtvamp::pluginsdk::detail {
 
-template <detail::IsPlugin TPlugin>
+template <IsPlugin TPlugin>
 class PluginAdapter {
 public:
     static constexpr const VampPluginDescriptor* getDescriptor() { return &descriptor; }
@@ -56,6 +59,56 @@ private:
         }
     }
 
+    static constexpr auto parameterCount = TPlugin::parameters.size();
+
+    static constexpr auto vampParameters = [] {
+        std::array<VampParameterDescriptor, parameterCount> result{};
+        for (size_t i = 0; i < parameterCount; ++i) {
+            const auto& p = TPlugin::parameters[i];
+            auto& vp      = result[i];
+
+            vp.identifier   = p.identifier;
+            vp.name         = p.name;
+            vp.description  = p.description;
+            vp.unit         = p.unit;
+            vp.defaultValue = p.defaultValue;
+            vp.minValue     = p.minValue;
+            vp.maxValue     = p.maxValue;
+            vp.isQuantized  = static_cast<int>(p.quantizeStep.has_value());
+            vp.quantizeStep = p.quantizeStep.value_or(0.0F);
+        }
+        return result;
+    }();
+
+    static constexpr auto vampParametersPtr = [] {
+        std::array<const VampParameterDescriptor*, parameterCount> result{};
+        std::transform(
+            vampParameters.begin(),
+            vampParameters.end(),
+            result.begin(),
+            [](auto&& e) { return &e; }
+        );
+        return result;
+    }();
+
+    static consteval const VampParameterDescriptor** getParameters() {
+        return vampParametersPtr.empty()
+            ? nullptr
+            : const_cast<const VampParameterDescriptor**>(vampParametersPtr.data());
+    }
+
+    static consteval const char** getPrograms() {
+        return TPlugin::programs.empty()
+            ? nullptr
+            : const_cast<const char**>(TPlugin::programs.data());
+    }
+
+    static consteval auto getVampInputDomain() {
+        return TPlugin::meta.inputDomain == TPlugin::InputDomain::Frequency
+            ? vampFrequencyDomain
+            : vampTimeDomain;
+    }
+
     static constexpr bool isValidParameterIndex(auto index) {
         return index >= 0 && std::cmp_less(index, TPlugin::parameters.size());
     }
@@ -69,7 +122,19 @@ private:
     }
 
     static constexpr VampPluginDescriptor descriptor = [] {
-        auto d = VampPluginDescriptorWrapper<TPlugin>::get();
+        VampPluginDescriptor d{};
+        d.vampApiVersion = 2;
+        d.identifier     = TPlugin::meta.identifier;
+        d.name           = TPlugin::meta.name;
+        d.description    = TPlugin::meta.description;
+        d.maker          = TPlugin::meta.maker;
+        d.pluginVersion  = TPlugin::meta.pluginVersion;
+        d.copyright      = TPlugin::meta.copyright;
+        d.parameterCount = static_cast<unsigned int>(TPlugin::parameters.size());
+        d.parameters     = getParameters();
+        d.programCount   = static_cast<unsigned int>(TPlugin::programs.size());
+        d.programs       = getPrograms();
+        d.inputDomain    = getVampInputDomain();
 
         d.instantiate = vampInstantiate;
         d.cleanup     = vampCleanup;
@@ -142,7 +207,12 @@ private:
             return handle != nullptr ? getInstance(handle)->getOutputDescriptor(index) : nullptr;
         };
 
-        d.releaseOutputDescriptor = [](VampOutputDescriptor*) {};  // memory owned and released by plugin
+        d.releaseOutputDescriptor = [](VampOutputDescriptor* descriptor) {
+            if (descriptor != nullptr) {
+                clear(*descriptor);
+                delete descriptor;  // NOLINT
+            }
+        };
 
         d.process = [](
             VampPluginHandle handle, const float* const* inputBuffers, int sec, int nsec
@@ -162,22 +232,24 @@ private:
 
 /* ------------------------------------------ Instance ------------------------------------------ */
 
-template <detail::IsPlugin TPlugin>
+template <IsPlugin TPlugin>
 class PluginAdapter<TPlugin>::Instance {
 public:
     explicit Instance(float inputSampleRate) : plugin_(inputSampleRate) {
-        updateOutputDescriptors();
+        std::generate_n(
+            featureLists_.begin(),
+            outputCount,
+            []() { return makeVampFeatureList(1); }
+        );
     }
 
     int initialise(unsigned int /* inputChannels */, unsigned int stepSize, unsigned int blockSize) {
         blockSize_ = blockSize;
         try {
             const bool success = plugin_.initialise(stepSize, blockSize);
-            outputsNeedUpdate_ = true;
             return success ? 1 : 0;
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::initialise: ", e.what());
-            outputsNeedUpdate_ = true;
             return 0;
         }
     }
@@ -207,7 +279,6 @@ public:
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::setParameter: ", e.what());
         }
-        outputsNeedUpdate_ = true;
     }
 
     unsigned int getCurrentProgram() const {
@@ -233,14 +304,15 @@ public:
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::selectProgram: ", e.what());
         }
-        outputsNeedUpdate_ = true;
     }
 
     VampOutputDescriptor* getOutputDescriptor(unsigned int index) {
-        updateOutputDescriptors();
-        const std::unique_lock lock{mutex_};
-        // bounds checking in descriptor lambda
-        return outputDescriptorWrappers_[index].get();
+        const auto outputs = plugin_.getOutputDescriptors();
+        if (index >= outputs.size()) {
+            RTVAMP_ERROR("rtvamp::Plugin::getOutputDescriptor: index out of bounds");
+            return nullptr;
+        }
+        return new VampOutputDescriptor{makeVampOutputDescriptor(outputs[index])};
     }
 
     VampFeatureList* process(const float* const* inputBuffers, int sec, int nsec) {
@@ -261,12 +333,17 @@ public:
         try {
             const auto& result = plugin_.process(getInputBuffer(), timestamp);
             assert(result.size() == outputCount);
-            featureListsWrapper_.assignValues(result);
+            for (size_t i = 0; i < outputCount; ++i) {
+                auto& featureList = featureLists_[i].get();
+                assert(featureList.featureCount == 1);
+                assert(featureList.features != nullptr);
+                assignValues(*featureList.features, result[i]);
+            }
         } catch (const std::exception& e) {
             RTVAMP_ERROR("rtvamp::Plugin::process: ", e.what());
         }
 
-        return featureListsWrapper_.get();  // return last feature list if exception is thrown - better return nans?
+        return asNative(featureLists_.data());  // return last feature list if exception is thrown - better return nans?
     }
 
     VampFeatureList* getRemainingFeatures() {
@@ -277,34 +354,11 @@ public:
     const TPlugin& get() const noexcept { return plugin_; }
 
 private:
-    void updateOutputDescriptors() {
-        if (outputsNeedUpdate_) {
-            try {
-                const std::unique_lock lock{mutex_};
-                const auto descriptors = plugin_.getOutputDescriptors();
-
-                // (re)generate vamp output descriptors
-                outputDescriptorWrappers_.clear();
-                outputDescriptorWrappers_.reserve(descriptors.size());
-                for (const auto& d : descriptors) {
-                    outputDescriptorWrappers_.emplace_back(d);
-                }
-
-                outputsNeedUpdate_ = false;
-            } catch (const std::exception& e) {
-                RTVAMP_ERROR("rtvamp::Plugin::getOutputDescriptors: ", e.what());
-            }
-        }
-    }
-
     static constexpr auto outputCount = TPlugin::outputCount;
 
-    TPlugin                                  plugin_;
-    size_t                                   blockSize_{0};
-    std::mutex                               mutex_;
-    std::atomic<bool>                        outputsNeedUpdate_{true};
-    std::vector<VampOutputDescriptorWrapper> outputDescriptorWrappers_;
-    VampFeatureListsWrapper<outputCount>     featureListsWrapper_;
+    TPlugin                                           plugin_;
+    size_t                                            blockSize_{0};
+    std::array<Wrapper<VampFeatureList>, outputCount> featureLists_{};
 };
 
 }  // namespace rtvamp::pluginsdk::detail
