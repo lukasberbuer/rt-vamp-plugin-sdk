@@ -118,16 +118,14 @@ constexpr const T& asNative(const Wrapper<T>& wrapper) noexcept {
 [[nodiscard]] inline VampFeatureUnion makeVampFeatureUnion(size_t valueCount) {
     VampFeatureUnion featureUnion{};
     featureUnion.v1.valueCount = static_cast<unsigned int>(valueCount);
-    featureUnion.v1.values     = new float[valueCount];  // NOLINT
-    std::fill_n(featureUnion.v1.values, valueCount, 0.0F);
+    featureUnion.v1.values     = new float[valueCount]{};  // NOLINT
     return featureUnion;
 }
 
 [[nodiscard]] inline VampFeatureList makeVampFeatureList(size_t featureCount) {
     VampFeatureList featureList{};
     featureList.featureCount = static_cast<unsigned int>(featureCount);
-    featureList.features     = new VampFeatureUnion[featureCount];  // NOLINT
-    std::fill_n(featureList.features, featureCount, VampFeatureUnion{});
+    featureList.features     = new VampFeatureUnion[featureCount]{};  // NOLINT
     return featureList;
 }
 
@@ -135,7 +133,7 @@ inline void assignValues(VampFeatureUnion& featureUnion, std::span<const float> 
     auto& v1 = featureUnion.v1;
     if (v1.valueCount != values.size()) {
         delete[] v1.values;  // NOLINT
-        v1.values = new float[values.size()];  // NOLINT
+        v1.values = new float[values.size()]{};  // NOLINT
     }
     v1.valueCount = static_cast<unsigned int>(values.size());
     std::copy_n(values.data(), v1.valueCount, v1.values);
@@ -151,13 +149,15 @@ inline void assignValues(VampFeatureUnion& featureUnion, std::span<const float> 
     native.unit             = copy(d.unit);
     native.hasFixedBinCount = 1;
     native.binCount         = d.binCount;
-    native.binNames         = d.binNames.empty() ? nullptr : new const char*[d.binCount];
-    std::transform(
-        d.binNames.begin(),
-        d.binNames.end(),
-        native.binNames,
-        [](const std::string& s) { return copy(s); }
-    );
+    native.binNames         = d.binNames.empty() ? nullptr : new const char*[d.binCount]{};
+    if (native.binNames != nullptr) {
+        std::transform(
+            d.binNames.begin(),
+            d.binNames.end(),
+            native.binNames,
+            [](const std::string& s) { return copy(s); }
+        );
+    }
     native.hasKnownExtents  = static_cast<int>(d.hasKnownExtents);
     native.minValue         = d.minValue;
     native.maxValue         = d.maxValue;
