@@ -31,16 +31,14 @@ private:
         return reinterpret_cast<Instance*>(handle);  // NOLINT
     }
 
-    static VampPluginHandle instantiate(
-        const VampPluginDescriptor* desc, float inputSampleRate
-    ) {
+    static VampPluginHandle instantiate(const VampPluginDescriptor* desc, float inputSampleRate) {
         // should the host create instances with others descriptors? -> shared state
         // possible solution: overwrite function pointer in entry point and dispatch to adapters there
         if (desc != &descriptor) {
             return nullptr;
         }
 
-        const std::unique_lock lock{mutex};
+        const std::scoped_lock lock{mutex};
         auto& adapter = instances.emplace_back(
             std::make_unique<Instance>(inputSampleRate)
         );
@@ -48,15 +46,8 @@ private:
     }
 
     static void cleanup(VampPluginHandle handle) {
-        const std::unique_lock lock{mutex};
-        auto it = std::find_if(
-            instances.begin(),
-            instances.end(),
-            [&](const auto& adapter) { return adapter.get() == handle; }
-        );
-        if (it != instances.end()) {
-            instances.erase(it);
-        }
+        const std::scoped_lock lock{mutex};
+        std::erase_if(instances, [&](const auto& adapter) { return adapter.get() == handle; });
     }
 
     static constexpr auto parameterCount = TPlugin::parameters.size();
