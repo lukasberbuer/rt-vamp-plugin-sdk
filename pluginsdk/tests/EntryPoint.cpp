@@ -4,10 +4,8 @@
 
 #include "TestPlugin.hpp"
 
-using rtvamp::pluginsdk::EntryPoint;
-
 TEST_CASE("EntryPoint") {
-    using EP = EntryPoint<TestPlugin, TestPlugin>;
+    using EP = rtvamp::pluginsdk::EntryPoint<TestPlugin, TestPlugin>;
 
     SECTION("Valid version range") {
         REQUIRE(EP::getDescriptor(0, 0) == nullptr);

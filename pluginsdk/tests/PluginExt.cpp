@@ -3,9 +3,10 @@
 
 #include "rtvamp/pluginsdk.hpp"
 
+using namespace rtvamp::pluginsdk;
 using Catch::Matchers::Equals;
 
-class TestPluginExt : public rtvamp::pluginsdk::PluginExt<TestPluginExt, 0> {
+class TestPluginExt : public PluginExt<TestPluginExt, 0> {
 public:
     using PluginExt::PluginExt;  // inherit constructor
 
@@ -163,7 +164,5 @@ TEST_CASE("PluginExt onProgramChange callback") {
 }
 
 TEST_CASE("PluginExt within PluginAdapter") {
-    using rtvamp::pluginsdk::detail::PluginAdapter;
-
-    REQUIRE(PluginAdapter<TestPluginExt>::getDescriptor() != nullptr);
+    REQUIRE(detail::PluginAdapter<TestPluginExt>::getDescriptor() != nullptr);
 }

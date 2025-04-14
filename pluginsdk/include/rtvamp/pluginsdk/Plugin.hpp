@@ -2,6 +2,7 @@
 
 #include <array>
 #include <complex>
+#include <concepts>
 #include <cstdint>
 #include <optional>
 #include <span>
@@ -134,22 +135,46 @@ private:
 
 /* ------------------------------------------- Concept ------------------------------------------ */
 
-namespace detail {
-
-/**
- * Check if type is derived from Plugin.
- * Some workaround to make it work with integer template parameter for output count.
- */
-template <typename T, size_t MaxOutputCount = 32>
-consteval bool isPlugin() {
-    return []<std::size_t... Ns>(std::index_sequence<Ns...>) {
-        return std::disjunction_v<std::is_base_of<Plugin<Ns>, T>...>;
-    }(std::make_index_sequence<MaxOutputCount>{});
-}
+template <typename T>
+concept HasParameters = requires {
+    { T::parameters } -> std::convertible_to<std::array<PluginBase::ParameterDescriptor, T::parameters.size()>>;
+};
 
 template <typename T>
-concept IsPlugin = detail::isPlugin<T>();
+concept HasPrograms = requires {
+    { T::programs } -> std::convertible_to<std::array<const char*, T::programs.size()>>;
+};
 
-}  // namespace detail
+template <typename T>
+concept IsPlugin = std::constructible_from<T, float> && requires(
+    T plugin,
+    std::string_view parameterName,
+    float parameterValue,
+    std::string_view programName,
+    uint32_t stepSize,
+    uint32_t blockSize,
+    PluginBase::InputBuffer buffer,
+    uint64_t nsec
+) {
+    { T::outputCount } -> std::convertible_to<uint32_t>;
+    { T::meta } -> std::convertible_to<typename T::Meta>;
+
+    requires (!HasParameters<T> || requires {
+        { plugin.getParameter(parameterName) } -> std::same_as<std::optional<float>>;
+        { plugin.setParameter(parameterName, parameterValue) } -> std::same_as<bool>;
+    });
+
+    requires (!HasPrograms<T> || requires {
+        { plugin.getCurrentProgram() } -> std::same_as<std::string_view>;
+        { plugin.selectProgram(programName) } -> std::same_as<bool>;
+    });
+
+    { plugin.getPreferredStepSize() } -> std::same_as<uint32_t>;
+    { plugin.getPreferredBlockSize() } -> std::same_as<uint32_t>;
+    { plugin.getOutputDescriptors() } -> std::same_as<std::array<PluginBase::OutputDescriptor, T::outputCount>>;
+    { plugin.initialise(stepSize, blockSize) } -> std::same_as<bool>;
+    { plugin.reset() } -> std::same_as<void>;
+    { plugin.process(buffer, nsec) } -> std::convertible_to<const std::array<PluginBase::Feature, T::outputCount>&>;
+};
 
 }  // namespace rtvamp::pluginsdk
