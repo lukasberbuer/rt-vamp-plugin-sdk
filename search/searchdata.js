@@ -10,7 +10,8 @@ var indexSectionsWithContent =
   7: "i",
   8: "ft",
   9: "r",
-  10: "2cfprstv"
+  10: "2cfprstv",
+  11: "r"
 };
 
 var indexSectionNames =
@@ -25,7 +26,8 @@ var indexSectionNames =
   7: "enums",
   8: "enumvalues",
   9: "defines",
-  10: "pages"
+  10: "pages",
+  11: "concepts"
 };
 
 var indexSectionLabels =
@@ -40,6 +42,7 @@ var indexSectionLabels =
   7: "Enumerations",
   8: "Enumerator",
   9: "Macros",
-  10: "Pages"
+  10: "Pages",
+  11: "Concepts"
 };
 

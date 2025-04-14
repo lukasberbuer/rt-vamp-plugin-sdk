@@ -7,6 +7,9 @@ var searchData=
   ['rtvamp_4',['rtvamp',['../namespacertvamp.html',1,'']]],
   ['rtvamp_3a_3ahostsdk_5',['hostsdk',['../namespacertvamp_1_1hostsdk.html',1,'rtvamp']]],
   ['rtvamp_3a_3apluginsdk_6',['pluginsdk',['../namespacertvamp_1_1pluginsdk.html',1,'rtvamp']]],
-  ['rtvamp_5fentry_5fpoint_7',['RTVAMP_ENTRY_POINT',['../EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98',1,'EntryPoint.hpp']]],
-  ['rtvamp_5fexport_5ffunction_8',['RTVAMP_EXPORT_FUNCTION',['../EntryPoint_8hpp.html#a6a1321320507dae050728a7781adec81',1,'EntryPoint.hpp']]]
+  ['rtvamp_3a_3apluginsdk_3a_3ahasparameters_7',['HasParameters',['../conceptrtvamp_1_1pluginsdk_1_1HasParameters.html',1,'rtvamp::pluginsdk']]],
+  ['rtvamp_3a_3apluginsdk_3a_3ahasprograms_8',['HasPrograms',['../conceptrtvamp_1_1pluginsdk_1_1HasPrograms.html',1,'rtvamp::pluginsdk']]],
+  ['rtvamp_3a_3apluginsdk_3a_3aisplugin_9',['IsPlugin',['../conceptrtvamp_1_1pluginsdk_1_1IsPlugin.html',1,'rtvamp::pluginsdk']]],
+  ['rtvamp_5fentry_5fpoint_10',['RTVAMP_ENTRY_POINT',['../EntryPoint_8hpp.html#ab9e8a9880a2de6797b776d72d446ae98',1,'EntryPoint.hpp']]],
+  ['rtvamp_5fexport_5ffunction_11',['RTVAMP_EXPORT_FUNCTION',['../EntryPoint_8hpp.html#a6a1321320507dae050728a7781adec81',1,'EntryPoint.hpp']]]
 ];
