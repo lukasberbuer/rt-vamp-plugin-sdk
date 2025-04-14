@@ -23,8 +23,7 @@ static void BM_plugin(benchmark::State& state, const VampPluginDescriptor* descr
     }
 
     descriptor->cleanup(handle);
-
-    addRateCounter(state, blockSize);
+    state.SetItemsProcessed(state.iterations() * blockSize * state.threads());
 }
 
 static void BM_rtvamp(benchmark::State& state) {

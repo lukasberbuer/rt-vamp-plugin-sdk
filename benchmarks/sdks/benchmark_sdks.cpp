@@ -23,7 +23,7 @@ static void BM_rtvamp(benchmark::State& state) {
         auto result = adapter.process(inputBuffer, 0);
         benchmark::DoNotOptimize(result);
     }
-    addRateCounter(state, blockSize);
+    state.SetItemsProcessed(state.iterations() * blockSize * state.threads());
 }
 BENCHMARK(BM_rtvamp)->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 BENCHMARK(BM_rtvamp)->Args({4096})->Threads(1)->UseRealTime();
@@ -48,7 +48,7 @@ static void BM_vamp(benchmark::State& state) {
         auto result = adapter.process(inputBuffers.data(), Vamp::RealTime{});
         benchmark::DoNotOptimize(result);
     }
-    addRateCounter(state, blockSize);
+    state.SetItemsProcessed(state.iterations() * blockSize * state.threads());
 }
 BENCHMARK(BM_vamp)->RangeMultiplier(2)->Range(1 << 4, 1 << 16);
 BENCHMARK(BM_vamp)->Args({4096})->Threads(1)->UseRealTime();

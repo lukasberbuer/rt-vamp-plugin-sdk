@@ -1,9 +1,9 @@
+from __future__ import annotations
+
 import argparse
-import os
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Sequence
+from subprocess import check_call
 
 try:
     # allow run command without installed dependencies
@@ -15,19 +15,26 @@ except:
 
 def run(folder: Path):
     def is_executable(fpath):
-        return (fpath.suffix == "" or fpath.suffix == ".exe")
+        return fpath.suffix == "" or fpath.suffix == ".exe"
 
-    for exe in filter(is_executable, folder.glob("benchmark_*")):
+    for exe in filter(is_executable, folder.glob("benchmark_*sdks")):
         csv = exe.with_suffix(".csv")
-        subprocess.run([exe, f"--benchmark_out={csv}", "--benchmark_out_format=csv"])
+        check_call(
+            (
+                exe,
+                f"--benchmark_out={csv}",
+                "--benchmark_out_format=csv",
+                "--benchmark_min_time=1s",
+            )
+        )
 
 
 @dataclass
 class Benchmark:
     name: str
-    args: List[any]
+    args: list[any]
     real_time: bool = False
-    threads: Optional[int] = False
+    threads: int | None = None
 
     @classmethod
     def parse(cls, name: str):
@@ -47,18 +54,21 @@ class Benchmark:
                 except ValueError:
                     args.append(part)
         return cls(
-            name = parts[0],
-            args = args,
-            real_time = "real_time" in parts,
-            threads = threads
+            name=parts[0],
+            args=args,
+            real_time="real_time" in parts,
+            threads=threads,
         )
 
 
 def read_csv(csv: Path):
-    df = pd.read_csv(csv, header=4)
-    df["benchmark"] = df.apply(lambda row: Benchmark.parse(row["name"]).name, axis = 1)
-    df["arg0"]      = df.apply(lambda row: Benchmark.parse(row["name"]).args[0], axis = 1)
-    df["threads"]   = df.apply(lambda row: Benchmark.parse(row["name"]).threads, axis = 1)
+    with open(csv) as f:
+        skiprows = next(i for i, line in enumerate(f) if line.startswith("name,"))
+
+    df = pd.read_csv(csv, skiprows=skiprows)
+    df["benchmark"] = df.apply(lambda row: Benchmark.parse(row["name"]).name, axis=1)
+    df["arg0"] = df.apply(lambda row: Benchmark.parse(row["name"]).args[0], axis=1)
+    df["threads"] = df.apply(lambda row: Benchmark.parse(row["name"]).threads, axis=1)
     return df
 
 
@@ -71,7 +81,7 @@ def analyze_benchmark_sdks(csv: Path):
     print(f"Analyze {csv}")
     df = read_csv(csv)
     df_single_threaded = df[df.threads.isna()]
-    df_multi_threaded  = df[df.threads.isna() == False]
+    df_multi_threaded = df[df.threads.isna() == False]
 
     def prettify_benchmark_names(names):
         replace = dict(BM_rtvamp="rt-vamp-plugin-sdk", BM_vamp="vamp-plugin-sdk")
@@ -79,12 +89,12 @@ def analyze_benchmark_sdks(csv: Path):
 
     legend_kwargs = dict(fancybox=False, framealpha=0.0)
 
-    fig, ax = plt.subplots(tight_layout=True)
+    _, ax = plt.subplots(tight_layout=True)
     df_single_threaded.groupby("benchmark").plot(
         ax=ax,
         title="RMS plugin",
         x="arg0",
-        y="rate",
+        y="items_per_second",
         logx=True,
         xlabel="Block size",
         ylabel="Throughput [Samples/s]",
@@ -95,12 +105,12 @@ def analyze_benchmark_sdks(csv: Path):
     if df_multi_threaded.empty:
         return
 
-    fig, ax = plt.subplots(tight_layout=True)
+    _, ax = plt.subplots(tight_layout=True)
     df_multi_threaded.groupby("benchmark").plot(
         ax=ax,
         title="Multithreading: RMS plugin (block size: 4096)",
         x="threads",
-        y="rate",
+        y="items_per_second",
         xlabel="Threads",
         ylabel="Throughput [Samples/s]",
     )
@@ -133,9 +143,9 @@ def main():
 
     args = parser.parse_args()
 
-    if (args.command == "run"):
+    if args.command == "run":
         run(args.folder)
-    elif (args.command == "analyze"):
+    elif args.command == "analyze":
         analyze(args.folder)
 
 
